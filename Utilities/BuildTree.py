@@ -1,9 +1,10 @@
+import re
 from typing import Union
 from DataStructurs.BinaryTrees import *
 
 
 def BuildTree(input: str) -> BinaryExpressionTreeNode | None:
-    input = input.strip()
+    input = re.sub(r'\s+', '', input)
     tree = BinaryExpressionTreeNode("Null")
     first = input[0]
     if first in ["|", "&"]:
