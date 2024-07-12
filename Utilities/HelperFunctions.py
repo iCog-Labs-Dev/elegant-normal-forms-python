@@ -1,5 +1,5 @@
 from typing import Union
-from DataStructures.BinaryTrees import (
+from DataStructures.Trees import (
     BinaryConstraintTreeNode,
     BinaryExpressionTreeNode,
     NodeType,

@@ -1,6 +1,6 @@
 import re
 from typing import Union
-from DataStructures.BinaryTrees import *
+from DataStructures.Trees import *
 
 
 def BuildTree(input: str) -> BinaryExpressionTreeNode | None:
