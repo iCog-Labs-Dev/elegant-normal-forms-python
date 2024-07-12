@@ -23,3 +23,11 @@ class BinaryConstraintTreeNode:
         self.value: str = value
         self.constraint: bool = constraint
         self.type: NodeType = NodeType.LITERAL
+
+
+class ConstraintTreeNode:
+    def __init__(self, value:str, constraint: bool = False):
+        self.value: str = value
+        self.constraint: bool = constraint
+        self.type: NodeType = NodeType.LITERAL
+        self.children: list[ConstraintTreeNode] = []

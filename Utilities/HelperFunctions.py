@@ -20,8 +20,12 @@ def print_tree(
     if node is None:
         return
     print("    " * level + f"[{side}{level}]", f"{constraint}{node.value}")
-    print_tree(node.left, level + 1, "L")
-    print_tree(node.right, level + 1, "R")
+
+    if(node.left is not None):
+        print_tree(node.left, level + 1, "L")
+
+    if(node.right is not None):
+        print_tree(node.right, level + 1, "R")
 
 
 def eval(node: BinaryConstraintTreeNode) -> Union[bool, None]:
