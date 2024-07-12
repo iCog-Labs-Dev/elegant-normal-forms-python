@@ -1,12 +1,13 @@
 from typing import Union
 from DataStructurs.BinaryTrees import *
 
-def BuildTree(input:str) -> BinaryExpressionTreeNode | None:
+
+def BuildTree(input: str) -> BinaryExpressionTreeNode | None:
     input = input.strip()
-    tree = BinaryExpressionTreeNode("")
+    tree = BinaryExpressionTreeNode("Null")
     first = input[0]
     if first in ["|", "&"]:
-        input = input[2: len(input) -1]
+        input = input[2 : len(input) - 1]
         firstArg, secondArg = splitArgs(input)
 
         if firstArg is None or secondArg is None:
@@ -17,7 +18,7 @@ def BuildTree(input:str) -> BinaryExpressionTreeNode | None:
         tree.right = BuildTree(secondArg)
         return tree
     elif first == "!":
-        input = input[2: len(input) -1]
+        input = input[2 : len(input) - 1]
         tree.value = "NOT"
         tree.right = BuildTree(input)
         return tree
@@ -26,6 +27,7 @@ def BuildTree(input:str) -> BinaryExpressionTreeNode | None:
     else:
         tree.value = first
         return tree
+
 
 def splitArgs(input: str) -> Union[tuple[str, str], tuple[None, None]]:
     brackets = 0
@@ -36,6 +38,6 @@ def splitArgs(input: str) -> Union[tuple[str, str], tuple[None, None]]:
         elif c == ")":
             brackets -= 1
         elif c == "," and brackets == 0:
-            return input[:index], input[index:]
+            return input[:index], input[index + 1 :]
         index += 1
-    return None, None 
+    return None, None
