@@ -5,9 +5,13 @@ from Utilities.PropagateTruthValue import propagateTruthValue
 input = "&(B, !(|(C, |(A, &(!(B), A)))))"
 
 tree = BuildTree(input)
-print("Binary Expression Tree finished")
-print_tree(tree)
+root = BinaryExpressionTreeNode("Root")
+root.type = NodeType.ROOT
+root.right = tree
 
-constraintTree = propagateTruthValue(tree)
+print("Binary Expression Tree finished")
+print_tree(root)
+
+constraintTree = propagateTruthValue(root)
 print("Constraint Tree finished")
 print_tree(constraintTree)

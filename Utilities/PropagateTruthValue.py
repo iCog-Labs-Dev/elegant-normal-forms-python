@@ -7,6 +7,14 @@ def propagateTruthValue(
     truthValue: bool = True,
 ) -> Union[BinaryConstraintTreeNode, None]:
     temporaryNode: BinaryConstraintTreeNode = BinaryConstraintTreeNode("")
+
+    if currentNode.type == NodeType.ROOT:
+        temporaryNode.type = currentNode.type
+        temporaryNode.value = currentNode.value
+        if currentNode.right is not None:
+            temporaryNode.right = propagateTruthValue(currentNode.right, truthValue)
+        return temporaryNode
+
     if currentNode.type == NodeType.NOT:
         if currentNode.right is not None:
             return propagateTruthValue(currentNode.right, not truthValue)

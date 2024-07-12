@@ -7,15 +7,11 @@ from DataStructures.Trees import (
 
 
 def print_tree(
-    node: Union[BinaryConstraintTreeNode, BinaryExpressionTreeNode], level=0, side=""
+    node: Union[BinaryConstraintTreeNode, BinaryExpressionTreeNode, None], level=0, side=""
 ):
     constraint = ""
-    if type(node) == BinaryConstraintTreeNode:
-        constraint = (
-            ""
-            if node.type != NodeType.LITERAL
-            else f"{'+' if node.constraint else '-'}"
-        )
+    if type(node) == BinaryConstraintTreeNode and node.type == NodeType.LITERAL:
+        constraint = f"{'+' if node.constraint else '-'}"
 
     if node is None:
         return

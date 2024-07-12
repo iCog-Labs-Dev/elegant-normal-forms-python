@@ -6,6 +6,7 @@ class NodeType(Enum):
     OR = "OR"
     NOT = "NOT"
     LITERAL = "LITERAL"
+    ROOT = "ROOT"
 
 
 class BinaryExpressionTreeNode:
