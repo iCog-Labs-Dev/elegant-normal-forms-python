@@ -38,10 +38,11 @@ def gatherJunctors(
 
             # Just to make the intellsense happy
             if centerNode.guardSet is not None:
-                centerNode.guardSet.append(currentNode.constraint)
+                centerNode.guardSet.append(currentNode)
 
         else:
             currentNode.type = NodeType.AND
             currentNode.guardSet = [currentNode.constraint]
             centerNode.children.append(currentNode)
     return None
+

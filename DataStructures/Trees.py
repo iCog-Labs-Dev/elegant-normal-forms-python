@@ -33,4 +33,4 @@ class ConstraintTreeNode:
         self.constraint: bool = constraint
         self.type: NodeType = NodeType.LITERAL
         self.children: list[BinaryConstraintTreeNode] = []
-        self.guardSet: list[bool] | None = None
+        self.guardSet: list[BinaryConstraintTreeNode] | None = None

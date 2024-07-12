@@ -24,8 +24,11 @@ if binaryConstraintTree is not None:
     constraintTree = gatherJunctors(binaryConstraintTree, constraintTree)
 print("Constraint Tree Finished")
 
-print("GuardSet: ", constraintTree.guardSet)
-print("Children: ", len(constraintTree.children))
+print("GuardSet: ")
+if constraintTree is not None and constraintTree.guardSet is not None:
+    for gct in constraintTree.guardSet:
+        print_tree(gct)
+    print("Children: ", len(constraintTree.children))
 
-for bct in constraintTree.children:
-    print_tree(bct)
+    for bct in constraintTree.children:
+        print_tree(bct)
