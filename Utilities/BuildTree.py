@@ -1,11 +1,17 @@
+from typing import Union
 from DataStructurs.BinaryTrees import *
 
 def BuildTree(input:str) -> BinaryExpressionTreeNode | None:
+    input = input.strip()
     tree = BinaryExpressionTreeNode("")
     first = input[0]
     if first in ["|", "&"]:
         input = input[2: len(input) -1]
-        firstArg, secondArg = input.split(",")
+        firstArg, secondArg = splitArgs(input)
+
+        if firstArg is None or secondArg is None:
+            raise ValueError("Insufficient arguments for binary operator")
+
         tree.value = "AND" if first == "&" else "OR"
         tree.left = BuildTree(firstArg)
         tree.right = BuildTree(secondArg)
@@ -20,3 +26,16 @@ def BuildTree(input:str) -> BinaryExpressionTreeNode | None:
     else:
         tree.value = first
         return tree
+
+def splitArgs(input: str) -> Union[tuple[str, str], tuple[None, None]]:
+    brackets = 0
+    index = 0
+    for c in input:
+        if c == "(":
+            brackets += 1
+        elif c == ")":
+            brackets -= 1
+        elif c == "," and brackets == 0:
+            return input[:index], input[index:]
+        index += 1
+    return None, None 
