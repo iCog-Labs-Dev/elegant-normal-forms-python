@@ -62,6 +62,9 @@ def isConsistent(toBeChecked):
             return isConsistent(toBeChecked[1:])
         
 
+    
+        
+
             
     
         

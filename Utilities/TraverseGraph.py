@@ -5,7 +5,7 @@ from DataStructures.Trees import BinaryConstraintTreeNode
 
 
 def TraverseGraph(constraintGraphNode:ConstraintGraphNode,
-                  incomingSet: List[BinaryConstraintTreeNode])-> Union[List|None] :
+                  incomingSet: List[BinaryConstraintTreeNode|ConstraintGraphNode])-> Union[List|None] :
     match constraintGraphNode.type:
         case GraphNodeType.START:
             local_set = []
