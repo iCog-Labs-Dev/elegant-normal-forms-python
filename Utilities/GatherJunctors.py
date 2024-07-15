@@ -42,7 +42,7 @@ def gatherJunctors(
 
         else:
             currentNode.type = NodeType.AND
-            currentNode.guardSet = [currentNode.constraint]
+            currentNode.guardSet = [currentNode]
             centerNode.children.append(currentNode)
     return None
 
