@@ -6,5 +6,7 @@ class Node:
         self.left = None
         self.right = None
         self.guard_set = []
+        self.children_list = []
+
         
     
