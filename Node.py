@@ -7,6 +7,11 @@ class Node:
         self.right = None
         self.guard_set = []
         self.children_list = []
+        
+class Tree:
+   def __init__(self,root):
+       self.root = Node("ROOT", root)
+    
 
         
     
