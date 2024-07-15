@@ -32,3 +32,4 @@ class ConstraintTreeNode:
         self.constraint: bool = constraint
         self.type: NodeType = NodeType.LITERAL
         self.children: list[ConstraintTreeNode] = []
+
