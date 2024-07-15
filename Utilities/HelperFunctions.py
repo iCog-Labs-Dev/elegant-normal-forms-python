@@ -27,14 +27,15 @@ def print_tree(
 def eval(node: BinaryConstraintTreeNode) -> Union[bool, None]:
     if node is None:
         return
-    if node.value == "AND":
-        if node.left is not None and node.right is not None:
-            return eval(node.left) and eval(node.right)
-    elif node.value == "OR":
-        if node.left is not None and node.right is not None:
-            return eval(node.left) or eval(node.right)
-    elif node.value == "NOT":
-        if node.right is not None:
-            return not eval(node.right)
-    else:
-        return node.constraint
+    match node.value:
+        case "AND":
+            if node.left is not None and node.right is not None:
+                return eval(node.left) and eval(node.right)
+        case "OR":
+            if node.left is not None and node.right is not None:
+                return eval(node.left) or eval(node.right)
+        case "NOT":
+            if node.right is not None:
+                return not eval(node.right)
+        case _:
+            return node.constraint
