@@ -6,8 +6,8 @@ class GraphNodeType(Enum):
     START = "START"
     STOP = "STOP"
     INTERNAL = "INTERNAL"
-    AND = "AND"
-    OR = "OR"
+    # AND = "AND"
+    # OR = "OR"
 
 class ConstraintGraphNode:
     def __init__(self):
@@ -17,3 +17,8 @@ class ConstraintGraphNode:
         self.graphNodeType: GraphNodeType = GraphNodeType.INTERNAL
         self.guardSet: List[BinaryConstraintTreeNode|ConstraintGraphNode] = []
         self.children: List[ConstraintGraphNode] =[]
+        
+    def __repr__(self):
+        return f'{self.value}, {self.type}'
+    def __str__(self):
+        return f'{self.value}, {self.type}'
