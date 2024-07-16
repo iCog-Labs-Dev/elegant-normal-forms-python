@@ -1,4 +1,4 @@
-from typing import Union,List
+from typing import Union,List,Any
 from DataStructures.Trees import (
     BinaryConstraintTreeNode,
     BinaryExpressionTreeNode,
@@ -61,6 +61,15 @@ def isConsistent(toBeChecked):
         else:
             return isConsistent(toBeChecked[1:])
         
+def union(list1: List[Any], list2: List[Any]) -> List[Any]:
+    if not list2:
+        return list1
+    if list2[0] not in list1:
+        return union(list1 + [list2[0]], list2[1:])
+    else:
+        return union(list1, list2[1:])
+
+    
 
     
         

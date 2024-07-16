@@ -1,5 +1,6 @@
 from enum import Enum
-from Trees import NodeType, BinaryConstraintTreeNode
+from .Trees import NodeType, BinaryConstraintTreeNode
+from typing import List
 
 class GraphNodeType(Enum):
     START = "START"
@@ -14,4 +15,5 @@ class ConstraintGraphNode:
         self.next: ConstraintGraphNode | None = None
         self.type: NodeType = NodeType.LITERAL
         self.graphNodeType: GraphNodeType = GraphNodeType.INTERNAL
-        self.guardSet: list[BinaryConstraintTreeNode] | None = None
+        self.guardSet: List[BinaryConstraintTreeNode|ConstraintGraphNode] = []
+        self.children: List[ConstraintGraphNode] =[]
