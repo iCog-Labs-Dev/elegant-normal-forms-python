@@ -34,3 +34,20 @@ class ConstraintTreeNode:
         self.type: NodeType = NodeType.LITERAL
         self.children: list[BinaryConstraintTreeNode] = []
         self.guardSet: list[BinaryConstraintTreeNode] | None = None
+
+def compareBinaryConstraintTreeNode(node1: BinaryConstraintTreeNode, node2: BinaryConstraintTreeNode):
+    return node1.value == node2.value and node1.constraint == node2.constraint
+
+def findAndRemoveChild(children: list[BinaryConstraintTreeNode], child: BinaryConstraintTreeNode) -> list[BinaryConstraintTreeNode]:
+    if len(children) == 0:
+        return []
+
+    firstChild = children[0]
+    if compareBinaryConstraintTreeNode(firstChild, child):
+        return children[1:]
+    elif len(children) > 0:
+        acc = findAndRemoveChild(children[1:], child)
+        acc.append(firstChild)
+        return acc
+    else:
+        return []
