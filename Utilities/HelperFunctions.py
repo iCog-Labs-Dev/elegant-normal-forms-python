@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, List
 from DataStructures.Trees import (
     BinaryConstraintTreeNode,
     BinaryExpressionTreeNode,
@@ -7,7 +7,9 @@ from DataStructures.Trees import (
 
 
 def print_tree(
-    node: Union[BinaryConstraintTreeNode, BinaryExpressionTreeNode, None], level=0, side=""
+    node: Union[BinaryConstraintTreeNode, BinaryExpressionTreeNode, None],
+    level=0,
+    side="",
 ):
     constraint = ""
     if type(node) == BinaryConstraintTreeNode and node.type == NodeType.LITERAL:
@@ -17,10 +19,10 @@ def print_tree(
         return
     print("    " * level + f"[{side}{level}]", f"{constraint}{node.value}")
 
-    if(node.left is not None):
+    if node.left is not None:
         print_tree(node.left, level + 1, "L")
 
-    if(node.right is not None):
+    if node.right is not None:
         print_tree(node.right, level + 1, "R")
 
 
@@ -39,3 +41,33 @@ def eval(node: BinaryConstraintTreeNode) -> Union[bool, None]:
                 return not eval(node.right)
         case _:
             return node.constraint
+
+
+def union(list1: List, list2: List) -> List:
+    if not list1:
+        return list2
+    elif list1[0] in list2:
+        return union(list1[1:], list2)
+    else:
+        return [list1[0]] + union(list1[1:], list2)
+
+
+def intersection(list1: List, list2: List) -> List:
+    if not list1 or not list2:
+        return []
+    element = list1[0]
+
+    if element in list2:
+        return [element] + intersection(list1[1:], list2)
+    else:
+        return intersection(list1[1:], list2)
+
+
+def difference(list1: List, list2: List) -> List:
+    if not list1:
+        return []
+    element = list1[0]
+
+    if element in list2:
+        return difference(list1[1:], list2)
+    return [element] + difference(list1[1:], list2)
