@@ -5,6 +5,20 @@ from DataStructures.Trees import (
     TreeNode
 )
 
+def print_constraint_tree(node: TreeNode, level=0, side = ""):
+    constraint = ""
+
+    if node.type == NodeType.LITERAL:
+        constraint = f"{'+' if node.constraint else '-'}"
+
+    if node is None:
+        return
+
+    print("    " * level + f"[{side}{level}]", f"{constraint}{node.value}")
+
+    if node.children:
+        map(lambda child: print_constraint_tree(child, level + 1, "CH1-"), node.children if node.children else [])
+        print_tree(node.left, level + 1, "L")
 
 def print_tree(
     node: Union[TreeNode, BinaryExpressionTreeNode, None], level=0, side=""
