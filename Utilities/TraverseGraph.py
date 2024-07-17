@@ -1,6 +1,6 @@
 from DataStructures.Graph import ConstraintGraphNode,GraphNodeType,NodeType
 from .HelperFunctions import isConsistent,union
-from typing import List,Union,Any
+from typing import List,Union,Any,Set
 
 from DataStructures.Trees import BinaryConstraintTreeNode
 
@@ -31,7 +31,8 @@ def traverseGraph(
         selectionSet.append(incomingSet)
         print("This is the selection set", selectionSet)
     return selectionSet
-            
+
+        
         
    
                 
