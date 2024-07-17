@@ -1,4 +1,4 @@
-from Node import Node
+from alternative_implementation.Node import Node
 
 def gather_junctors(current_node:Node, parent_node:Node):
     match current_node.node_type:

@@ -1,4 +1,4 @@
-from Node import Node
+from .Node import Node
 # from typing import Boolean
 def propagate_truth_value(curr_node:Node,parent_node:Node) -> Node:
     match curr_node.node_type:
