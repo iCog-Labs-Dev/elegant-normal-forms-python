@@ -24,9 +24,17 @@ class TreeNode:
         self.left: TreeNode | None = None
         self.right: TreeNode | None = None
         self.constraint: bool = constraint
-        self.guardSet: list[TreeNode] | None = None
-        self.children: list[TreeNode] | None = None 
+        self.guardSet: list[TreeNode] | None = []
+        self.children: list[TreeNode] | None = []
         self.type: NodeType = NodeType.LITERAL
+    def __eq__(self, other):
+        if self.value == other.value and self.constraint == other.constrant:
+            return True
+        return False
+    def __str__(self):
+        return f'({self.value},{self.constraint})'
+    def __repr__(self):
+        return f'({self.value},{self.constraint})'
 
 
 def findAndRemoveChild(children: list[TreeNode], child: TreeNode) -> list[TreeNode]:
