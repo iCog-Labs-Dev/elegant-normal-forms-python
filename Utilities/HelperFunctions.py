@@ -43,10 +43,32 @@ def eval(node: BinaryConstraintTreeNode) -> Union[bool, None]:
             return node.constraint
 
 
-def union(list1: List, list2: List) -> List:
+def compareBCTNode(n1: BinaryConstraintTreeNode, n2: BinaryConstraintTreeNode) -> bool:
+    return n1.value == n2.value and n1.constraint == n2.constraint
+
+
+def find_object(
+    objs_list: List[BinaryConstraintTreeNode],
+    instance: BinaryConstraintTreeNode,
+    index=0,
+) -> bool:
+    if index == len(objs_list):
+        return False
+    elif (
+        objs_list[index].value == instance.value
+        and objs_list[index].constraint == instance.constraint
+    ):
+        return True
+    else:
+        return find_object(objs_list, instance, index + 1)
+
+
+def union(
+    list1: List[BinaryConstraintTreeNode], list2: List[BinaryConstraintTreeNode]
+) -> List[BinaryConstraintTreeNode]:
     if not list1:
         return list2
-    elif list1[0] in list2:
+    elif find_object(list2, list1[0]):
         return union(list1[1:], list2)
     else:
         return [list1[0]] + union(list1[1:], list2)
@@ -57,7 +79,7 @@ def intersection(list1: List, list2: List) -> List:
         return []
     element = list1[0]
 
-    if element in list2:
+    if find_object(list2, element):
         return [element] + intersection(list1[1:], list2)
     else:
         return intersection(list1[1:], list2)
@@ -68,6 +90,6 @@ def difference(list1: List, list2: List) -> List:
         return []
     element = list1[0]
 
-    if element in list2:
+    if find_object(list2, element):
         return difference(list1[1:], list2)
     return [element] + difference(list1[1:], list2)
