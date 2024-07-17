@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, List
 from DataStructures.Trees import (
     BinaryExpressionTreeNode,
     NodeType,
@@ -17,10 +17,10 @@ def print_tree(
         return
     print("    " * level + f"[{side}{level}]", f"{constraint}{node.value}")
 
-    if(node.left is not None):
+    if node.left is not None:
         print_tree(node.left, level + 1, "L")
 
-    if(node.right is not None):
+    if node.right is not None:
         print_tree(node.right, level + 1, "R")
 
 
@@ -39,3 +39,59 @@ def eval(node: TreeNode) -> Union[bool, None]:
                 return not eval(node.right)
         case _:
             return node.constraint
+
+
+def compareBCTNode(n1: TreeNode, n2: TreeNode) -> bool:
+    return n1.value == n2.value and n1.constraint == n2.constraint
+
+
+def find_object(
+    objs_list: List[TreeNode],
+    instance: TreeNode,
+    index=0,
+) -> bool:
+    if index == len(objs_list):
+        return False
+    elif (
+        objs_list[index].value == instance.value
+        and objs_list[index].constraint == instance.constraint
+    ):
+        return True
+    else:
+        return find_object(objs_list, instance, index + 1)
+
+
+def union(
+    list1: List[TreeNode], list2: List[TreeNode]
+) -> List[TreeNode]:
+    if not list1:
+        return list2
+    elif find_object(list2, list1[0]):
+        return union(list1[1:], list2)
+    else:
+        return [list1[0]] + union(list1[1:], list2)
+
+
+def intersection(
+    list1: List[TreeNode], list2: List[TreeNode]
+) -> List[TreeNode]:
+    if not list1 or not list2:
+        return []
+    element = list1[0]
+
+    if find_object(list2, element):
+        return [element] + intersection(list1[1:], list2)
+    else:
+        return intersection(list1[1:], list2)
+
+
+def difference(
+    list1: List[TreeNode], list2: List[TreeNode]
+) -> List[TreeNode]:
+    if not list1:
+        return []
+    element = list1[0]
+
+    if find_object(list2, element):
+        return difference(list1[1:], list2)
+    return [element] + difference(list1[1:], list2)
