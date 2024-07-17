@@ -20,6 +20,8 @@ test_data2 = [ex_a,ex_c,ex_d,ex_e]
 print(isConsistent(test_data))
 print(isConsistent(test_data2))
 print("The consistency is finished")
+print(isConsistent([]))
+print(isConsistent([ex_a]))
 # g_exa = ConstraintGraphNode()
 # g_exa.value = 'first'
 
@@ -46,9 +48,8 @@ print("The consistency is finished")
 start_node = ConstraintGraphNode()
 head_or = ConstraintGraphNode()
 start_node.graphNodeType = GraphNodeType.START
-or_node = ConstraintGraphNode()
-or_node.graphNodeType = GraphNodeType.INTERNAL
-or_node.type = NodeType.OR
+head_or.graphNodeType = GraphNodeType.INTERNAL
+head_or.type = NodeType.OR
 c = ConstraintGraphNode()
 d = ConstraintGraphNode()
 c.value = 'C'
