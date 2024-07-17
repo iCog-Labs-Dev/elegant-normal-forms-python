@@ -102,18 +102,15 @@ def intersection(
         return intersection(list1[1:], list2)
 
 
-def difference(
-    list1: List[TreeNode], list2: List[TreeNode]
-) -> List[TreeNode]:
+def setDifference(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode] :
     if not list1:
         return []
     element = list1[0]
 
     if find_object(list2, element):
-        return difference(list1[1:], list2)
-    return [element] + difference(list1[1:], list2)
+        return setDifference(list1[1:], list2)
 
-
+    return [element] + setDifference(list1[1:], list2)
 
 # def union(list1: List[Any], list2: List[Any]) -> List[Any]:
 #     if not list2:
@@ -122,20 +119,6 @@ def difference(
 #         return union(list1 + [list2[0]], list2[1:])
 #     else:
 #         return union(list1, list2[1:])
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
 #     match node.value:
 #         case "AND":
 #             if node.left is not None and node.right is not None:
@@ -148,4 +131,3 @@ def difference(
 #                 return not eval(node.right)
 #         case _:
 #             return node.constraint
-

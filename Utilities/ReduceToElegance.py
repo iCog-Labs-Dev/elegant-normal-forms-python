@@ -14,8 +14,6 @@ def iterator(previousGuardSet: list[TreeNode], current: TreeNode , dominantSet: 
     if current.guardSet:
         handleSet = union(dominantSet, current.guardSet)
 
-        
-
 def reduceToElegance(current: TreeNode, dominantSet: list[TreeNode], commandSet: list[TreeNode]):
     match current.type:
         case NodeType.AND:
