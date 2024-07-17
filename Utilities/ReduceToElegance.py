@@ -26,16 +26,15 @@ def compareSets(set1: list[TreeNode], set2: list[TreeNode], currentIndex = 0) ->
     else:
         set2 = findAndRemoveChild(set2, currentElement)
         return compareSets(set1[1:], set2, currentIndex + 1)
-    
 
-def commandSetIterator(children: List[TreeNode]):
+def commandSetIterator(children: List[TreeNode], localCommandSet: List[TreeNode]):
     if children == []:
-        return children
+        return localCommandSet 
     else:
-       if children[0].children == [] and len(children[0].guardSet if children[0].guardSet else []) == 1:
-           return [children[0]] + commandSetIterator(children[1:])
+       if children[0].children == [] and len(children[0].guardSet if children[0].guardSet else []) == 1 and children and children[0].type == NodeType.AND:
+            return union(children[0].guardSet if children[0].guardSet else [], commandSetIterator(children[1:], localCommandSet))
        else:
-           return commandSetIterator(children[1:])
+        return commandSetIterator(children[1:], localCommandSet)
   
 def containsTerminalAndNode(children: list[TreeNode]) -> bool:
     if len(children) == 0:
@@ -128,8 +127,7 @@ def andSubTreeElegance(child: TreeNode , current: TreeNode, handleSet: list[Tree
 
 def orSubTreeIterator(child: TreeNode, remainingChildren: list[TreeNode], currentNode: TreeNode, dominantSet: list[TreeNode], commandSet: list[TreeNode]):
     localCommandSet = commandSet
-
-    #TODO: construct local command set here
+    localCommandSet = commandSetIterator(remainingChildren, localCommandSet)
 
     action = orSubTreeElegance(child, currentNode, dominantSet, localCommandSet)
 
