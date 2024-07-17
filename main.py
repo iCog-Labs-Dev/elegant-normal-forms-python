@@ -6,6 +6,7 @@ from Utilities.HelperFunctions import isConsistent,union
 from DataStructures.Trees import *
 from DataStructures.Graphs import *
 from Utilities.TraverseGraph import *
+#from Utilities.ReduceToElegance import commandSetIterator
 ex_a = BinaryConstraintTreeNode("x")
 ex_b = BinaryConstraintTreeNode("x")
 ex_c = BinaryConstraintTreeNode("y")

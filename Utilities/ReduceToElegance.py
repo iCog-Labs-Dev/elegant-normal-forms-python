@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Union,List
 from DataStructures.Trees import TreeNode, NodeType, findAndRemoveChild
 from Utilities.HelperFunctions import find_object, intersection, setDifference, union, isConsistent
 
@@ -27,6 +28,15 @@ def compareSets(set1: list[TreeNode], set2: list[TreeNode], currentIndex = 0) ->
         return compareSets(set1[1:], set2, currentIndex + 1)
     
 
+def commandSetIterator(children: List[TreeNode]):
+    if children == []:
+        return children
+    else:
+       if children[0].children == [] and len(children[0].guardSet if children[0].guardSet else []) == 1:
+           return [children[0]] + commandSetIterator(children[1:])
+       else:
+           return commandSetIterator(children[1:])
+  
 def containsTerminalAndNode(children: list[TreeNode]) -> bool:
     if len(children) == 0:
         return False
@@ -175,7 +185,13 @@ def iterator(current: TreeNode , dominantSet: list[TreeNode], commandSet: list[T
     return None
 
 
-def reduceToElegance(current: TreeNode, dominantSet: list[TreeNode], commandSet: list[TreeNode]) :
+def reduceToElegance(
+    current: Union[TreeNode,None], 
+    dominantSet: list[TreeNode], 
+    commandSet: list[TreeNode]
+    ) :
+    if current == None:
+        return 
     match current.type:
         case NodeType.AND:
             if current.guardSet:
