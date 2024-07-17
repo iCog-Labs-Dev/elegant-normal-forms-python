@@ -1,6 +1,6 @@
 from enum import Enum
 from DataStructures.Trees import TreeNode, NodeType, findAndRemoveChild
-from Utilities.HelperFunctions import intersection, setDifference, union, isConsistent
+from Utilities.HelperFunctions import find_object, intersection, setDifference, union, isConsistent
 
 class ReductionSignal(Enum):
     DELETE = "DELETE"
@@ -10,6 +10,22 @@ class ReductionSignal(Enum):
 class IterationSignal(Enum):
     ADVANCE = "ADVANCE"
     RESET = "RESET"
+
+def compareGuardSets(set1: list[TreeNode], set2: list[TreeNode], currentIndex = 0) -> bool:
+    if not (len(set1) == len(set2)):
+        return False
+
+    if currentIndex == len(set1):
+        # This means the recursion finished with out finding a mismatch between the two
+        return True
+
+    currentElement = set1[0]
+    if not find_object(set2, currentElement):
+        return False
+    else:
+        set2 = findAndRemoveChild(set2, currentElement)
+        return compareGuardSets(set1[1:], set2, currentIndex + 1)
+    
 
 def containsTerminalAndNode(children: list[TreeNode]) -> bool:
     if len(children) == 0:
@@ -29,6 +45,7 @@ def applyOrCut(child: TreeNode, current: TreeNode):
             grandChild = child.children[0]
             current.guardSet = union(current.guardSet if current.guardSet else [], grandChild.guardSet if grandChild.guardSet else [])
             current.children = grandChild.children if grandChild.children else [] + current.children if current.children else []
+            current.children = findAndRemoveChild(current.children, grandChild) 
 
 def applyAndCut(grandChild: TreeNode, child: TreeNode):
     hasOneChild = grandChild.children and len(grandChild.children) == 1 
@@ -83,17 +100,45 @@ def subTreeElegance(child: TreeNode , current: TreeNode, handleSet: list[TreeNod
                 else:
                     return IterationSignal.RESET
 
-    map(lambda child: applyOrCut(child, current), current.children if current.children else [])
+def subTreeIterator(children:list[TreeNode], currentNode: TreeNode, handleSet: list[TreeNode], commandSet: list[TreeNode], currentChildIndex = 0 ):
+    currentChild = children[currentChildIndex]
+    action = subTreeElegance(currentChild, currentNode, handleSet, commandSet)
 
-def iterator(previousGuardSet: list[TreeNode], current: TreeNode , dominantSet: list[TreeNode], commandSet: list[TreeNode]):
+    match action:
+        case IterationSignal.ADVANCE :
+            if currentChildIndex + 1 < len(children):
+                return subTreeIterator(children, currentNode, handleSet, commandSet, currentChildIndex + 1)
+            else:
+                return None
+        case IterationSignal.RESET:
+            return subTreeIterator(children, currentNode, handleSet, commandSet, 0)
+        case _:
+            return action
+    
+
+def iterator(current: TreeNode , dominantSet: list[TreeNode], commandSet: list[TreeNode]):
     previousGuardSet = current.guardSet if current.guardSet is not None else []
     handleSet = []
     
+    # Determine if current is a site for inconsistent Handle
     if not isConsistent(handleSet):
         return ReductionSignal.DELETE
     
-    if current.children:
-        current.children
+    # Reduce each child's subtree to relative elegance
+    outcome = subTreeIterator(current.children if current.children else [], current, handleSet, commandSet)
+
+    # The subtree iterator returns a value different from None only if ReductionSignal has been found during the processing. If not it will always return None in the end
+    if outcome:
+        return outcome
+
+    # Apply OR-CUT to each child of current, if possible
+    map(lambda child: applyOrCut(child, current), current.children if current.children else [])
+
+    if not compareGuardSets(previousGuardSet, current.guardSet if current.guardSet else []):
+        return iterator(current, dominantSet, commandSet)
+    
+    return None
+
 
 def reduceToElegance(current: TreeNode, dominantSet: list[TreeNode], commandSet: list[TreeNode]) :
     match current.type:
