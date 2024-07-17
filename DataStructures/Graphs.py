@@ -12,3 +12,7 @@ class ConstraintGraphNode:
         self.next: ConstraintGraphNode | None = None
         self.type: NodeType = NodeType.LITERAL
         self.graphNodeType: GraphNodeType = GraphNodeType.INTERNAL
+    def __repr__(self):
+        return f'{self.value}, {self.type}'
+    def __str__(self):
+        return f'{self.value}, {self.type}'

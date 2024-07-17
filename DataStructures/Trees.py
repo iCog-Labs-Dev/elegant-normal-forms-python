@@ -9,6 +9,7 @@ class NodeType(Enum):
     ROOT = "ROOT"
 
 
+
 class BinaryExpressionTreeNode:
     def __init__(self, value: str):
         self.left: BinaryExpressionTreeNode | None = None
