@@ -17,33 +17,23 @@ class BinaryExpressionTreeNode:
         self.type: NodeType = NodeType.LITERAL
 
 
-class BinaryConstraintTreeNode:
+class TreeNode:
     def __init__(self, value: str, constraint: bool = False):
-        self.left: BinaryConstraintTreeNode | None = None
-        self.right: BinaryConstraintTreeNode | None = None
         self.value: str = value
+        self.left: TreeNode | None = None
+        self.right: TreeNode | None = None
         self.constraint: bool = constraint
-        self.guardSet: list[BinaryConstraintTreeNode] | None = None
+        self.guardSet: list[TreeNode] | None = None
+        self.children: list[TreeNode] | None = None 
         self.type: NodeType = NodeType.LITERAL
 
 
-class ConstraintTreeNode:
-    def __init__(self, value:str, constraint: bool = False):
-        self.value: str = value
-        self.constraint: bool = constraint
-        self.type: NodeType = NodeType.LITERAL
-        self.children: list[BinaryConstraintTreeNode] = []
-        self.guardSet: list[BinaryConstraintTreeNode] | None = None
-
-def compareBinaryConstraintTreeNode(node1: BinaryConstraintTreeNode, node2: BinaryConstraintTreeNode):
-    return node1.value == node2.value and node1.constraint == node2.constraint
-
-def findAndRemoveChild(children: list[BinaryConstraintTreeNode], child: BinaryConstraintTreeNode) -> list[BinaryConstraintTreeNode]:
+def findAndRemoveChild(children: list[TreeNode], child: TreeNode) -> list[TreeNode]:
     if len(children) == 0:
         return []
 
     firstChild = children[0]
-    if compareBinaryConstraintTreeNode(firstChild, child):
+    if firstChild == child:
         return children[1:]
     elif len(children) > 0:
         acc = findAndRemoveChild(children[1:], child)

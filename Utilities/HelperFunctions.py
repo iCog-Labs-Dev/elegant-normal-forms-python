@@ -1,16 +1,16 @@
 from typing import Union
 from DataStructures.Trees import (
-    BinaryConstraintTreeNode,
     BinaryExpressionTreeNode,
     NodeType,
+    TreeNode
 )
 
 
 def print_tree(
-    node: Union[BinaryConstraintTreeNode, BinaryExpressionTreeNode, None], level=0, side=""
+    node: Union[TreeNode, BinaryExpressionTreeNode, None], level=0, side=""
 ):
     constraint = ""
-    if type(node) == BinaryConstraintTreeNode and node.type == NodeType.LITERAL:
+    if type(node) == TreeNode and node.type == NodeType.LITERAL:
         constraint = f"{'+' if node.constraint else '-'}"
 
     if node is None:
@@ -24,7 +24,7 @@ def print_tree(
         print_tree(node.right, level + 1, "R")
 
 
-def eval(node: BinaryConstraintTreeNode) -> Union[bool, None]:
+def eval(node: TreeNode) -> Union[bool, None]:
     if node is None:
         return
     match node.value:
