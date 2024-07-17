@@ -1,4 +1,4 @@
-from typing import Union, List, Any
+from typing import Union, List 
 from DataStructures.Trees import (
     BinaryExpressionTreeNode,
     NodeType,
