@@ -1,6 +1,6 @@
 from DataStructures.Graph import ConstraintGraphNode,GraphNodeType,NodeType
 from .HelperFunctions import isConsistent,union
-from typing import List,Union,Any,Set
+from typing import List,Union,Any
 
 from DataStructures.Trees import BinaryConstraintTreeNode
 
