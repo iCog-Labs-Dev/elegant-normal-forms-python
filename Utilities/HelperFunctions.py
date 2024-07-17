@@ -74,7 +74,9 @@ def union(
         return [list1[0]] + union(list1[1:], list2)
 
 
-def intersection(list1: List, list2: List) -> List:
+def intersection(
+    list1: List[BinaryConstraintTreeNode], list2: List[BinaryConstraintTreeNode]
+) -> List[BinaryConstraintTreeNode]:
     if not list1 or not list2:
         return []
     element = list1[0]
@@ -85,7 +87,9 @@ def intersection(list1: List, list2: List) -> List:
         return intersection(list1[1:], list2)
 
 
-def difference(list1: List, list2: List) -> List:
+def difference(
+    list1: List[BinaryConstraintTreeNode], list2: List[BinaryConstraintTreeNode]
+) -> List[BinaryConstraintTreeNode]:
     if not list1:
         return []
     element = list1[0]
