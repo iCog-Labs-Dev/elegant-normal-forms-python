@@ -4,7 +4,7 @@ from Utilities.HelperFunctions import print_tree
 from Utilities.PropagateTruthValue import propagateTruthValue
 from Utilities.HelperFunctions import isConsistent,union
 from DataStructures.Trees import *
-from DataStructures.Graph import *
+from DataStructures.Graphs import *
 from Utilities.TraverseGraph import *
 ex_a = BinaryConstraintTreeNode("x")
 ex_b = BinaryConstraintTreeNode("x")

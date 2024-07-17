@@ -82,3 +82,15 @@ def union(list1: List[Any], list2: List[Any]) -> List[Any]:
     
     
     
+    match node.value:
+        case "AND":
+            if node.left is not None and node.right is not None:
+                return eval(node.left) and eval(node.right)
+        case "OR":
+            if node.left is not None and node.right is not None:
+                return eval(node.left) or eval(node.right)
+        case "NOT":
+            if node.right is not None:
+                return not eval(node.right)
+        case _:
+            return node.constraint

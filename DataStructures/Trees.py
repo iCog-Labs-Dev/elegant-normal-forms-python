@@ -24,7 +24,7 @@ class BinaryConstraintTreeNode:
         self.right: BinaryConstraintTreeNode | None = None
         self.value: str = value
         self.constraint: bool = constraint
-        self.guardSet: list[bool] | None = None
+        self.guardSet: list[BinaryConstraintTreeNode] | None = None
         self.type: NodeType = NodeType.LITERAL
 
 
