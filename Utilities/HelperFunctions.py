@@ -5,19 +5,34 @@ from DataStructures.Trees import BinaryExpressionTreeNode, NodeType, TreeNode
 def print_constraint_tree(node: TreeNode, level=0, side=""):
     constraint = ""
 
-    if node.type == NodeType.LITERAL:
+    if node.value not in ["AND", "OR"]:
         constraint = f"{'+' if node.constraint else '-'}"
 
     if node is None:
         return
 
-    print("    " * level + f"[{side}{level}]", f"{constraint}{node.value}")
+    if node.type == NodeType.AND:
+        print("    " * level + f"[{side}{level}]", end="")
+        print("[", end="")
+        list(map(lambda child: print_constraint(child), node.guardSet))
+        print("]")
+    else:
+        print("    " * level + f"[{side}{level}]", f"{constraint}{node.value}")
 
-    if node.children:
+    list(
         map(
-            lambda child: print_constraint_tree(child, level + 1, "CH1-"), node.children
+            lambda child: print_constraint_tree(child, level + 1, "CHL"),
+            node.children,
         )
-        print_tree(node.left, level + 1, "L")
+    )
+
+
+def print_constraint(node: TreeNode):
+    if node.type not in ["AND", "OR"]:
+        constraint = "+" if node.constraint else "-"
+        print(f"{constraint}{node.value}", end=" ")
+    else:
+        print(node.value, end="")
 
 
 def print_tree(node: Union[TreeNode, BinaryExpressionTreeNode, None], level=0, side=""):
