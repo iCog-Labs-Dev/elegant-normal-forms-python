@@ -23,8 +23,8 @@ class TreeNode:
         self.left: TreeNode | None = None
         self.right: TreeNode | None = None
         self.constraint: bool = constraint
-        self.guardSet: list[TreeNode] | None = []
-        self.children: list[TreeNode] | None = []
+        self.guardSet: list[TreeNode] = []
+        self.children: list[TreeNode] = []
         self.type: NodeType = NodeType.LITERAL
 
     # def __eq__(self, other: TreeNode):

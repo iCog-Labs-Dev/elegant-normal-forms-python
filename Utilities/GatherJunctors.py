@@ -3,7 +3,7 @@ from DataStructures.Trees import *
 
 
 def gatherJunctors(
-    currentNode: TreeNode, centerNode:TreeNode 
+    currentNode: TreeNode, centerNode: TreeNode
 ) -> Union[TreeNode, None]:
 
     if currentNode.type == NodeType.ROOT:
@@ -24,8 +24,7 @@ def gatherJunctors(
                 gatherJunctors(currentNode.right, centerNode)
 
         else:
-            if centerNode.children:
-                centerNode.children.append(currentNode)
+            centerNode.children.append(currentNode)
 
         if currentNode.type == NodeType.AND:
             currentNode.guardSet = []
@@ -33,18 +32,10 @@ def gatherJunctors(
         return None
     elif currentNode.type == NodeType.LITERAL:
         if centerNode.type == NodeType.AND:
-            centerNode.guardSet = (
-                [] if centerNode.guardSet is None else centerNode.guardSet
-            )
-
-            # Just to make the intellsense happy
-            if centerNode.guardSet is not None:
-                centerNode.guardSet.append(currentNode)
+            centerNode.guardSet.append(currentNode)
 
         else:
-            if centerNode.children:
-                currentNode.type = NodeType.AND
-                currentNode.guardSet = [currentNode]
-                centerNode.children.append(currentNode)
+            currentNode.type = NodeType.AND
+            currentNode.guardSet = [currentNode]
+            centerNode.children.append(currentNode)
     return None
-
