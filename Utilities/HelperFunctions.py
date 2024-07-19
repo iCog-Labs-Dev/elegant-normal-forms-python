@@ -13,6 +13,7 @@ def print_constraint_tree(node: TreeNode, level=0, side=""):
 
     if node.type == NodeType.AND:
         print("    " * level + f"[{side}{level}]", end="")
+        print(" AND", end="")
         print("[", end="")
         list(map(lambda child: print_constraint(child), node.guardSet))
         print("]")
