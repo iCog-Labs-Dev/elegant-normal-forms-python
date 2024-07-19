@@ -95,7 +95,13 @@ from Utilities.ReduceToElegance import reduceToElegance
 # input = "&(B, !(|(C, |(A, &(&(B, &(C, D)), A)))))"
 # input = "&(B, !(|(C, |(A, &(!(B), A)))))"
 # input = "|(&(A, |(!(B), !(C))), D)"
-input = "|(!(A), A)"
+# input = "&(A, &(B, &(C, &(|(A, |(B, |(C, A))), &(B, &(&(A, A), !(A)))))))"
+# input = "!(&(A, B), &(A, B))"
+# input = "|(A, |(B, |(C, |(D, C))))"
+# input = "|(A, &(B, &(C, &(D, C))))"
+# input = "|(&(A, B), |(A, C))"
+# input = "|(|(!(A), &(A, &(B, C))), &(B, &(C, !(B))))"
+# input = "|(|(!(A), &(A, &(B, C))), &(C, &(B, !(B))))"
 
 tree = BuildTree(input)
 root = BinaryExpressionTreeNode("Root")
