@@ -95,7 +95,7 @@ def subTreeElegance(child: TreeNode , current: TreeNode, handleSet: list[TreeNod
     map(lambda child: applyOrCut(child, current), current.children if current.children else [])
 
 def iterator(previousGuardSet: list[TreeNode], current: TreeNode , dominantSet: list[TreeNode], commandSet: list[TreeNode]):
-    previousGuardSet = current.guardSet if current.guardSet is not None else []
+    previousGuardSet = previousGuardSet
     handleSet = []
     
     if not isConsistent(handleSet):
