@@ -6,6 +6,7 @@ from Utilities.HelperFunctions import isConsistent,union
 from DataStructures.Trees import *
 from DataStructures.Graphs import *
 from Utilities.TraverseGraph import *
+#from Utilities.ReduceToElegance import commandSetIterator
 ex_a = BinaryConstraintTreeNode("x")
 ex_b = BinaryConstraintTreeNode("x")
 ex_c = BinaryConstraintTreeNode("y")
@@ -103,7 +104,7 @@ binaryConstraintTree = propagateTruthValue(root)
 print("Binary Constraint Tree finished")
 print_tree(binaryConstraintTree)
 
-constraintTree = ConstraintTreeNode("ROOT")
+constraintTree = TreeNode("ROOT")
 constraintTree.type = NodeType.ROOT
 
 if binaryConstraintTree is not None:
@@ -114,7 +115,9 @@ print("GuardSet: ")
 if constraintTree is not None and constraintTree.guardSet is not None:
     for gct in constraintTree.guardSet:
         print_tree(gct)
-    print("Children: ", len(constraintTree.children))
-
-    for bct in constraintTree.children:
-        print_tree(bct)
+    if constraintTree.children:
+        print("Children: ", len(constraintTree.children))
+    
+    if constraintTree.children is not None:
+        for bct in constraintTree.children:
+            print_tree(bct)

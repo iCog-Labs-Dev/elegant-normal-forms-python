@@ -5,8 +5,8 @@ from DataStructures.Trees import *
 def propagateTruthValue(
     currentNode: BinaryExpressionTreeNode,
     truthValue: bool = True,
-) -> Union[BinaryConstraintTreeNode, None]:
-    temporaryNode: BinaryConstraintTreeNode = BinaryConstraintTreeNode("")
+) -> Union[TreeNode, None]:
+    temporaryNode: TreeNode= TreeNode("")
 
     match currentNode.type:
         case NodeType.ROOT:

@@ -3,8 +3,8 @@ from DataStructures.Trees import *
 
 
 def gatherJunctors(
-    currentNode: BinaryConstraintTreeNode, centerNode: ConstraintTreeNode
-) -> Union[ConstraintTreeNode, None]:
+    currentNode: TreeNode, centerNode:TreeNode 
+) -> Union[TreeNode, None]:
 
     if currentNode.type == NodeType.ROOT:
         centerNode.type = NodeType.AND
@@ -24,7 +24,8 @@ def gatherJunctors(
                 gatherJunctors(currentNode.right, centerNode)
 
         else:
-            centerNode.children.append(currentNode)
+            if centerNode.children:
+                centerNode.children.append(currentNode)
 
         if currentNode.type == NodeType.AND:
             currentNode.guardSet = []
@@ -41,8 +42,9 @@ def gatherJunctors(
                 centerNode.guardSet.append(currentNode)
 
         else:
-            currentNode.type = NodeType.AND
-            currentNode.guardSet = [currentNode]
-            centerNode.children.append(currentNode)
+            if centerNode.children:
+                currentNode.type = NodeType.AND
+                currentNode.guardSet = [currentNode]
+                centerNode.children.append(currentNode)
     return None
 
