@@ -38,8 +38,8 @@ def gatherJunctors(
             currentNode.left = None
             currentNode.right = None
 
-        if currentNode.type == NodeType.AND:
-            currentNode.guardSet = []
+        # if currentNode.type == NodeType.AND:
+        #     currentNode.guardSet = []
 
         return None
     elif currentNode.type == NodeType.LITERAL:
