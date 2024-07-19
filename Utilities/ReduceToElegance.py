@@ -241,7 +241,7 @@ def iterator(
     current: TreeNode, dominantSet: list[TreeNode], commandSet: list[TreeNode]
 ):
     previousGuardSet = current.guardSet
-    handleSet = []
+    handleSet = union(dominantSet, current.guardSet)
 
     # Determine if current is a site for inconsistent Handle
     if not isConsistent(handleSet):
