@@ -148,20 +148,29 @@ def andSubTreeElegance(
             resultSet = intersections([], current.children)
             if len(resultSet) > 0:
                 current.guardSet = union(current.guardSet, resultSet)
-                map(
-                    lambda grandChild: computeGrandChildGuardSet(grandChild, resultSet),
-                    child.children,
+                list(
+                    map(
+                        lambda grandChild: computeGrandChildGuardSet(
+                            grandChild, resultSet
+                        ),
+                        child.children,
+                    )
                 )
-                map(
-                    lambda grandChild: applyAndCut(grandChild, child),
-                    child.children,
+                list(
+                    map(
+                        lambda grandChild: applyAndCut(grandChild, child),
+                        child.children,
+                    )
                 )
 
                 return IterationSignal.RESET
             else:
-                bools = map(
-                    lambda grandChild: applyAndCut(grandChild, child),
-                    child.children,
+                # Adding `list` here might not be necessary but just to be safe
+                bools = list(
+                    map(
+                        lambda grandChild: applyAndCut(grandChild, child),
+                        child.children,
+                    )
                 )
                 containsTerminalAndNode = any(bools)
 
@@ -246,7 +255,7 @@ def iterator(
         return outcome
 
     # Apply OR-CUT to each child of current, if possible
-    map(lambda child: applyOrCut(child, current), current.children)
+    list(map(lambda child: applyOrCut(child, current), current.children))
 
     if not compareSets(previousGuardSet, current.guardSet):
         return iterator(current, dominantSet, commandSet)
