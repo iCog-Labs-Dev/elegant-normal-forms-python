@@ -7,13 +7,16 @@ def gatherJunctors(
 ) -> Union[TreeNode, None]:
 
     if currentNode.type == NodeType.ROOT:
-        centerNode.type = NodeType.AND
-        centerNode.value = "AND"
-        centerNode.guardSet = []
+        currentNode.type = NodeType.AND
+        currentNode.value = "AND"
+        currentNode.guardSet = []
         if currentNode.right is not None:
-            gatherJunctors(currentNode.right, centerNode)
+            gatherJunctors(currentNode.right, currentNode)
 
-        return centerNode
+        currentNode.left = None
+        currentNode.right = None
+
+        return currentNode
 
     elif currentNode.type in [NodeType.OR, NodeType.AND]:
         if currentNode.type == centerNode.type:
@@ -26,8 +29,17 @@ def gatherJunctors(
         else:
             centerNode.children.append(currentNode)
 
-        if currentNode.type == NodeType.AND:
-            currentNode.guardSet = []
+            if currentNode.left:
+                gatherJunctors(currentNode.left, currentNode)
+
+            if currentNode.right:
+                gatherJunctors(currentNode.right, currentNode)
+
+            currentNode.left = None
+            currentNode.right = None
+
+        # if currentNode.type == NodeType.AND:
+        #     currentNode.guardSet = []
 
         return None
     elif currentNode.type == NodeType.LITERAL:

@@ -27,8 +27,6 @@ from Utilities.ReduceToElegance import reduceToElegance
 # print(isConsistent([]))
 # print(isConsistent([ex_a]))
 # g_exa = ConstraintGraphNode()
-# g_exa.value = 'first'
-
 # g_exa.graphNodeType = GraphNodeType.START
 # g_exb = ConstraintGraphNode()
 # g_exa.next = g_exb
@@ -93,7 +91,17 @@ from Utilities.ReduceToElegance import reduceToElegance
 # traverseGraph(node_start, incoming_set, selection_sets)
 # print(f"Final selection_sets: {selection_sets}")
 
-input = "&(B, !(|(C, |(A, &(!(B), A)))))"
+# input = "&(B, !(|(C, |(A, &(!(B), A)))))"
+# input = "&(B, !(|(C, |(A, &(&(B, &(C, D)), A)))))"
+# input = "&(B, !(|(C, |(A, &(!(B), A)))))"
+# input = "|(&(A, |(!(B), !(C))), D)"
+# input = "&(A, &(B, &(C, &(|(A, |(B, |(C, A))), &(B, &(&(A, A), !(A)))))))"
+# input = "!(&(A, B), &(A, B))"
+# input = "|(A, |(B, |(C, |(D, C))))"
+# input = "|(A, &(B, &(C, &(D, C))))"
+# input = "|(&(A, B), |(A, C))"
+# input = "|(|(!(A), &(A, &(B, C))), &(B, &(C, !(B))))"
+# input = "|(|(!(A), &(A, &(B, C))), &(C, &(B, !(B))))"
 
 tree = BuildTree(input)
 root = BinaryExpressionTreeNode("Root")
@@ -130,6 +138,9 @@ if constraintTree:
 
 
 lastAction = reduceToElegance(constraintTree, [], [])
+# If the last action returned is a DELETE, that means the whole tree is a contradiction. Will always return False
+# If the last action returned is a DISCONNECT, that means the whole tree is a tautology. Will always return True
+# If the last action returned is a KEEP, that means the algorithm tried to reduce the tree as much as possible
 print("Last action after reduction: ", lastAction)
 if constraintTree:
     print_constraint_tree(constraintTree)
