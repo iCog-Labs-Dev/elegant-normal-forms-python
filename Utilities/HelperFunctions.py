@@ -1,14 +1,42 @@
-from typing import Union, List 
-from DataStructures.Trees import (
-    BinaryExpressionTreeNode,
-    NodeType,
-    TreeNode
-)
+from typing import Union, List
+from DataStructures.Trees import BinaryExpressionTreeNode, NodeType, TreeNode
 
 
-def print_tree(
-    node: Union[TreeNode, BinaryExpressionTreeNode, None], level=0, side=""
-):
+def print_constraint_tree(node: TreeNode, level=0, side=""):
+    constraint = ""
+
+    if node.value not in ["AND", "OR"]:
+        constraint = f"{'+' if node.constraint else '-'}"
+
+    if node is None:
+        return
+
+    if node.type == NodeType.AND:
+        print("    " * level + f"[{side}{level}]", end="")
+        print(" AND", end="")
+        print("[", end="")
+        list(map(lambda child: print_constraint(child), node.guardSet))
+        print("]")
+    else:
+        print("    " * level + f"[{side}{level}]", f"{constraint}{node.value}")
+
+    list(
+        map(
+            lambda child: print_constraint_tree(child, level + 1, "CHL"),
+            node.children,
+        )
+    )
+
+
+def print_constraint(node: TreeNode):
+    if node.type not in ["AND", "OR"]:
+        constraint = "+" if node.constraint else "-"
+        print(f"{constraint}{node.value}", end=" ")
+    else:
+        print(node.value, end="")
+
+
+def print_tree(node: Union[TreeNode, BinaryExpressionTreeNode, None], level=0, side=""):
     constraint = ""
     if type(node) == TreeNode and node.type == NodeType.LITERAL:
         constraint = f"{'+' if node.constraint else '-'}"
@@ -38,25 +66,31 @@ def eval(node: TreeNode) -> Union[bool, None]:
             return not eval(node.right)
     else:
         return node.constraint
-    
-def isConsistentForSingleValue(first_val: TreeNode, toBeChecked: List[TreeNode]) -> bool:
+
+
+def isConsistentForSingleValue(
+    first_val: TreeNode, toBeChecked: List[TreeNode]
+) -> bool:
     if toBeChecked == []:
         return True
-    elif first_val.value == toBeChecked[0].value \
-    and first_val.constraint != toBeChecked[0].constraint:
+    elif (
+        first_val.value == toBeChecked[0].value
+        and first_val.constraint != toBeChecked[0].constraint
+    ):
         return False
     else:
         return isConsistentForSingleValue(first_val, toBeChecked[1:])
-    
+
+
 def isConsistent(toBeChecked):
     if toBeChecked == []:
         return True
     else:
-        if not(isConsistentForSingleValue(toBeChecked[0],toBeChecked[1:])):
+        if not (isConsistentForSingleValue(toBeChecked[0], toBeChecked[1:])):
             return False
         else:
             return isConsistent(toBeChecked[1:])
-        
+
 
 def compareBCTNode(n1: TreeNode, n2: TreeNode) -> bool:
     return n1.value == n2.value and n1.constraint == n2.constraint
@@ -78,9 +112,7 @@ def find_object(
         return find_object(objs_list, instance, index + 1)
 
 
-def union(
-    list1: List[TreeNode], list2: List[TreeNode]
-) -> List[TreeNode]:
+def union(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode]:
     if not list1:
         return list2
     elif find_object(list2, list1[0]):
@@ -89,9 +121,7 @@ def union(
         return [list1[0]] + union(list1[1:], list2)
 
 
-def intersection(
-    list1: List[TreeNode], list2: List[TreeNode]
-) -> List[TreeNode]:
+def intersection(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode]:
     if not list1 or not list2:
         return []
     element = list1[0]
@@ -102,7 +132,7 @@ def intersection(
         return intersection(list1[1:], list2)
 
 
-def setDifference(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode] :
+def setDifference(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode]:
     if not list1:
         return []
     element = list1[0]
@@ -111,6 +141,7 @@ def setDifference(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode
         return setDifference(list1[1:], list2)
 
     return [element] + setDifference(list1[1:], list2)
+
 
 # def union(list1: List[Any], list2: List[Any]) -> List[Any]:
 #     if not list2:
