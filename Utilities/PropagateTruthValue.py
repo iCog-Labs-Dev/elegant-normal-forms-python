@@ -6,6 +6,26 @@ def propagateTruthValue(
     currentNode: BinaryExpressionTreeNode,
     truthValue: bool = True,
 ) -> Union[TreeNode, None]:
+    """
+    Propagates a truth value through a binary expression tree and adjusts the tree based on the given truth value.
+
+    Parameters
+    ----------
+    currentNode : BinaryExpressionTreeNode
+        The current node in the binary expression tree from which to start propagation.
+    truthValue : bool, optional
+        The truth value to propagate, by default True.
+
+    Returns
+    -------
+    Union[TreeNode, None]
+        A new tree node with the propagated truth values, or None if the operation cannot be performed.
+    
+    Raises
+    ------
+    ValueError
+        If the current node type is not valid.
+    """
     temporaryNode: TreeNode= TreeNode("")
 
     match currentNode.type:
