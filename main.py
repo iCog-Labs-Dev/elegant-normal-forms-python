@@ -91,7 +91,7 @@ from Utilities.ReduceToElegance import reduceToElegance
 # traverseGraph(node_start, incoming_set, selection_sets)
 # print(f"Final selection_sets: {selection_sets}")
 
-input = "&(B, !(|(C, |(A, &(!(B), A)))))"
+input = "&(B, !(|(C, |(A, &(!(B), |(K,X))))))"
 # input = "&(B, !(|(C, |(A, &(&(B, &(C, D)), A)))))"
 # input = "&(B, !(|(C, |(A, &(!(B), A)))))"
 # input = "|(&(A, |(!(B), !(C))), D)"
