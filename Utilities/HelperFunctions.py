@@ -101,15 +101,34 @@ def find_object(
     instance: TreeNode,
     index=0,
 ) -> bool:
-    if index == len(objs_list):
+    """
+    Recursively checks if a given TreeNode instance exists within a list of TreeNode objects.
+
+    Parameters
+    ----------
+    objs_list : List[TreeNode]
+        A list of TreeNode objects to search within.
+    
+    instance : TreeNode
+        The TreeNode instance to search for within objs_list.
+    
+    index : int, optional
+        The current index in objs_list being checked (default is 0).
+
+    Returns
+    -------
+    bool
+        True if the instance is found in objs_list (based on value and constraint), False otherwise.
+    """
+    if index == len(objs_list):# no more objs_list(list of tree node) to compare with instance tree node
         return False
-    elif (
+    elif ( # compare objs_list value and constraint with instance value and constraint, if both are equal return true
         objs_list[index].value == instance.value
         and objs_list[index].constraint == instance.constraint
     ):
         return True
     else:
-        return find_object(objs_list, instance, index + 1)
+        return find_object(objs_list, instance, index + 1) # if one of them is not equal continue to the next element of the objs_list
 
 
 def union(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode]:
@@ -133,14 +152,32 @@ def intersection(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode]
 
 
 def setDifference(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode]:
-    if not list1:
+    """
+    Computes the set difference between two lists of TreeNode objects.
+    Returns elements from list1 that are not found in list2.
+
+    Parameters
+    ----------
+    list1 : List[TreeNode]
+        The first list of TreeNode objects.
+    
+    list2 : List[TreeNode]
+        The second list of TreeNode objects to compare against.
+
+    Returns
+    -------
+    List[TreeNode]
+        A list of TreeNode objects from list1 that are not found in list2 (based on value and constraint).
+    """
+    if not list1: # if list1 is empty it returns empty list
         return []
-    element = list1[0]
+    element = list1[0] # taking the first element of the list
 
-    if find_object(list2, element):
-        return setDifference(list1[1:], list2)
+    if find_object(list2, element): # check is there is constraint and value similarity between element and list2
+        return setDifference(list1[1:], list2) # if yes go to the next element recursively
 
-    return [element] + setDifference(list1[1:], list2)
+    return [element] + setDifference(list1[1:], list2) # if there is no similarity either in constraint or value 
+                                                       # we add that element and go to the next elelement of list1
 
 
 # def union(list1: List[Any], list2: List[Any]) -> List[Any]:
