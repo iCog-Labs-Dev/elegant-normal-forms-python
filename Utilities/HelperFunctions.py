@@ -132,6 +132,35 @@ def find_object(
 
 
 def union(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode]:
+    """
+    Creates a union of two lists of TreeNode objects, ensuring that the resulting list
+    contains unique TreeNode instances based on their value and constraint attributes.
+
+    The function recursively checks each TreeNode in list1 to see if it is already present
+    in list2. If it is not present, it adds the TreeNode to the result. The final result
+    is a list that contains all unique TreeNode instances from both lists.
+
+    Parameters
+    ----------
+    list1 : List[TreeNode]
+        The first list of TreeNode objects to union with list2.
+    
+    list2 : List[TreeNode]
+        The second list of TreeNode objects to union with list1.
+    
+    Returns
+    -------
+    List[TreeNode]
+        A list of TreeNode objects that represents the union of list1 and list2, 
+        containing only unique elements based on value and constraint.
+    
+    Notes
+    -----
+    - This function assumes that each TreeNode object has `value` and `constraint` attributes.
+    - The uniqueness of a TreeNode is determined by comparing these two attributes.
+    - The order of the resulting list preserves the order from list1, followed by elements
+      from list2 that were not present in list1.
+    """
     if not list1:
         return list2
     elif find_object(list2, list1[0]):
