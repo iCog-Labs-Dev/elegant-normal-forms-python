@@ -18,11 +18,11 @@ class TestBuildTree(unittest.TestCase):
         input_str = "|(&(A, B), |(A, C))"
         result = BuildTree(input_str)
         
-        expected_tree = BinaryExpressionTreeNode("|")
-        expected_tree.left = BinaryExpressionTreeNode("&")
+        expected_tree = BinaryExpressionTreeNode("OR")
+        expected_tree.left = BinaryExpressionTreeNode("AND")
         expected_tree.left.left = BinaryExpressionTreeNode("A")
         expected_tree.left.right = BinaryExpressionTreeNode("B")
-        expected_tree.right = BinaryExpressionTreeNode("|")
+        expected_tree.right = BinaryExpressionTreeNode("OR")
         expected_tree.right.left = BinaryExpressionTreeNode("A")
         expected_tree.right.right = BinaryExpressionTreeNode("C")
         
@@ -32,7 +32,7 @@ class TestBuildTree(unittest.TestCase):
         input_str = "&(A, B)"
         result = BuildTree(input_str)
         
-        expected_tree = BinaryExpressionTreeNode("&")
+        expected_tree = BinaryExpressionTreeNode("AND")
         expected_tree.left = BinaryExpressionTreeNode("A")
         expected_tree.right = BinaryExpressionTreeNode("B")
         
@@ -42,7 +42,7 @@ class TestBuildTree(unittest.TestCase):
         input_str = "|(A, B)"
         result = BuildTree(input_str)
         
-        expected_tree = BinaryExpressionTreeNode("|")
+        expected_tree = BinaryExpressionTreeNode("OR")
         expected_tree.left = BinaryExpressionTreeNode("A")
         expected_tree.right = BinaryExpressionTreeNode("B")
         
