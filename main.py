@@ -91,7 +91,7 @@ from Utilities.ReduceToElegance import reduceToElegance
 # traverseGraph(node_start, incoming_set, selection_sets)
 # print(f"Final selection_sets: {selection_sets}")
 
-input = "&(B, !(|(C, |(A, &(!(B), |(K,X))))))"
+# input = "&(B, !(|(C, |(A, &(!(B), |(K,X))))))"
 # input = "&(B, !(|(C, |(A, &(&(B, &(C, D)), A)))))"
 # input = "&(B, !(|(C, |(A, &(!(B), A)))))"
 # input = "|(&(A, |(!(B), !(C))), D)"
@@ -99,7 +99,7 @@ input = "&(B, !(|(C, |(A, &(!(B), |(K,X))))))"
 # input = "!(&(A, B), &(A, B))"
 # input = "|(A, |(B, |(C, |(D, C))))"
 # input = "|(A, &(B, &(C, &(D, C))))"
-# input = "|(&(A, B), |(A, C))"
+input = "|(&(A, B), |(A, C))"
 # input = "|(|(!(A), &(A, &(B, C))), &(B, &(C, !(B))))"
 # input = "|(|(!(A), &(A, &(B, C))), &(C, &(B, !(B))))"
 
@@ -108,8 +108,9 @@ root = BinaryExpressionTreeNode("Root")
 root.type = NodeType.ROOT
 root.right = tree
 
+
 print("Binary Expression Tree finished")
-print_tree(root)
+print_tree(root.right)
 
 binaryConstraintTree = propagateTruthValue(root)
 print("Binary Constraint Tree finished")
