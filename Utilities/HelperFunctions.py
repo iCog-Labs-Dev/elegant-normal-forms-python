@@ -37,6 +37,32 @@ def print_constraint(node: TreeNode):
 
 
 def print_tree(node: Union[TreeNode, BinaryExpressionTreeNode, None], level=0, side=""):
+    """
+    Recursively prints the structure of a binary tree or a generic tree.
+
+    The function prints each node's value along with its constraint (if applicable) and 
+    the position in the tree (indicated by `side` and `level`). The output is indented 
+    according to the depth of the node in the tree to represent the tree hierarchy visually.
+
+    Parameters
+    ----------
+    node : Union[TreeNode, BinaryExpressionTreeNode, None]
+        The root node of the tree (or subtree) to print. It can be of type TreeNode, 
+        BinaryExpressionTreeNode, or None.
+    
+    level : int, optional
+        The current depth level in the tree, used for indentation (default is 0).
+    
+    side : str, optional
+        A string indicating whether the current node is on the left or right side of its 
+        parent, or is a child node (`CHL`). This is used to label nodes in the output 
+        (default is an empty string).
+
+    Returns
+    -------
+    None
+        The function prints the tree structure and returns None.
+    """
     constraint = ""
     if type(node) == TreeNode and node.type == NodeType.LITERAL:
         constraint = f"{'+' if node.constraint else '-'}"
