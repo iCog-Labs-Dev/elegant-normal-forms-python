@@ -27,6 +27,12 @@ class TreeNode:
         self.children: list[TreeNode] = []
         self.type: NodeType = NodeType.LITERAL
 
+    def __hash__(self):
+        return hash((self.value, self.constraint, self.type))
+
+    def __repr__(self):
+        return f"TreeNode(value={self.value}, constraint={self.constraint}, type={self.type})"
+
     # def __eq__(self, other: TreeNode):
     #     if self.value == other.value and self.constraint == other.constrant:
     #         return True

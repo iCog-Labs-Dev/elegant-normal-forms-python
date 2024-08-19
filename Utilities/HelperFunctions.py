@@ -188,13 +188,14 @@ def union(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode]:
     - The order of the resulting list preserves the order from list1, followed by elements
       from list2 that were not present in list1.
     """
-    if not list1:
-        return list2
-    elif find_object(list2, list1[0]):
-        return union(list1[1:], list2)
-    else:
-        return [list1[0]] + union(list1[1:], list2)
-
+    # Start with all elements in list1
+    result = list1[:]
+    
+    for node in list2:
+        if not find_object(result, node):
+            result.append(node)
+    
+    return result
 
 def intersection(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode]:
     if not list1 or not list2:
