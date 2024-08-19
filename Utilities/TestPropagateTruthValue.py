@@ -19,6 +19,7 @@ class TestPropagateTruthValue(unittest.TestCase):
         return (node1.value == node2.value and
                 node1.type == node2.type and
                 node1.children == node2.children and
+                node1.constraint == node2.constraint and
                 node1.guardSet == node2.guardSet and
                 self.compare_trees(node1.left, node2.left) and
                 self.compare_trees(node1.right, node2.right))

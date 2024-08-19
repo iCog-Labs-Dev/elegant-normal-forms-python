@@ -100,7 +100,7 @@ from Utilities.ReduceToElegance import reduceToElegance
 # input = "|(A, |(B, |(C, |(D, C))))"
 # input = "|(A, &(B, &(C, &(D, C))))"
 # input = "|(&(A, B), |(A, C))"
-input = "&(A,B)"
+input = "|(A,B)"
 # input = "|(|(!(A), &(A, &(B, C))), &(B, &(C, !(B))))"
 # input = "|(|(!(A), &(A, &(B, C))), &(C, &(B, !(B))))"
 

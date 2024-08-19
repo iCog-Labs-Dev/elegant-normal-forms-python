@@ -82,6 +82,12 @@ def gatherJunctors(
 
         else:
             currentNode.type = NodeType.AND
-            currentNode.guardSet = [currentNode]
+
+            temp = TreeNode(currentNode.value)
+            temp.type = NodeType.LITERAL
+
+            currentNode.value = "AND"
+
+            currentNode.guardSet = [temp]
             centerNode.children.append(currentNode)
     return None
