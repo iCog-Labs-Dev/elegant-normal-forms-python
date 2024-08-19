@@ -99,7 +99,8 @@ from Utilities.ReduceToElegance import reduceToElegance
 # input = "!(&(A, B), &(A, B))"
 # input = "|(A, |(B, |(C, |(D, C))))"
 # input = "|(A, &(B, &(C, &(D, C))))"
-input = "|(&(A, B), |(A, C))"
+# input = "|(&(A, B), |(A, C))"
+input = "&(A,B)"
 # input = "|(|(!(A), &(A, &(B, C))), &(B, &(C, !(B))))"
 # input = "|(|(!(A), &(A, &(B, C))), &(C, &(B, !(B))))"
 
@@ -110,7 +111,7 @@ root.right = tree
 
 
 print("Binary Expression Tree finished")
-print_tree(root.right)
+print_tree(root)
 
 binaryConstraintTree = propagateTruthValue(root)
 print("Binary Constraint Tree finished")
