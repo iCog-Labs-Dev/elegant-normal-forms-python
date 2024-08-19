@@ -85,6 +85,7 @@ def gatherJunctors(
 
             temp = TreeNode(currentNode.value)
             temp.type = NodeType.LITERAL
+            temp.constraint = currentNode.constraint
 
             currentNode.value = "AND"
 

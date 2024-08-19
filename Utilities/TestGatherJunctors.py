@@ -102,14 +102,14 @@ class TestGatherJunctors(unittest.TestCase):
         node_A = TreeNode("A")
         node_A.type = NodeType.LITERAL
         node_A.value = "A"
-        node_A.constraint = False
+        node_A.constraint = True
         node_A.children = []
         node_A.guardSet = []
 
         node_B = TreeNode("B")
         node_B.type = NodeType.LITERAL
         node_B.value = "B"
-        node_B.constraint = False
+        node_B.constraint = True
         node_B.children = []
         node_B.guardSet = []
 
@@ -214,13 +214,13 @@ class TestGatherJunctors(unittest.TestCase):
         node_A = TreeNode("A")
         node_A.type = NodeType.LITERAL
         node_A.value = "A"
-        node_A.constraint = False
+        node_A.constraint = True
         node_A.guardSet = []
 
         node_B = TreeNode("B")
         node_B.type = NodeType.LITERAL
         node_B.value = "B"
-        node_B.constraint = False
+        node_B.constraint = True
         node_B.guardSet = []
 
         guard_set_A = TreeNode("AND")
@@ -343,13 +343,13 @@ class TestGatherJunctors(unittest.TestCase):
         node_C = TreeNode("C")
         node_C.type = NodeType.LITERAL
         node_C.value = "C"
-        node_C.constraint = False
+        node_C.constraint = True
         node_C.guardSet = []
 
         node_D = TreeNode("D")
         node_D.type = NodeType.LITERAL
         node_D.value = "D"
-        node_D.constraint = False
+        node_D.constraint = True
         node_D.guardSet = []
 
         node_and_C = TreeNode("AND")
