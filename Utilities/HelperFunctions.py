@@ -97,6 +97,20 @@ def eval(node: TreeNode) -> Union[bool, None]:
 def isConsistentForSingleValue(
     first_val: TreeNode, toBeChecked: List[TreeNode]
 ) -> bool:
+    """
+    Checks if a single TreeNode is consistent with a list of TreeNodes. Consistency
+    is defined as having no TreeNode in the list with the same value but a different constraint.
+
+    Parameters:
+    -------------
+        first_val: TreeNode 
+             The TreeNode to check for consistency.
+        toBeChecked: List[TreeNode] 
+             The list of TreeNodes to check against.
+
+    Returns:
+        bool: True if consistent, False otherwise.
+    """
     if toBeChecked == []:
         return True
     elif (
@@ -108,7 +122,7 @@ def isConsistentForSingleValue(
         return isConsistentForSingleValue(first_val, toBeChecked[1:])
 
 
-def isConsistent(toBeChecked):
+def isConsistent(toBeChecked: List[TreeNode]) -> bool:
     if toBeChecked == []:
         return True
     else:
