@@ -150,7 +150,8 @@ def find_object(
         return False
     elif ( # compare objs_list value and constraint with instance value and constraint, if both are equal return true
         objs_list[index].value == instance.value
-        and objs_list[index].constraint == instance.constraint
+        and objs_list[index].constraint == instance.constraint 
+        and objs_list[index].type == instance.type
     ):
         return True
     else:
@@ -233,24 +234,3 @@ def setDifference(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode
 
     return [element] + setDifference(list1[1:], list2) # if there is no similarity either in constraint or value 
                                                        # we add that element and go to the next elelement of list1
-
-
-# def union(list1: List[Any], list2: List[Any]) -> List[Any]:
-#     if not list2:
-#         return list1
-#     if list2[0] not in list1:
-#         return union(list1 + [list2[0]], list2[1:])
-#     else:
-#         return union(list1, list2[1:])
-#     match node.value:
-#         case "AND":
-#             if node.left is not None and node.right is not None:
-#                 return eval(node.left) and eval(node.right)
-#         case "OR":
-#             if node.left is not None and node.right is not None:
-#                 return eval(node.left) or eval(node.right)
-#         case "NOT":
-#             if node.right is not None:
-#                 return not eval(node.right)
-#         case _:
-#             return node.constraint
