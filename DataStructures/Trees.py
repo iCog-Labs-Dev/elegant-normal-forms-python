@@ -46,15 +46,16 @@ class TreeNode:
 
 
 def findAndRemoveChild(children: list[TreeNode], child: TreeNode) -> list[TreeNode]:
-    if len(children) == 0:
+    if not children:
         return []
 
-    firstChild = children[0]
-    if firstChild == child:
-        return children[1:]
-    elif len(children) > 0:
-        acc = findAndRemoveChild(children[1:], child)
-        acc.append(firstChild)
-        return acc
-    else:
-        return []
+    result = []
+    found = False
+
+    for c in children:
+        if not found and c == child:
+            found = True  # Skip the first occurrence of the child
+        else:
+            result.append(c)
+
+    return result
