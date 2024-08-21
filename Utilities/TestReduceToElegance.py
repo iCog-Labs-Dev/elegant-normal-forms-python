@@ -1,7 +1,7 @@
 import unittest
 
 from DataStructures.Trees import BinaryExpressionTreeNode, TreeNode, NodeType, findAndRemoveChild
-from Utilities.ReduceToElegance import compareSets, commandSetIterator, containsTerminalAndNode, applyOrCut, applyAndCut, intersections, computeGrandChildGuardSet
+from Utilities.ReduceToElegance import compareSets, commandSetIterator, containsTerminalAndNode, applyOrCut, applyAndCut, intersections, computeGrandChildGuardSet, orSubTreeElegance,andSubTreeElegance,orSubTreeIterator,andSubTreeIterator,iterator,reduceToElegance, ReductionSignal, IterationSignal
 
 class TestReduceToElegance(unittest.TestCase):
     
@@ -104,6 +104,80 @@ class TestReduceToElegance(unittest.TestCase):
         self.node14.constraint = True
         self.node14.guardSet = []
         self.node14.children = [self.node1, self.node2]
+
+        self.node15 = TreeNode("P")
+        self.node15.type = NodeType.AND
+        self.node15.value = "P"
+        self.node15.constraint = True
+        self.node15.guardSet = []
+        self.node15.children = []
+
+        # Node with a guardSet that will intersect with a commandSet (for testing deletion)
+        self.node16 = TreeNode("Q")
+        self.node16.type = NodeType.AND
+        self.node16.value = "Q"
+        self.node16.constraint = True
+        self.node16.guardSet = [TreeNode("G6")]
+        self.node16.children = []
+
+        # Node for testing OR-subtree iteration
+        self.node17 = TreeNode("R")
+        self.node17.type = NodeType.OR
+        self.node17.value = "R"
+        self.node17.constraint = True
+        self.node17.guardSet = []
+        self.node17.children = [self.node15, self.node16]
+
+        # Node for testing AND-subtree iteration
+        self.node18 = TreeNode("S")
+        self.node18.type = NodeType.AND
+        self.node18.value = "S"
+        self.node18.constraint = True
+        self.node18.guardSet = []
+        self.node18.children = [self.node15, self.node16]
+    
+    def test_orSubTreeElegance(self):
+        # Adjust the dominantSet and localCommandSet to trigger DELETE
+        dominantSet = [TreeNode("G7")]
+        localCommandSet = [TreeNode("G6")]
+        
+        # Set node16's guardSet to intersect with localCommandSet for triggering DELETE
+        self.node16.guardSet = [TreeNode("G6")]
+
+        # Invoke orSubTreeElegance and check for DELETE outcome
+        result = orSubTreeElegance(self.node16, self.node17, dominantSet, localCommandSet)
+        self.assertEqual(result, ReductionSignal.DISCONNECT)
+    
+    def test_andSubTreeElegance(self):
+        handleSet = [TreeNode("G6")]
+        commandSet = [TreeNode("G7")]
+        result = andSubTreeElegance(self.node16, self.node18, handleSet, commandSet)
+        self.assertEqual(result, IterationSignal.ADVANCE)
+    
+    def test_orSubTreeIterator(self):
+        dominantSet = [TreeNode("G5")]
+        commandSet = [TreeNode("G6")]
+        result = orSubTreeIterator(self.node15, self.node17.children[1:], self.node17, dominantSet, commandSet)
+        self.assertEqual(result, ReductionSignal.DISCONNECT)  # Should return None at the end of iteration
+
+    def test_andSubTreeIterator(self):
+        handleSet = [TreeNode("G6")]
+        commandSet = [TreeNode("G7")]
+        result = andSubTreeIterator(self.node18.children, self.node18, handleSet, commandSet)
+        self.assertIsNone(result)  # Should return None if no ReductionSignal is found
+
+    def test_iterator(self):
+        dominantSet = [TreeNode("G5")]
+        commandSet = [TreeNode("G6")]
+        result = iterator(self.node17, dominantSet, commandSet)
+        self.assertIsNone(result)  # Should return None if no ReductionSignal is found
+
+    def test_reduceToElegance(self):
+        dominantSet = [TreeNode("G5")]
+        commandSet = [TreeNode("G6")]
+        result = reduceToElegance(self.node16, dominantSet, commandSet)
+        self.assertEqual(result, ReductionSignal.DISCONNECT)
+
 
     def test_applyAndCut_single_child_empty_guardSet(self):
         # Node with one child and empty guardSet
@@ -248,8 +322,6 @@ class TestReduceToElegance(unittest.TestCase):
         # Check that the second child is node9
         self.assertEqual(current.children[1].value, "J")
 
-    
-    
     def test_commandSetIterator_with_terminal_AND_node(self):
         children = [self.node4, self.node5, self.node6]
         result = commandSetIterator(children, [])

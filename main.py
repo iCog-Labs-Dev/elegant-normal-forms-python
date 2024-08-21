@@ -8,7 +8,7 @@ from DataStructures.Trees import *
 
 # from DataStructures.Graphs import *
 # from Utilities.TraverseGraph import *
-from Utilities.ReduceToElegance import reduceToElegance
+from Utilities.ReduceToElegance import reduceToElegance,orSubTreeElegance,andSubTreeElegance,orSubTreeIterator,andSubTreeIterator,iterator
 
 # ex_a = BinaryConstraintTreeNode("x")
 # ex_b = BinaryConstraintTreeNode("x")
@@ -128,16 +128,6 @@ print("Before Reduction")
 
 if constraintTree:
     print_constraint_tree(constraintTree)
-# print("GuardSet: ")
-# if constraintTree is not None and constraintTree.guardSet is not None:
-#     for gct in constraintTree.guardSet:
-#         print_tree(gct)
-#     if constraintTree.children:
-#         print("Children: ", len(constraintTree.children))
-#
-#     if constraintTree.children is not None:
-#         for bct in constraintTree.children:
-#             print_tree(bct)
 
 
 lastAction = reduceToElegance(constraintTree, [], [])
@@ -147,13 +137,72 @@ lastAction = reduceToElegance(constraintTree, [], [])
 print("Last action after reduction: ", lastAction)
 if constraintTree:
     print_constraint_tree(constraintTree)
-# print("GuardSet: ")
-# if constraintTree is not None and constraintTree.guardSet is not None:
-#     for gct in constraintTree.guardSet:
-#         print_tree(gct)
-#     if constraintTree.children:
-#         print("Children: ", len(constraintTree.children))
-#
-#     if constraintTree.children is not None:
-#         for bct in constraintTree.children:
-#             print_tree(bct)
+
+
+# dominantSet = [TreeNode("G7")]
+# localCommandSet = [TreeNode("G6")]
+
+# node15 = TreeNode("P")
+# node15.type = NodeType.AND
+# node15.value = "P"
+# node15.constraint = True
+# node15.guardSet = []
+# node15.children = []
+
+# node16 = TreeNode("Q")
+# node16.type = NodeType.AND
+# node16.value = "Q"
+# node16.constraint = True
+# node16.guardSet = [TreeNode("G6")]
+# node16.children = []
+#         # Set node16's guardSet to intersect with localCommandSet for triggering DELETE
+# node17 = TreeNode("R")
+# node17.type = NodeType.OR
+# node17.value = "R"
+# node17.constraint = True
+# node17.guardSet = []
+# node17.children = [node15, node16]
+
+# node18 = TreeNode("S")
+# node18.type = NodeType.AND
+# node18.value = "S"
+# node18.constraint = True
+# node18.guardSet = []
+# node18.children = [node15, node16]
+
+#         # Invoke orSubTreeElegance and check for DELETE outcome
+# result = orSubTreeElegance(node16, node17, dominantSet, localCommandSet)
+# print("or subtree elegance result")
+# print(result)
+
+# handleSet = [TreeNode("G6")]
+# commandSet = [TreeNode("G7")]
+
+# result = andSubTreeElegance(node16, node18, handleSet, commandSet)
+# print("andSubTreeElegance result")
+# print(result)
+
+# dominantSet = [TreeNode("G5")]
+# commandSet = [TreeNode("G6")]
+# result = orSubTreeIterator(node15, node17.children[1:], node17, dominantSet, commandSet)
+# print("orSubTreeIterator result")
+# print(result)
+
+# handleSet = [TreeNode("G6")]
+# commandSet = [TreeNode("G7")]
+# result = andSubTreeIterator(node18.children, node18, handleSet, commandSet)
+# print("andSubTreeIterator result")
+# print(result)
+
+# dominantSet = [TreeNode("G5")]
+# commandSet = [TreeNode("G6")]
+# result = iterator(node17, dominantSet, commandSet)
+# print("iterator result")
+# print(result)
+
+# dominantSet = [TreeNode("G5")]
+# commandSet = [TreeNode("G6")]
+# result = reduceToElegance(node16, dominantSet, commandSet)
+# print("reduceToElegance result")
+
+# print(result)
