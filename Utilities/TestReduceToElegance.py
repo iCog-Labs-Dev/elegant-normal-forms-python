@@ -1,7 +1,7 @@
 import unittest
 
 from DataStructures.Trees import BinaryExpressionTreeNode, TreeNode, NodeType, findAndRemoveChild
-from Utilities.ReduceToElegance import compareSets, commandSetIterator, containsTerminalAndNode, applyOrCut
+from Utilities.ReduceToElegance import compareSets, commandSetIterator, containsTerminalAndNode, applyOrCut, applyAndCut, intersections, computeGrandChildGuardSet
 
 class TestReduceToElegance(unittest.TestCase):
     
@@ -73,6 +73,141 @@ class TestReduceToElegance(unittest.TestCase):
         self.node10.constraint = True
         self.node10.guardSet = []
         self.node10.children = [self.node9]
+
+        self.node11 = TreeNode("L")
+        self.node11.type = NodeType.AND
+        self.node11.value = "L"
+        self.node11.constraint = True
+        self.node11.guardSet = []
+        self.node11.children = []
+
+        # Node with one child but a non-empty guardSet
+        self.node12 = TreeNode("M")
+        self.node12.type = NodeType.AND
+        self.node12.value = "M"
+        self.node12.constraint = True
+        self.node12.guardSet = [TreeNode("G4")]
+        self.node12.children = [self.node3]
+
+        # Node with a non-empty guardSet and no children
+        self.node13 = TreeNode("N")
+        self.node13.type = NodeType.AND
+        self.node13.value = "N"
+        self.node13.constraint = True
+        self.node13.guardSet = [TreeNode("G5")]
+        self.node13.children = []
+
+        # Node with children but no guardSet
+        self.node14 = TreeNode("O")
+        self.node14.type = NodeType.AND
+        self.node14.value = "O"
+        self.node14.constraint = True
+        self.node14.guardSet = []
+        self.node14.children = [self.node1, self.node2]
+
+    def test_applyAndCut_single_child_empty_guardSet(self):
+        # Node with one child and empty guardSet
+        result = applyAndCut(self.node14, self.node10)
+        
+        # Check that the function returns False since child should not be removed
+        self.assertFalse(result)
+        self.assertEqual(len(self.node10.children), 1)
+    
+    def test_applyAndCut_no_children_empty_guardSet(self):
+        # Node with no children and an empty guardSet
+        result = applyAndCut(self.node11, self.node10)
+        
+        # Should return False since grandChild has no children
+        self.assertFalse(result)
+        self.assertEqual(self.node10.children, [self.node9])
+
+    def test_applyAndCut_non_empty_guardSet(self):
+        # Node with one child but a non-empty guardSet
+        result = applyAndCut(self.node12, self.node10)
+        
+        # Should return False as the guardSet is not empty
+        self.assertFalse(result)
+
+    def test_computeGrandChildGuardSet_difference(self):
+        # Node with a non-empty guardSet
+        resultSet = [TreeNode("G5")]
+        computeGrandChildGuardSet(self.node13, resultSet)
+        
+        # GuardSet should now be empty after the difference
+        self.assertEqual(self.node13.guardSet, [])
+    def test_computeGrandChildGuardSet_no_difference(self):
+        grandChild = TreeNode("G")
+        grandChild.type = NodeType.LITERAL
+        grandChild.guardSet = [self.node1]
+
+        resultSet = [self.node2]
+
+        computeGrandChildGuardSet(grandChild, resultSet)
+
+    # The guardSet should remain unchanged as there's no intersection with resultSet
+        self.assertEqual(grandChild.guardSet, [self.node1])
+    def test_computeGrandChildGuardSet_empty_guardSet(self):
+        grandChild = TreeNode("G")
+        grandChild.type = NodeType.LITERAL
+        grandChild.guardSet = []
+
+        resultSet = [self.node2]
+
+        computeGrandChildGuardSet(grandChild, resultSet)
+
+        # The guardSet should remain empty
+        self.assertEqual(grandChild.guardSet, [])
+    def test_computeGrandChildGuardSet_basic(self):
+        grandChild = TreeNode("G")
+        grandChild.type = NodeType.LITERAL
+        grandChild.guardSet = [self.node1, self.node2]
+
+        resultSet = [self.node2]
+
+        computeGrandChildGuardSet(grandChild, resultSet)
+
+        # The guardSet should now only contain node1
+        self.assertEqual(grandChild.guardSet, [self.node1])
+
+
+    def test_intersections_no_children(self):
+        # No children provided
+        result = intersections([], [])
+        
+        # Should return an empty list
+        self.assertEqual(result, [])
+    def test_intersections_basic(self):
+        children = [self.node4, self.node5]
+        intersectionSet = [self.node4.guardSet[0], self.node5.guardSet[0]]
+
+        result = intersections(intersectionSet, children)
+
+        # The intersection should return the common guard set
+        self.assertEqual(result, [])
+    def test_intersections_no_common_guardSet(self):
+        children = [self.node4, self.node5]
+        intersectionSet = [TreeNode("X")]
+
+        result = intersections(intersectionSet, children)
+
+        # There should be no intersection
+        self.assertEqual(result, [])
+    def test_intersections_empty_children(self):
+        intersectionSet = [self.node4.guardSet[0]]
+
+        result = intersections(intersectionSet, [])
+
+        # Result should be empty as there are no children
+        self.assertEqual(result, [])
+    
+    def test_intersections_empty_intersectionSet(self):
+        children = [self.node4, self.node5]
+        intersectionSet = []
+
+        result = intersections(intersectionSet, children)
+
+        # Result should be empty as intersectionSet is empty
+        self.assertEqual(result, [])
 
     def test_applyOrCut_basic(self):
         # Testing applyOrCut with simple nodes
