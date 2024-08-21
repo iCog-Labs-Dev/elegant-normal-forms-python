@@ -27,6 +27,12 @@ class TreeNode:
         self.children: list[TreeNode] = []
         self.type: NodeType = NodeType.LITERAL
 
+    def __hash__(self):
+        return hash((self.value, self.constraint, self.type))
+
+    def __repr__(self):
+        return f"TreeNode(value={self.value}, constraint={self.constraint}, type={self.type})"
+
     # def __eq__(self, other: TreeNode):
     #     if self.value == other.value and self.constraint == other.constrant:
     #         return True
@@ -40,15 +46,16 @@ class TreeNode:
 
 
 def findAndRemoveChild(children: list[TreeNode], child: TreeNode) -> list[TreeNode]:
-    if len(children) == 0:
+    if not children:
         return []
 
-    firstChild = children[0]
-    if firstChild == child:
-        return children[1:]
-    elif len(children) > 0:
-        acc = findAndRemoveChild(children[1:], child)
-        acc.append(firstChild)
-        return acc
-    else:
-        return []
+    result = []
+    found = False
+
+    for c in children:
+        if not found and c == child:
+            found = True  # Skip the first occurrence of the child
+        else:
+            result.append(c)
+
+    return result
