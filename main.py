@@ -10,6 +10,8 @@ from DataStructures.Trees import *
 # from Utilities.TraverseGraph import *
 from Utilities.ReduceToElegance import reduceToElegance
 
+import itertools
+
 # ex_a = BinaryConstraintTreeNode("x")
 # ex_b = BinaryConstraintTreeNode("x")
 # ex_c = BinaryConstraintTreeNode("y")
@@ -91,9 +93,8 @@ from Utilities.ReduceToElegance import reduceToElegance
 # traverseGraph(node_start, incoming_set, selection_sets)
 # print(f"Final selection_sets: {selection_sets}")
 
-# input = "&(B, !(|(C, |(A, &(!(B), A)))))"
+input = "&(B, !(|(C, |(A, &(!(B), A)))))"
 # input = "&(B, !(|(C, |(A, &(&(B, &(C, D)), A)))))"
-# input = "&(B, !(|(C, |(A, &(!(B), A)))))"
 # input = "|(&(A, |(!(B), !(C))), D)"
 # input = "&(A, &(B, &(C, &(|(A, |(B, |(C, A))), &(B, &(&(A, A), !(A)))))))"
 # input = "!(&(A, B), &(A, B))"
@@ -154,3 +155,111 @@ if constraintTree:
 #     if constraintTree.children is not None:
 #         for bct in constraintTree.children:
 #             print_tree(bct)
+
+print('*'*50)
+
+def generateTruthTableValues(literals):
+    combinations = list (itertools.product([True, False], repeat=len(literals)))
+
+    result = []
+    for combination in combinations:
+        result.append(dict(zip(literals,combination)))
+    
+    return result
+
+# print(generateTruthTableValues(['A', 'B', 'C', 'D', 'E']))
+# print(len(generateTruthTableValues(['A', 'B', 'C', 'D', 'E'])))
+
+# truthValues = {
+#     'A': True,
+#     'B': True,
+#     'C': False,
+#     'D': False,
+# }
+
+def evaluateBinaryExpressionTreeNode(currentNode, truthValues):
+    match currentNode.type:
+        case NodeType.NOT:
+            if currentNode.right is not None:
+                return (not evaluateBinaryExpressionTreeNode(currentNode.right, truthValues))
+        case NodeType.AND:
+            if currentNode.left is not None and currentNode.right is not None:
+                return (
+                    evaluateBinaryExpressionTreeNode(currentNode.left, truthValues) and evaluateBinaryExpressionTreeNode(currentNode.right, truthValues)
+                )
+        case NodeType.OR:
+            if currentNode.left is not None and currentNode.right is not None:
+                return (
+                    evaluateBinaryExpressionTreeNode(currentNode.left, truthValues) or evaluateBinaryExpressionTreeNode(currentNode.right, truthValues)
+                )
+        case NodeType.LITERAL:
+            if currentNode.value is not None and currentNode.value in truthValues:
+                return truthValues[currentNode.value]
+
+# res = evaluateBinaryExpressionTreeNode(tree, truthValues)
+# print(res)
+
+def evaluateReducedConstraintTree(constraintTree, truthValues):
+    truthValue = None
+    match constraintTree.type:
+        case NodeType.AND:
+            if constraintTree.guardSet == [] and constraintTree.children == []:
+                return True
+            if constraintTree.guardSet != []:
+                for literal in constraintTree.guardSet:
+                    if literal.value is not None and literal.value in truthValues:
+                        literalTruthValue = truthValues[literal.value]
+
+                        if literal.constraint == False:
+                            literalTruthValue = not literalTruthValue
+                        
+                        if truthValue is None:
+                            truthValue = literalTruthValue
+                        else:
+                            truthValue = truthValue and literalTruthValue
+
+            if constraintTree.children != []:
+                for orNode in constraintTree.children:
+                    if truthValue is None:
+                        truthValue = evaluateReducedConstraintTree(orNode, truthValues)
+                    else:
+                        truthValue = truthValue and evaluateReducedConstraintTree(orNode, truthValues)
+            return truthValue
+        case NodeType.OR:
+            for andNode in constraintTree.children:
+                if truthValue is None:
+                    truthValue = evaluateReducedConstraintTree(andNode, truthValues)
+                else:
+                    truthValue = truthValue or evaluateReducedConstraintTree(andNode, truthValues)
+            return truthValue
+
+# val = evaluateReducedConstraintTree(constraintTree, truthValues)
+# print(val)
+
+# truthTable = [
+#     (
+#         truthValues,
+#         outcome
+#     )
+# ]
+def generateExpressionTruthTable(literals):
+    truthTable = []
+    for generatedTruthValues in generateTruthTableValues(literals):
+        outcome = evaluateBinaryExpressionTreeNode(tree, generatedTruthValues)
+        truthTable.append((generatedTruthValues, outcome))
+    return truthTable
+
+# print(generateExpressionTruthTable(['A', 'B']))
+print(generateExpressionTruthTable(['A', 'B', 'C']))
+# print(generateExpressionTruthTable(['A', 'B', 'C', 'D']))
+
+def generateReducedTruthTable(literals):
+    reducedTruthTable = []
+    for generatedTruthValues in generateTruthTableValues(literals):
+        outcome = evaluateReducedConstraintTree(constraintTree, generatedTruthValues)
+        reducedTruthTable.append((generatedTruthValues, outcome))
+    return reducedTruthTable
+
+# print(generateReducedTruthTable(['A', 'B']))
+print(generateReducedTruthTable(['A', 'B', 'C']))
+# print(generateReducedTruthTable(['A', 'B', 'C', 'D']))
