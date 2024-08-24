@@ -9,6 +9,7 @@ from DataStructures.Trees import *
 # from DataStructures.Graphs import *
 # from Utilities.TraverseGraph import *
 from Utilities.ReduceToElegance import reduceToElegance
+from enfCheckers.conditions import ruleFive, ruleSix, ruleSeven
 
 # ex_a = BinaryConstraintTreeNode("x")
 # ex_b = BinaryConstraintTreeNode("x")
@@ -91,7 +92,7 @@ from Utilities.ReduceToElegance import reduceToElegance
 # traverseGraph(node_start, incoming_set, selection_sets)
 # print(f"Final selection_sets: {selection_sets}")
 
-# input = "&(B, !(|(C, |(A, &(!(B), A)))))"
+input = "&(B, !(|(C, |(A, &(!(B), A)))))"
 # input = "&(B, !(|(C, |(A, &(&(B, &(C, D)), A)))))"
 # input = "&(B, !(|(C, |(A, &(!(B), A)))))"
 # input = "|(&(A, |(!(B), !(C))), D)"
@@ -144,6 +145,10 @@ lastAction = reduceToElegance(constraintTree, [], [])
 print("Last action after reduction: ", lastAction)
 if constraintTree:
     print_constraint_tree(constraintTree)
+    # check if the enf conditions hold
+    ruleFive(constraintTree)
+    ruleSix(constraintTree)
+    ruleSeven(constraintTree)
 # print("GuardSet: ")
 # if constraintTree is not None and constraintTree.guardSet is not None:
 #     for gct in constraintTree.guardSet:
