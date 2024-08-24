@@ -135,6 +135,101 @@ class TestReduceToElegance(unittest.TestCase):
         self.node18.constraint = True
         self.node18.guardSet = []
         self.node18.children = [self.node15, self.node16]
+
+        self.node19 = TreeNode("C")
+        self.node19.type = NodeType.LITERAL
+        self.node19.value = "C"
+        self.node19.constraint = False
+        self.node19.guardSet = [TreeNode("G1", constraint=True), TreeNode("G2", constraint=False)]
+        self.node19.children = [TreeNode("D", constraint=True)]
+
+        self.node20 = TreeNode("B")
+        self.node20.type = NodeType.OR
+        self.node20.value = "B"
+        self.node20.constraint = False
+        self.node20.guardSet = []
+        self.node20.children = [self.node19]
+
+        self.node21 = TreeNode("A")
+        self.node21.type = NodeType.AND
+        self.node21.value = "A"
+        self.node21.constraint = True
+        self.node21.guardSet = [TreeNode("G0", constraint=True)]
+        self.node21.children = [TreeNode("E", constraint=False)]
+
+
+        self.node22 = TreeNode("A")
+        self.node22.type = NodeType.LITERAL
+        self.node22.value = "A"
+        self.node22.constraint = True
+        self.node22.guardSet = []
+
+        # AND Node with one terminal child and a single guardSet
+        self.node23 = TreeNode("B")
+        self.node23.type = NodeType.AND
+        self.node23.value = "B"
+        self.node23.constraint = False
+        self.node23.guardSet = [self.node1]  # GuardSet with a single constraint (node1)
+        self.node23.children = []
+
+        # AND Node with children but no terminal node
+        self.node24 = TreeNode("C")
+        self.node24.type = NodeType.AND
+        self.node24.value = "C"
+        self.node24.constraint = False
+        self.node24.guardSet = []
+        self.node24.children = [self.node1]  # Non-terminal child (node1 has no children)
+
+        # OR Node with terminal child and guardSet
+        self.node25 = TreeNode("D")
+        self.node25.type = NodeType.OR
+        self.node25.value = "D"
+        self.node25.constraint = False
+        self.node25.guardSet = [self.node1]
+        self.node25.children = []
+
+        # AND Node with no children and multiple guardSets
+        self.node26 = TreeNode("E")
+        self.node26.type = NodeType.AND
+        self.node26.value = "E"
+        self.node26.constraint = False
+        self.node26.guardSet = [self.node1, self.node3]  # Multiple guardSets
+        self.node26.children = []
+
+        # AND Node with terminal child and no guardSet
+        self.node27 = TreeNode("F")
+        self.node27.type = NodeType.AND
+        self.node27.value = "F"
+        self.node27.constraint = False
+        self.node27.guardSet = []
+        self.node27.children = []
+
+    def test_empty_children(self):
+        self.assertFalse(containsTerminalAndNode([]), "Should return False for empty children list")
+
+    def test_single_terminal_and_node_with_single_guardset(self):
+        self.assertTrue(containsTerminalAndNode([self.node23]), "Should return True for AND node with terminal child and single guardSet")
+
+    def test_single_and_node_with_non_terminal_child(self):
+        self.assertFalse(containsTerminalAndNode([self.node24]), "Should return False for AND node with non-terminal child")
+
+    def test_single_or_node_with_terminal_child(self):
+        self.assertFalse(containsTerminalAndNode([self.node25]), "Should return False for OR node even with terminal child")
+
+    def test_single_and_node_with_multiple_guardsets(self):
+        self.assertFalse(containsTerminalAndNode([self.node26]), "Should return False for AND node with multiple guardSets")
+
+    def test_single_and_node_with_terminal_child_no_guardset(self):
+        self.assertFalse(containsTerminalAndNode([self.node27]), "Should return False for AND node with no guardSet")
+
+    def test_multiple_children_with_one_matching(self):
+        children = [self.node24, self.node23, self.node25]
+        self.assertTrue(containsTerminalAndNode(children), "Should return True if any child matches the condition")
+
+    def test_multiple_children_none_matching(self):
+        children = [self.node24, self.node25, self.node26]
+        self.assertFalse(containsTerminalAndNode(children), "Should return False if no child matches the condition")
+
     
     def test_orSubTreeElegance(self):
         # Adjust the dominantSet and localCommandSet to trigger DELETE
@@ -321,6 +416,25 @@ class TestReduceToElegance(unittest.TestCase):
         
         # Check that the second child is node9
         self.assertEqual(current.children[1].value, "J")
+    def test_applyorcut(self):
+        applyOrCut(self.node20, self.node21)
+
+        # Create expected guardSet
+        expected_guardSet = [
+            TreeNode(value="G0", constraint=True),
+            TreeNode(value="G1", constraint=True),
+            TreeNode(value="G2", constraint=False)
+            ]
+
+        # Create expected children
+        expected_children = [
+            TreeNode(value="D", constraint=True),
+            TreeNode(value="E", constraint=False)
+            ]
+
+            # Perform assertions
+        self.assertEqual(self.node21.guardSet, expected_guardSet)
+        self.assertEqual(self.node21.children, expected_children)
 
     def test_commandSetIterator_with_terminal_AND_node(self):
         children = [self.node4, self.node5, self.node6]

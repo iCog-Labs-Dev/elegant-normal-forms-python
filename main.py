@@ -8,7 +8,7 @@ from DataStructures.Trees import *
 
 # from DataStructures.Graphs import *
 # from Utilities.TraverseGraph import *
-from Utilities.ReduceToElegance import reduceToElegance,orSubTreeElegance,andSubTreeElegance,orSubTreeIterator,andSubTreeIterator,iterator
+from Utilities.ReduceToElegance import reduceToElegance, orSubTreeElegance,andSubTreeElegance,orSubTreeIterator,andSubTreeIterator
 
 # ex_a = BinaryConstraintTreeNode("x")
 # ex_b = BinaryConstraintTreeNode("x")
