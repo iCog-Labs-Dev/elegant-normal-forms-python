@@ -252,7 +252,7 @@ def iterator(
     outcome = andSubTreeIterator(current.children, current, handleSet, commandSet)
 
     # The subtree iterator returns a value different from None only if ReductionSignal has been found during the processing. If not it will always return None in the end
-    if outcome:
+    if outcome: 
         return outcome
 
     # Apply OR-CUT to each child of current, if possible
@@ -261,7 +261,7 @@ def iterator(
     if not compareSets(previousGuardSet, current.guardSet):
         return iterator(current, dominantSet, commandSet)
 
-    return None
+    return None 
 
 
 def reduceToElegance(
