@@ -91,7 +91,6 @@ from Utilities.ReduceToElegance import reduceToElegance
 # traverseGraph(node_start, incoming_set, selection_sets)
 # print(f"Final selection_sets: {selection_sets}")
 
-# input = "&(B, !(|(C, |(A, &(!(B), A)))))"
 # input = "&(B, !(|(C, |(A, &(&(B, &(C, D)), A)))))"
 # input = "&(B, !(|(C, |(A, &(!(B), A)))))"
 # input = "|(&(A, |(!(B), !(C))), D)"
@@ -99,17 +98,20 @@ from Utilities.ReduceToElegance import reduceToElegance
 # input = "!(&(A, B), &(A, B))"
 # input = "|(A, |(B, |(C, |(D, C))))"
 # input = "|(A, &(B, &(C, &(D, C))))"
-# input = "|(&(A, B), |(A, C))"
-# input = "|(|(!(A), &(A, &(B, C))), &(B, &(C, !(B))))"
+# input = "|(&(A, B), |(A, C))" # Failing
 # input = "|(|(!(A), &(A, &(B, C))), &(C, &(B, !(B))))"
+# input = "|(&(D, &(C, A)), |(&(C, A), &(E, &(C, A))))"
+# input = "!(!(&(A, B)))"
+# input = "|(&(A, B), &(A, B))"
+input = "|(g, &(a, &(b, &(|(!(c), |(!(d), e)), |(c, &(c, f))))))" # Example from Mosh's paper
 
 tree = BuildTree(input)
 root = BinaryExpressionTreeNode("Root")
 root.type = NodeType.ROOT
 root.right = tree
 
-print("Binary Expression Tree finished")
-print_tree(root)
+# print("Binary Expression Tree finished")
+# print_tree(root)
 
 binaryConstraintTree = propagateTruthValue(root)
 print("Binary Constraint Tree finished")
@@ -120,7 +122,7 @@ constraintTree.type = NodeType.ROOT
 
 if binaryConstraintTree is not None:
     constraintTree = gatherJunctors(binaryConstraintTree, constraintTree)
-print("Constraint Tree Finished")
+# print("Constraint Tree Finished")
 print("Before Reduction")
 
 if constraintTree:
