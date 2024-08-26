@@ -2,7 +2,7 @@
 import itertools
 
 from DataStructures.Trees import *
-from enfCheckers.conditions import ruleFive, ruleOne, ruleSeven, ruleSix, ruleTwo
+from enfCheckers.conditions import ruleFive, ruleOne, ruleSeven, ruleSix, ruleThree, ruleTwo
 from Utilities.BuildTree import *
 from Utilities.GatherJunctors import gatherJunctors
 from Utilities.HelperFunctions import print_constraint_tree, print_tree
@@ -151,6 +151,7 @@ if constraintTree:
     # check if the enf conditions hold
     ruleOne(constraintTree)
     ruleTwo(constraintTree)
+    ruleThree(constraintTree)
     ruleFive(constraintTree)
     ruleSix(constraintTree)
     ruleSeven(constraintTree)
