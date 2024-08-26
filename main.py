@@ -1,99 +1,15 @@
-from Utilities.BuildTree import *
-from Utilities.GatherJunctors import gatherJunctors
-from Utilities.HelperFunctions import print_tree, print_constraint_tree
-from Utilities.PropagateTruthValue import propagateTruthValue
-
-# from Utilities.HelperFunctions import isConsistent, union
-from DataStructures.Trees import *
-
-# from DataStructures.Graphs import *
-# from Utilities.TraverseGraph import *
-from Utilities.ReduceToElegance import reduceToElegance,orSubTreeElegance,andSubTreeElegance,orSubTreeIterator,andSubTreeIterator,iterator
-
 import itertools
 
-# ex_a = BinaryConstraintTreeNode("x")
-# ex_b = BinaryConstraintTreeNode("x")
-# ex_c = BinaryConstraintTreeNode("y")
-# ex_d = BinaryConstraintTreeNode("d")
-# ex_e = BinaryConstraintTreeNode("e")
+from Utilities.BuildTree import *
+from Utilities.HelperFunctions import print_constraint_tree, print_tree
+from Utilities.PropagateTruthValue import propagateTruthValue
+from Utilities.ReduceToElegance import reduceToElegance, ReductionSignal, findAndRemoveChild
 
-# ex_b.constraint = True
+from DataStructures.Trees import *
+from test import constraint as constraintTree, constraint2 as constraintTree2, current, dominantSet, commandSet, parentOfCurrent
 
-# test_data = [ex_a,ex_c,ex_d,ex_b,ex_e]
-# test_data2 = [ex_a,ex_c,ex_d,ex_e]
 
-# print(isConsistent(test_data))
-# print(isConsistent(test_data2))
-# print("The consistency is finished")
-# print(isConsistent([]))
-# print(isConsistent([ex_a]))
-# g_exa = ConstraintGraphNode()
-# g_exa.graphNodeType = GraphNodeType.START
-# g_exb = ConstraintGraphNode()
-# g_exa.next = g_exb
-# g_exb.value = 'second'
-# g_exc = ConstraintGraphNode()
-# g_exc.value = 'third'
-# g_exd = ConstraintGraphNode()
-# g_exd.value = 'fourth'
-# #g_exd.graphNodeType = GraphNodeType.INTERNAL
-# g_exe = ConstraintGraphNode()
-# g_exe.graphNodeType = GraphNodeType.STOP
-# g_exe.value = 'fifth'
-# g_exa.children.append(g_exb)
-# g_exa.children.append(g_exc)
-# g_exb.children.append(g_exe)
-# #result = traverseGraph(g_exa,[],[])
-# print("this is the result of the guard set")
-# print(traverseGraph(g_exa,[],[]))
-# print(union([1,2,3,4,5],[1,3,4,5,8,9]))
-# print(union([],[]))
-# selection_set = []
-# start_node = ConstraintGraphNode()
-# head_and = ConstraintGraphNode()
-# start_node.graphNodeType = GraphNodeType.START
-# head_and.graphNodeType = GraphNodeType.INTERNAL
-# head_and.type = NodeType.AND
-# c = ConstraintGraphNode()
-# d = ConstraintGraphNode()
-# stop_node = ConstraintGraphNode()
-# stop_node.graphNodeType = GraphNodeType.STOP
-# c.next = stop_node
-# d.next = stop_node
-# c.value = 'C'
-# d.value = 'D'
-# start_node.next = head_and
-# head_and.guardSet.append(c)
-# head_and.guardSet.append(d)
-
-# traverseGraph(start_node,[],selection_set)
-# print(selection_set)
-# node_stop = ConstraintGraphNode()
-# node_stop.graphNodeType = GraphNodeType.STOP
-
-# node_internal_or = ConstraintGraphNode()
-# node_internal_or.graphNodeType = GraphNodeType.INTERNAL
-# node_internal_or.type = NodeType.OR
-# node_internal_or.children = [node_stop, node_stop]
-
-# node_internal_and = ConstraintGraphNode()
-# node_internal_and.graphNodeType = GraphNodeType.INTERNAL
-# node_internal_and.type = NodeType.AND
-# node_internal_and.next = node_internal_or
-# node_internal_and.guardSet = [1, 2]
-
-# node_start = ConstraintGraphNode()
-# node_start.graphNodeType = GraphNodeType.START
-# node_start.next = node_internal_and
-
-# incoming_set = []
-# selection_sets = []
-
-# traverseGraph(node_start, incoming_set, selection_sets)
-# print(f"Final selection_sets: {selection_sets}")
-
-input = "&(B, !(|(C, |(A, &(!(B), A)))))"
+# input = "&(B, !(|(C, |(A, &(!(B), A)))))"
 # input = "&(B, !(|(C, |(A, &(!(B), |(K,X))))))"
 # input = "&(B, !(|(C, |(A, &(&(B, &(C, D)), A)))))"
 # input = "|(&(A, |(!(B), !(C))), D)"
@@ -102,46 +18,112 @@ input = "&(B, !(|(C, |(A, &(!(B), A)))))"
 # input = "|(A, |(B, |(C, |(D, C))))"
 # input = "|(A, &(B, &(C, &(D, C))))"
 # input = "|(&(A, B), |(A, C))"
-input = "|(A,B)"
+# input = "|(A,B)"
 # input = "&(&(A,B),|(C,D))"
 # input = "|(|(!(A), &(A, &(B, C))), &(B, &(C, !(B))))"
 # input = "|(|(!(A), &(A, &(B, C))), &(C, &(B, !(B))))"
 # input = "|(&(D, &(C, A)), |(&(C, A), &(E, &(C, A))))"
 # input = "!(!(&(A, B)))"
 # input = "|(&(A, B), &(A, B))"
-input = "|(g, &(a, &(b, &(|(!(c), |(!(d), e)), |(c, &(c, f))))))" # Example from Mosh's paper
+# input = "|(g, &(a, &(b, &(|(!(c), |(!(d), e)), |(c, &(c, f))))))" # Example from Mosh's paper
+# input2 = "|(g,&(a, &(b, &(c, |(!(d), e)))))" # Reduced form of the above expression from Mosh's paper.
+# input2 = "|(g, &(a, &(b, &(|(c, |(d, e)), |(c, f)))))"
 
-tree = BuildTree(input)
-root = BinaryExpressionTreeNode("Root")
-root.type = NodeType.ROOT
-root.right = tree
+# Test cases for inconsistent handle set
+# input = "&(a, |(&(!(a), |(b, c)), b))" # Input tree
+# input2 = "&(a, b)" # Output tree
 
-# print("Binary Expression Tree finished")
-# print_tree(root)
+# Test cases for Promote Common Constraints (Promote) Transformation
+# input = "&(a, &(|(&(!(b), c), !(b)), |(!(c), &(!(b), !(d)))))"
+# input2 = "&(a, &(!(b), &(c, |(!(c), &(!(b), !(d))))))"
 
-binaryConstraintTree = propagateTruthValue(root)
-print("Binary Constraint Tree finished")
-print_tree(binaryConstraintTree)
+# Test cases for Subtract redundant constraint (Redundant) Transformation
+# input = "&(a, |(&(!(b), &(c, |(&(a, &(c, !(d))), a))), !(e)))"
+# input2 = "&(a, |(&(!(b), &(c, |(!(d), a))), !(e)))"
 
-constraintTree = TreeNode("ROOT")
-constraintTree.type = NodeType.ROOT
+# The 0-Consraint Subsumption (0-Subsume) Transformation
+# input = "&(a, &(|(a, |(!(b), |(e, f))), c))"
+# input2 = "&(a, |(a, &(!(b), |(e, f))))"
 
-if binaryConstraintTree is not None:
-    constraintTree = gatherJunctors(binaryConstraintTree, constraintTree)
-# print("Constraint Tree Finished")
-print("Before Reduction")
+# The 1-Consraint Subsumption (1-Subsume) Transformation
+# input = "&(a, |(&(b, |(&(e,d), c)), d))"
+# input2 = "&(a, |(&(b, c), d))"
 
-if constraintTree:
-    print_constraint_tree(constraintTree)
+# 1-Constraint-Complement-Subtraction (1-CC-Subtract) Transformation
+# input = "&(a, |(&(b, |(&(b, c), d)), !(b)))"
+# input2 = "&(a, |(&(b, |(c, d)), !(b)))"
+
+# 1-Constraint-Complement-Subtraction (1-CC-Subtract) Transformation
+# input = "&(a, |(&(b, |(&(b, c), d)), !(b)))"
+# input2 = "&(a, |(&(b, |(c, d)), !(b)))"
 
 
-lastAction = reduceToElegance(constraintTree, [], [])
+
+# tree = BuildTree(input)
+# tree2 = BuildTree(input2)
+# root = BinaryExpressionTreeNode("Root")
+# root.type = NodeType.ROOT
+# root.right = tree
+#
+
+print("Constraint tree before modification")
+print_constraint_tree(constraintTree)
+
+rteOutput = reduceToElegance(current, dominantSet, commandSet)
+match rteOutput:
+    case ReductionSignal.DELETE:
+        parentOfCurrent.children = findAndRemoveChild(parentOfCurrent.children, current)
+
+print("RTE action: ", rteOutput)
+print("Constraint tree after modification")
+print_constraint_tree(constraintTree)
+#
+# root2 = BinaryExpressionTreeNode("Root")
+# root2.type = NodeType.ROOT
+# root2.right = tree2
+#
+# # print("Binary Expression Tree finished")
+# # print_tree(root)
+#
+# binaryConstraintTree = propagateTruthValue(root)
+# print("Binary Constraint Tree finished")
+# print_tree(binaryConstraintTree)
+#
+# binaryConstraintTree2 = propagateTruthValue(root2)
+# print("Binary Constraint Tree finished")
+# print_tree(binaryConstraintTree2)
+#
+# constraintTree = TreeNode("ROOT")
+# constraintTree.type = NodeType.ROOT
+#
+# constraintTree2 = TreeNode("ROOT")
+# constraintTree2.type = NodeType.ROOT
+
+# if binaryConstraintTree is not None:
+#     constraintTree = gatherJunctors(binaryConstraintTree, constraintTree)
+# # print("Constraint Tree Finished")
+# print("Before Reduction")
+#
+# if constraintTree:
+#     print_constraint_tree(constraintTree)
+#
+#
+# if binaryConstraintTree2 is not None:
+#     constraintTree2 = gatherJunctors(binaryConstraintTree2, constraintTree2)
+# # print("Constraint Tree Finished")
+# print("Before Reduction 2")
+#
+# if constraintTree:
+#     print_constraint_tree(constraintTree)
+
+
+# lastAction = reduceToElegance(constraintTree, [], [])
 # If the last action returned is a DELETE, that means the whole tree is a contradiction. Will always return False
 # If the last action returned is a DISCONNECT, that means the whole tree is a tautology. Will always return True
 # If the last action returned is a KEEP, that means the algorithm tried to reduce the tree as much as possible
-print("Last action after reduction: ", lastAction)
-if constraintTree:
-    print_constraint_tree(constraintTree)
+# print("Last action after reduction: ", lastAction)
+# if constraintTree:
+#     print_constraint_tree(constraintTree)
 # print("GuardSet: ")
 # if constraintTree is not None and constraintTree.guardSet is not None:
 #     for gct in constraintTree.guardSet:
@@ -152,6 +134,12 @@ if constraintTree:
 #     if constraintTree.children is not None:
 #         for bct in constraintTree.children:
 #             print_tree(bct)
+
+print("constraint tree 1")
+print_constraint_tree(constraintTree)
+
+print("constraint tree 2")
+print_constraint_tree(constraintTree2)
 
 print('*'*50)
 
@@ -169,7 +157,6 @@ def generateTruthTableValues(literals):
 
 # truthValues = {
 #     'A': True,
-#     'B': True,
 #     'C': False,
 #     'D': False,
 # }
@@ -232,14 +219,13 @@ def evaluateReducedConstraintTree(constraintTree, truthValues):
 
 # val = evaluateReducedConstraintTree(constraintTree, truthValues)
 # print(val)
-
 # truthTable = [
 #     (
 #         truthValues,
 #         outcome
 #     )
 # ]
-def generateExpressionTruthTable(literals):
+def generateExpressionTruthTable(tree, literals):
     truthTable = []
     for generatedTruthValues in generateTruthTableValues(literals):
         outcome = evaluateBinaryExpressionTreeNode(tree, generatedTruthValues)
@@ -247,8 +233,9 @@ def generateExpressionTruthTable(literals):
     return truthTable
 
 # print(generateExpressionTruthTable(['A', 'B']))
-print(generateExpressionTruthTable(['A', 'B', 'C']))
 # print(generateExpressionTruthTable(['A', 'B', 'C', 'D']))
+initialTruthTable = generateExpressionTruthTable(constraintTree, ['a', 'b', 'c', 'd'])
+supposedlyReducedTruthTable = generateExpressionTruthTable(constraintTree2, ['a', 'b', 'c', 'd'])
 
 def generateReducedTruthTable(literals):
     reducedTruthTable = []
@@ -258,9 +245,39 @@ def generateReducedTruthTable(literals):
     return reducedTruthTable
 
 # print(generateReducedTruthTable(['A', 'B']))
-print(generateReducedTruthTable(['A', 'B', 'C']))
+# print(generateReducedTruthTable(['A', 'B', 'C']))
 # print(generateReducedTruthTable(['A', 'B', 'C', 'D']))
+reducedTruthTable = generateReducedTruthTable(['a', 'b', 'c', 'd', 'e', 'f', 'g'])
 
+def compare_tables(table1, table2):
+    # Convert each tuple in the table into a sorted representation
+    def sorted_tuple(t):
+        return (tuple(sorted(t[0].items())), t[1])
+    
+    # Sort both tables based on their sorted tuple representation
+    sorted_table1 = sorted(map(sorted_tuple, table1))
+    sorted_table2 = sorted(map(sorted_tuple, table2))
+    
+    if sorted_table1 == sorted_table2:
+        print("Tables are equal.")
+        return True
+    else:
+        print("Tables are not equal.")
+        
+        # Create dictionaries to map the first elements to their boolean values
+        dict_table1 = {sorted_tuple(t)[0]: sorted_tuple(t)[1] for t in table1}
+        dict_table2 = {sorted_tuple(t)[0]: sorted_tuple(t)[1] for t in table2}
+        
+        # Find entries with the same first element but different second elements
+        for key in dict_table1:
+            if key in dict_table2 and dict_table1[key] != dict_table2[key]:
+                print(f"Mismatch found for entry {key}:")
+                print(f" - Table 1 has {dict_table1[key]}")
+                print(f" - Table 2 has {dict_table2[key]}")
+                
+        return False
+
+compare_tables(initialTruthTable, supposedlyReducedTruthTable)
 
 # dominantSet = [TreeNode("G7")]
 # localCommandSet = [TreeNode("G6")]

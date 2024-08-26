@@ -271,3 +271,32 @@ constraint2.type = NodeType.AND
 # parentOfCurrent = or11
 # dominantSet = [a, b]
 # commandSet = [c]
+
+# NOTE: Test cases for 1 Constraint Complement subtraction (1CCSubtract) tranforamtion.
+
+and11.guardSet = [b, c]
+and12.guardSet = [d]
+and21.guardSet = [b]
+and22.guardSet = [bprime]
+constraint.guardSet = [a]
+
+or11.children = [and11, and12]
+or21.children = [and21, and22]
+and21.children = [or11]
+constraint.children = [or21]
+
+and112.guardSet = [c]
+and122.guardSet = [d]
+and212.guardSet = [b]
+and222.guardSet = [bprime]
+constraint2.guardSet = [a]
+
+or112.children = [and112, and122]
+or212.children = [and212, and222]
+and212.children = [or112]
+constraint2.children = [or212]
+
+current = and11
+parentOfCurrent = or11
+dominantSet = [a, b]
+commandSet = [d]
