@@ -135,11 +135,11 @@ print_constraint_tree(constraintTree)
 #         for bct in constraintTree.children:
 #             print_tree(bct)
 
-print("constraint tree 1")
-print_constraint_tree(constraintTree)
-
-print("constraint tree 2")
-print_constraint_tree(constraintTree2)
+# print("constraint tree 1")
+# print_constraint_tree(constraintTree)
+#
+# print("constraint tree 2")
+# print_constraint_tree(constraintTree2)
 
 print('*'*50)
 

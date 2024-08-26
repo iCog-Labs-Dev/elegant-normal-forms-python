@@ -211,8 +211,9 @@ def orSubTreeIterator(
     localCommandSet = commandSet
     localCommandSet = commandSetIterator(currentNodeTemp.children, localCommandSet)
 
+    # Promote child to parent's guardSet
+    parent.guardSet += intersections(currentNodeTemp.children)
     action = orSubTreeElegance(parent, child, currentNode, dominantSet, localCommandSet)
-    parent.guardSet += intersections()
 
     match action:
         case IterationSignal.ADVANCE:
