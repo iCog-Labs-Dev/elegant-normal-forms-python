@@ -162,28 +162,53 @@ constraint2.type = NodeType.AND
 
 #NOTE: Test cases for cut unnecessary or (OrCut) transformation.
 
-and11.guardSet = [dprime]
-and21.guardSet = [b]
-and22.guardSet = [cprime]
-constraint.guardSet = [a]
+# and11.guardSet = [dprime]
+# and21.guardSet = [b]
+# and22.guardSet = [cprime]
+# constraint.guardSet = [a]
+#
+# or11.children = [and11]
+# or21.children = [and21, and22]
+# and21.children = [or11]
+# constraint.children = [or21]
+#
+# and112.guardSet = [b, dprime]
+# and122.guardSet = [cprime]
+# constraint2.guardSet = [a]
+#
+# or112.children = [and112, and122]
+# constraint2.children = [or112]
+#
+# current = or11
+# parentOfCurrent = and21
+# dominantSet = [a, b]
+# commandSet = []
 
-or11.children = [and11]
-or21.children = [and21, and22]
-and21.children = [or11]
-constraint.children = [or21]
+# NOTE: Test cases for cut unnecessary and (AndCut) transformation.
 
-and112.guardSet = [b, dprime]
-and122.guardSet = [cprime]
-constraint2.guardSet = [a]
-
-or112.children = [and112, and122]
-constraint2.children = [or112]
-
-current = or11
-parentOfCurrent = and21
-dominantSet = [a, b]
-commandSet = []
-
+# and11.guardSet = [b, a]
+# and12.guardSet = [eprime]
+# and21.guardSet = []
+# and22.guardSet = [c]
+# constraint.guardSet = [a]
+#
+# or11.children = [and11, and12]
+# or21.children = [and21, and22]
+# and21.children = [or11]
+# constraint.children = [or21]
+#
+# and112.guardSet = [b, d]
+# and122.guardSet = [eprime]
+# and132.guardSet = [c]
+# constraint2.guardSet = [a]
+#
+# or112.children = [and112, and122, and132]
+# constraint2.children = [or112]
+#
+# current = and21
+# parentOfCurrent = or21
+# dominantSet = []
+# commandSet = []
 
 # NOTE: Test cases for 0 constraint subsumption(0-Subsume) transformation.
 
@@ -213,3 +238,36 @@ commandSet = []
 #
 # constraint2.guardSet = [a]
 # constraint2.children = [or212]
+#
+# current = or22
+# parentOfCurrent = constraint
+# dominantSet = [a]
+# commandSet = []
+
+# NOTE: Test cases for 1 - Constraint - Subsumption (1Subsume) Transformation.
+
+# and11.guardSet = [e, d]
+# and12.guardSet = [c]
+# and21.guardSet = [b]
+# and22.guardSet = [d]
+# constraint.guardSet = [a]
+#
+# or11.children = [and11, and12]
+# or21.children = [and21, and22]
+# and21.children = [or11]
+# constraint.children = [or21]
+#
+# and112.guardSet = [c]
+# and212.guardSet = [b]
+# and222.guardSet = [d]
+# constraint2.guardSet = [a]
+#
+# or112.children = [and112]
+# or212.children = [and212, and222]
+# and212.children = [or112]
+# constraint2.children = [or212]
+#
+# current = and11
+# parentOfCurrent = or11
+# dominantSet = [a, b]
+# commandSet = [c]
