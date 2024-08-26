@@ -1,10 +1,10 @@
-from Utilities.BuildTree import *
-from Utilities.GatherJunctors import gatherJunctors
-from Utilities.HelperFunctions import print_tree, print_constraint_tree
-from Utilities.PropagateTruthValue import propagateTruthValue
-
 # from Utilities.HelperFunctions import isConsistent, union
 from DataStructures.Trees import *
+from enfCheckers.rule1 import rule1
+from Utilities.BuildTree import *
+from Utilities.GatherJunctors import gatherJunctors
+from Utilities.HelperFunctions import print_constraint_tree, print_tree
+from Utilities.PropagateTruthValue import propagateTruthValue
 
 # from DataStructures.Graphs import *
 # from Utilities.TraverseGraph import *
@@ -109,6 +109,7 @@ input = "|(A,B)"
 # input = "&(&(A,B),|(C,D))"
 # input = "|(|(!(A), &(A, &(B, C))), &(B, &(C, !(B))))"
 # input = "|(|(!(A), &(A, &(B, C))), &(C, &(B, !(B))))"
+input = "|(&(A, &(&(B, C), |(D, !(E)))), |(F, &(G, &(!(H), I))))"
 
 tree = BuildTree(input)
 root = BinaryExpressionTreeNode("Root")
