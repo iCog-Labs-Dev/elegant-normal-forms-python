@@ -1,4 +1,4 @@
-from Utilities.HelperFunctions import print_constraint_tree
+from Utilities.HelperFunctions import print_constraint_tree, union
 from Utilities.ReduceToElegance import commandSetIterator
 from DataStructures.Trees import NodeType, TreeNode
 
@@ -43,7 +43,50 @@ chAndNode5.type = NodeType.AND
 chAndNode5.guardSet.append(e)
 
 children = [a, b, c, d]
+
+
 # print(commandSetIterator(children))
+def commandSetIterator(children, level, localCommandSet, target, targetNodeLevel):
+    if children == [] or (
+        children[0].value == target.value and children[0].type == target.type
+    ):
+        return localCommandSet
+    else:
+        if (
+            children[0].children == []
+            and len(children[0].guardSet if children[0].guardSet else []) == 1
+            and children
+            and children[0].type == NodeType.AND
+        ):
+            return union(
+                children[0].guardSet,
+                commandSetIterator(
+                    children[1:], level, localCommandSet, target, targetNodeLevel
+                ),
+            )
+        else:
+            return commandSetIterator(
+                children[1:], level + 1, localCommandSet, target, targetNodeLevel
+            )
+
+
+def dominantSetIterator(children, level, localDominantSet, target, targetNodeLevel):
+    if children == []:
+        return localDominantSet
+    if children[0].value == target.value and children[0].type == target.type:
+        return localDominantSet
+    else:
+        if children[0].type == NodeType.AND and level < targetNodeLevel:
+            return union(
+                children[0].guardSet,
+                dominantSetIterator(
+                    children[1:], level, localDominantSet, target, targetNodeLevel
+                ),
+            )
+        else:
+            return dominantSetIterator(
+                children[1:], level + 1, localDominantSet, target, targetNodeLevel
+            )
 
 
 def buildOneSubsumeIO():
@@ -251,6 +294,10 @@ def OneCCSubtract():
     return input, output, bcAnd
 
 
+oneCCSub = OneCCSubtract()
+oneCCSubDomSet = dominantSetIterator(oneCCSub[0].children, 0, [], oneCCSub[2], 2)
+oneCCSubComSet = commandSetIterator(oneCCSub[0].children, 0, [], oneCCSub[2], 2)
+print(oneCCSubDomSet, oneCCSubComSet)
 # print_constraint_tree(OneCCSubtract()[0])
 # print_constraint_tree(OneCCSubtract()[1])
 # print_constraint_tree(OneCCSubtract()[2])
