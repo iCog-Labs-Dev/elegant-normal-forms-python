@@ -108,13 +108,14 @@ def intersections(
 
 
 def orSubTreeElegance(
+    parent: TreeNode,
     child: TreeNode,
     current: TreeNode,
     dominantSet: list[TreeNode],
     localCommandSet: list[TreeNode],
 ):
 
-    outcome = reduceToElegance(child, dominantSet, localCommandSet)
+    outcome = reduceToElegance(parent, child, dominantSet, localCommandSet)
 
     match outcome:
         case ReductionSignal.DELETE:
@@ -135,7 +136,7 @@ def andSubTreeElegance(
     handleSet: list[TreeNode],
     commandSet: list[TreeNode],
 ):
-    outcome = reduceToElegance(child, handleSet, commandSet)
+    outcome = reduceToElegance(child, child, handleSet, commandSet)
     match outcome:
         case ReductionSignal.DELETE:
             current.children = []
@@ -184,6 +185,7 @@ def andSubTreeElegance(
 
 
 def orSubTreeIterator(
+    parent: TreeNode,
     child: TreeNode,
     remainingChildren: list[TreeNode],
     currentNode: TreeNode,
@@ -195,6 +197,8 @@ def orSubTreeIterator(
     # If the initial state changes while the function is executing, it will result in unexpected behavior.
     # After the update is complete, it will not be necessary any more.
 
+    # This function is responsible for the Promote (Promote Common Constraint) trasofromation.
+
     currentNodeTemp= TreeNode(currentNode.value)
     currentNodeTemp.type = currentNode.type
     currentNodeTemp.guardSet = currentNode.guardSet
@@ -204,12 +208,14 @@ def orSubTreeIterator(
     localCommandSet = commandSet
     localCommandSet = commandSetIterator(currentNodeTemp.children, localCommandSet)
 
-    action = orSubTreeElegance(child, currentNode, dominantSet, localCommandSet)
+    action = orSubTreeElegance(parent, child, currentNode, dominantSet, localCommandSet)
+    parent.guardSet += intersections()
 
     match action:
         case IterationSignal.ADVANCE:
             if len(remainingChildren) > 0:
                 return orSubTreeIterator(
+                    parent,
                     remainingChildren[0],
                     remainingChildren[1:],
                     currentNode,
@@ -220,8 +226,7 @@ def orSubTreeIterator(
                 return None
         case IterationSignal.RESET:
             return None
-        case _:
-            return action
+        case _: return action
 
 
 def andSubTreeIterator(
@@ -277,6 +282,7 @@ def iterator(
 
 
 def reduceToElegance(
+    parent: TreeNode,
     current: Union[TreeNode, None],
     dominantSet: list[TreeNode],
     commandSet: list[TreeNode],
@@ -321,6 +327,7 @@ def reduceToElegance(
             # Current type is OR
             if len(current.children) > 0:
                 action = orSubTreeIterator(
+                    parent,
                     current.children[0],
                     current.children[1:],
                     current,

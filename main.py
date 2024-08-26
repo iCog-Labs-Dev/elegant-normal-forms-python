@@ -69,7 +69,7 @@ from test import constraint as constraintTree, constraint2 as constraintTree2, c
 print("Constraint tree before modification")
 print_constraint_tree(constraintTree)
 
-rteOutput = reduceToElegance(current, dominantSet, commandSet)
+rteOutput = reduceToElegance(parentOfCurrent, current, dominantSet, commandSet)
 match rteOutput:
     case ReductionSignal.DELETE:
         parentOfCurrent.children = findAndRemoveChild(parentOfCurrent.children, current)
