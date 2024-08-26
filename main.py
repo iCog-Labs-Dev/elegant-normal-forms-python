@@ -12,6 +12,70 @@ from Utilities.ReduceToElegance import reduceToElegance,orSubTreeElegance,andSub
 
 import itertools
 
+# Function to check ENF properties
+
+def check_property_4(node):
+
+    """
+    No AND node with an empty guardSet has fewer than two children if it's not the root node.
+    """
+
+    if node is None:
+        return True  
+
+    if node.type == NodeType.AND and node.guardSet == []:
+        if node.parent is not None and len(node.children) < 2:
+            return False
+    
+    return all(check_property_4(child) for child in node.children)
+
+def check_property_5(node):
+    """
+    For each OR node, the intersection of the guard sets of its children is empty.
+    """
+    
+    if node is None:
+        return True  
+
+    if node.type == NodeType.OR:
+        guard_sets = [child.guardSet for child in node.children]
+        for i, gs1 in enumerate(guard_sets):
+            for j, gs2 in enumerate(guard_sets):
+                if i != j and set(gs1) & set(gs2):
+                    return False
+   
+    return all(check_property_5(child) for child in node.children)
+
+def check_property_6(node):
+    """
+    For each AND node, the intersection of its guard set and its dominant set is empty.
+    """
+    
+    if node is None:
+        return True 
+
+    if node.type == NodeType.AND:
+        dominant_set = getattr(node, 'dominantSet', [])
+        if set(node.guardSet) & set(dominant_set):
+            return False
+    
+    
+    return all(check_property_6(child) for child in node.children)
+
+def check_property_7(node):
+    """
+    For each AND node, the intersection of its guard set and its command set is empty.
+    """
+    if node is None:
+        return True  
+
+    if node.type == NodeType.AND:
+        command_set = getattr(node, 'commandSet', [])
+        if set(node.guardSet) & set(command_set):
+            return False
+    
+    return all(check_property_7(child) for child in node.children)
+    
 # ex_a = BinaryConstraintTreeNode("x")
 # ex_b = BinaryConstraintTreeNode("x")
 # ex_c = BinaryConstraintTreeNode("y")
@@ -257,6 +321,26 @@ def generateReducedTruthTable(literals):
 # print(generateReducedTruthTable(['A', 'B']))
 print(generateReducedTruthTable(['A', 'B', 'C']))
 # print(generateReducedTruthTable(['A', 'B', 'C', 'D']))
+
+
+
+# Check ENF properties
+
+
+property_4_satisfied = check_property_4(constraintTree)
+print(f"Property 4 satisfied: {property_4_satisfied}")
+
+property_5_satisfied = check_property_5(constraintTree)
+print(f"Property 5 satisfied: {property_5_satisfied}")
+
+property_6_satisfied = check_property_6(constraintTree)
+print(f"Property 6 satisfied: {property_6_satisfied}")
+
+property_7_satisfied = check_property_7(constraintTree)
+print(f"Property 7 satisfied: {property_7_satisfied}")
+
+
+
 
 
 # dominantSet = [TreeNode("G7")]
