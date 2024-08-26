@@ -148,6 +148,7 @@ class TestGatherJunctors(unittest.TestCase):
 
     def testCase02(self):
         # Initial tree setup
+        # (AND (OR A B) C)
         input_tree = TreeNode("ROOT")
         input_tree.type = NodeType.ROOT
         input_tree.children = []
