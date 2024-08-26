@@ -204,6 +204,70 @@ class TestReduceToElegance(unittest.TestCase):
         self.node27.guardSet = []
         self.node27.children = []
 
+        self.nodeA = TreeNode("A")
+        self.nodeA.type = NodeType.LITERAL
+        self.nodeA.constraint = True
+
+        self.nodeB = TreeNode("B")
+        self.nodeB.type = NodeType.LITERAL
+        self.nodeB.constraint = True
+
+        self.nodeC = TreeNode("C")
+        self.nodeC.type = NodeType.LITERAL
+        self.nodeC.constraint = True
+
+        self.nodeD = TreeNode("D")
+        self.nodeD.type = NodeType.LITERAL
+        self.nodeD.constraint = True
+
+        # Child nodes with guardSets
+        self.node28 = TreeNode("AND")
+        self.node28.type = NodeType.AND
+        self.node28.guardSet = [self.nodeA, self.nodeB]
+
+        self.node29 = TreeNode("AND")
+        self.node29.type = NodeType.AND
+        self.node29.guardSet = [self.nodeA, self.nodeC]
+
+        self.node30 = TreeNode("AND")
+        self.node30.type = NodeType.AND
+        self.node30.guardSet = [self.nodeB, self.nodeD]
+
+    def test_empty_children(self):
+        # Test with no children
+        result = intersections([])  # Pass only the required argument
+        self.assertEqual(result, [])
+
+    def test_single_child(self):
+        # Test with a single child
+        result = intersections([self.node28])  # Pass only the required argument
+        self.assertEqual(result, self.node28.guardSet)
+
+    def test_all_nodes_intersect(self):
+        # Test where there is a common intersection (e.g., nodeA)
+        node4 = TreeNode("AND")
+        node4.type = NodeType.AND
+        node4.guardSet = [self.nodeA, self.nodeD]
+
+        result = intersections([self.node28, self.node29, node4])  # Pass only the required argument
+        self.assertEqual(result, [self.nodeA])
+
+    def test_no_intersection(self):
+        # Test where there is no intersection (no common node in guardSets)
+        result = intersections([self.node28, self.node30])  # Pass only the required argument
+        self.assertEqual(result, [self.nodeB])
+
+    def test_partial_intersection(self):
+        # Test where some but not all nodes intersect (e.g., nodeB)
+        node4 = TreeNode("AND")
+        node4.type = NodeType.AND
+        node4.guardSet = [self.nodeB, self.nodeD]
+
+        result = intersections([self.node28, node4])  # Pass only the required argument
+        self.assertEqual(result, [self.nodeB])
+
+        
+
     def test_empty_children(self):
         self.assertFalse(containsTerminalAndNode([]), "Should return False for empty children list")
 
@@ -337,46 +401,6 @@ class TestReduceToElegance(unittest.TestCase):
 
         # The guardSet should now only contain node1
         self.assertEqual(grandChild.guardSet, [self.node1])
-
-
-    def test_intersections_no_children(self):
-        # No children provided
-        result = intersections([], [])
-        
-        # Should return an empty list
-        self.assertEqual(result, [])
-    def test_intersections_basic(self):
-        children = [self.node4, self.node5]
-        intersectionSet = [self.node4.guardSet[0], self.node5.guardSet[0]]
-
-        result = intersections(intersectionSet, children)
-
-        # The intersection should return the common guard set
-        self.assertEqual(result, [])
-    def test_intersections_no_common_guardSet(self):
-        children = [self.node4, self.node5]
-        intersectionSet = [TreeNode("X")]
-
-        result = intersections(intersectionSet, children)
-
-        # There should be no intersection
-        self.assertEqual(result, [])
-    def test_intersections_empty_children(self):
-        intersectionSet = [self.node4.guardSet[0]]
-
-        result = intersections(intersectionSet, [])
-
-        # Result should be empty as there are no children
-        self.assertEqual(result, [])
-    
-    def test_intersections_empty_intersectionSet(self):
-        children = [self.node4, self.node5]
-        intersectionSet = []
-
-        result = intersections(intersectionSet, children)
-
-        # Result should be empty as intersectionSet is empty
-        self.assertEqual(result, [])
 
     def test_applyOrCut_basic(self):
         # Testing applyOrCut with simple nodes

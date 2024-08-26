@@ -94,16 +94,19 @@ def applyAndCut(grandChild: TreeNode, child: TreeNode):
 def computeGrandChildGuardSet(grandChild: TreeNode, resultSet: list[TreeNode]):
     grandChild.guardSet = setDifference(grandChild.guardSet, resultSet)
 
-
-def intersections(
-    intersectionSet: list[TreeNode], children: list[TreeNode]
-) -> list[TreeNode]:
-    if len(children) == 0:
+def intersections(children: list[TreeNode]) -> list[TreeNode]:
+    # Base case: If there's only one child or no children, return its guardSet or an empty list
+    if not children:
         return []
+    if len(children) == 1:
+        return children[0].guardSet
 
-    intersectionSet = intersection(intersectionSet, children[0].guardSet)
-
-    return intersections(intersectionSet, children[1:])
+    # Recursive case: Intersect the guardSet of the first child with the intersection of the rest
+    first_child_guardSet = children[0].guardSet
+    remaining_intersections = intersections(children[1:])
+    
+    # Intersect the current guardSet with the result of the recursive call
+    return intersection(first_child_guardSet, remaining_intersections)
 
 
 def orSubTreeElegance(
@@ -145,7 +148,7 @@ def andSubTreeElegance(
             return IterationSignal.ADVANCE
 
         case ReductionSignal.KEEP:
-            resultSet = intersections([], current.children)
+            resultSet = intersections(current.children)
             if len(resultSet) > 0:
                 current.guardSet = union(current.guardSet, resultSet)
                 list(
