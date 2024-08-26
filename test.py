@@ -1,5 +1,4 @@
 from Utilities.HelperFunctions import print_constraint_tree, union
-from Utilities.ReduceToElegance import commandSetIterator
 from DataStructures.Trees import NodeType, TreeNode
 
 a = TreeNode("a")
@@ -294,10 +293,10 @@ def OneCCSubtract():
     return input, output, bcAnd
 
 
-oneCCSub = OneCCSubtract()
-oneCCSubDomSet = dominantSetIterator(oneCCSub[0].children, 0, [], oneCCSub[2], 2)
-oneCCSubComSet = commandSetIterator(oneCCSub[0].children, 0, [], oneCCSub[2], 2)
-print(oneCCSubDomSet, oneCCSubComSet)
+# oneCCSub = OneCCSubtract()
+# oneCCSubDomSet = dominantSetIterator(oneCCSub[0].children, 0, [], oneCCSub[2], 3)
+# oneCCSubComSet = commandSetIterator(oneCCSub[0].children, 0, [], oneCCSub[2], 3)
+# print(oneCCSubDomSet, oneCCSubComSet)
 # print_constraint_tree(OneCCSubtract()[0])
 # print_constraint_tree(OneCCSubtract()[1])
 # print_constraint_tree(OneCCSubtract()[2])
