@@ -102,7 +102,7 @@ def ruleFour(tree: TreeNode, is_root=True) -> bool:
 
     # Recursive Case: Check all children
     for child in tree.children:
-        if not ruleFour(child,False):
+        if not ruleFour(child, False):
             return False
 
     return True
@@ -122,7 +122,11 @@ def ruleFive(tree):
 
             traverse(child, level + 1)
 
-    traverse(tree)
+    try:
+        traverse(tree)
+        return True
+    except AssertionError:
+        return False
 
 
 def ruleSix(tree):
@@ -160,7 +164,11 @@ def ruleSix(tree):
                 ), "Not in ENF, case 6 failed"
             traverse(root, child, level + 1)
 
-    traverse(tree, tree)
+    try:
+        traverse(tree, tree)
+        return True
+    except AssertionError:
+        return False
 
 
 def ruleSeven(tree):
@@ -209,4 +217,8 @@ def ruleSeven(tree):
 
             traverse(root, child, level + 1)
 
-    traverse(tree, tree)
+    try:
+        traverse(tree, tree)
+        return True
+    except AssertionError:
+        return False
