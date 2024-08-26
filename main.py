@@ -14,7 +14,7 @@ import itertools
 
 # Function to check ENF properties
 
-def check_property_4(node):
+def check_property_4(node, is_root=True):
 
     """
     No AND node with an empty guardSet has fewer than two children if it's not the root node.
@@ -24,10 +24,10 @@ def check_property_4(node):
         return True  
 
     if node.type == NodeType.AND and node.guardSet == []:
-        if node.parent is not None and len(node.children) < 2:
+        if not is_root and len(node.children) < 2:
             return False
-    
-    return all(check_property_4(child) for child in node.children)
+        
+    return all(check_property_4(child, is_root=False) for child in node.children)
 
 def check_property_5(node):
     """
@@ -74,6 +74,7 @@ def check_property_7(node):
         if set(node.guardSet) & set(command_set):
             return False
     
+
     return all(check_property_7(child) for child in node.children)
     
 # ex_a = BinaryConstraintTreeNode("x")
