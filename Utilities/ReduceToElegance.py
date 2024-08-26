@@ -77,6 +77,7 @@ def applyOrCut(child: TreeNode, current: TreeNode):
         current.guardSet = union(current.guardSet, grandChild.guardSet)
         current.children = grandChild.children + current.children
         current.children = findAndRemoveChild(current.children, grandChild)
+        current.children = findAndRemoveChild(current.children, child)
 
 
 def applyAndCut(grandChild: TreeNode, child: TreeNode):
