@@ -21,24 +21,62 @@ d.constraint = True
 e.constraint = True
 f.constraint = True
 
+or11 = TreeNode("OR")
+or21 = TreeNode("OR")
+or22 = TreeNode("OR")
+or11.type = NodeType.OR
+or21.type = NodeType.OR
+or22.type = NodeType.OR
+
+or112 = TreeNode("OR")
+or212 = TreeNode("OR")
+or222 = TreeNode("OR")
+or112.type = NodeType.OR
+or212.type = NodeType.OR
+or222.type = NodeType.OR
+
+and11 = TreeNode("AND")
+and12 = TreeNode("AND")
+and13 = TreeNode("AND")
+and14 = TreeNode("AND")
+and21 = TreeNode("AND")
+and22 = TreeNode("AND")
+and23 = TreeNode("AND")
+and24 = TreeNode("AND")
+and11.type = NodeType.AND
+and12.type = NodeType.AND
+and13.type = NodeType.AND
+and14.type = NodeType.AND
+and21.type = NodeType.AND
+and22.type = NodeType.AND
+and23.type = NodeType.AND
+and24.type = NodeType.AND
+
+and112 = TreeNode("AND")
+and122 = TreeNode("AND")
+and132 = TreeNode("AND")
+and142 = TreeNode("AND")
+and212 = TreeNode("AND")
+and222 = TreeNode("AND")
+and232 = TreeNode("AND")
+and242 = TreeNode("AND")
+and112.type = NodeType.AND
+and122.type = NodeType.AND
+and132.type = NodeType.AND
+and142.type = NodeType.AND
+and212.type = NodeType.AND
+and222.type = NodeType.AND
+and232.type = NodeType.AND
+and242.type = NodeType.AND
+
+constraint = TreeNode("AND")
+constraint.type = NodeType.AND
+
+constraint2= TreeNode("AND")
+constraint2.type = NodeType.AND
+
 #NOTE: Test case for inconsistent handle (InconHandle).
 
-# and11 = TreeNode("AND")
-# and12 = TreeNode("AND")
-# and21 = TreeNode("AND")
-# and22 = TreeNode("AND")
-# constraint = TreeNode("AND")
-# and11.type = NodeType.AND
-# and12.type = NodeType.AND
-# and21.type = NodeType.AND
-# and22.type = NodeType.AND
-# constraint.type = NodeType.AND
-#
-# or11 = TreeNode("OR")
-# or21 = TreeNode("OR")
-# or11.type = NodeType.OR
-# or21.type = NodeType.OR
-#
 # and11.guardSet = [b]
 # and12.guardSet = [c]
 # and21.guardSet = [aprime]
@@ -49,11 +87,6 @@ f.constraint = True
 # constraint.children = [or21]
 # or11.children = [and11, and12]
 # or21.children = [and21, and22]
-#
-# and112 = TreeNode("AND")
-# constraint2 = TreeNode("AND")
-# and112.type = NodeType.AND
-# constraint2.type = NodeType.AND
 #
 # or112 = TreeNode("OR")
 # or112.type = NodeType.OR
@@ -71,23 +104,6 @@ f.constraint = True
 
 #NOTE: Test cases for Promote-Common-Constraints (Promote) Transformation.
 
-# and11 = TreeNode("AND")
-# and12 = TreeNode("AND")
-# and13 = TreeNode("AND")
-# and14 = TreeNode("AND")
-# and11.type = NodeType.AND
-# and12.type = NodeType.AND
-# and13.type = NodeType.AND
-# and14.type = NodeType.AND
-#
-# or11 = TreeNode("OR")
-# or12 = TreeNode("OR")
-# or11.type = NodeType.OR
-# or12.type = NodeType.OR
-#
-# constraint = TreeNode("AND")
-# constraint.type = NodeType.AND
-#
 # and11.guardSet = [bprime, c]
 # and12.guardSet = [bprime]
 # and13.guardSet = [cprime]
@@ -98,24 +114,6 @@ f.constraint = True
 #
 # constraint.guardSet = [a]
 # constraint.children = [or11, or12]
-#
-#
-# and112 = TreeNode("AND")
-# and122 = TreeNode("AND")
-# and132 = TreeNode("AND")
-# and142 = TreeNode("AND")
-# and112.type = NodeType.AND
-# and122.type = NodeType.AND
-# and132.type = NodeType.AND
-# and142.type = NodeType.AND
-#
-# or112 = TreeNode("OR")
-# or122 = TreeNode("OR")
-# or112.type = NodeType.OR
-# or122.type = NodeType.OR
-#
-# constraint2 = TreeNode("AND")
-# constraint2.type = NodeType.AND
 #
 # and112.guardSet = [c]
 # and122.guardSet = []
@@ -135,20 +133,6 @@ f.constraint = True
 
 # NOTE: Test cases for subtract redundant constraint (Redundant) transformation.
 
-# and11 = TreeNode("AND")
-# and12 = TreeNode("AND")
-# and21 = TreeNode("AND")
-# and22 = TreeNode("AND")
-# constraint = TreeNode("AND")
-# and11.type = NodeType.AND
-# and12.type = NodeType.AND
-# and21.type = NodeType.AND
-# and22.type = NodeType.AND
-# constraint.type = NodeType.AND
-#
-# or11 = TreeNode("OR")
-# or21 = TreeNode("OR")
-#
 # and11.guardSet = [a, c, dprime]
 # and12.guardSet = [a]
 # and21.guardSet = [bprime, c]
@@ -159,20 +143,6 @@ f.constraint = True
 # or21.children = [and21, and22]
 # and21.children = [or11]
 # constraint.children = [or21]
-#
-# and112 = TreeNode("AND")
-# and122 = TreeNode("AND")
-# and212 = TreeNode("AND")
-# and222 = TreeNode("AND")
-# constraint2 = TreeNode("AND")
-# and112.type = NodeType.AND
-# and122.type = NodeType.AND
-# and212.type = NodeType.AND
-# and222.type = NodeType.AND
-# constraint2.type = NodeType.AND
-#
-# or112 = TreeNode("OR")
-# or212 = TreeNode("OR")
 #
 # and112.guardSet = [dprime]
 # and122.guardSet = [a]
@@ -190,30 +160,12 @@ f.constraint = True
 # dominantSet = [bprime, c, a]
 # commandSet = [a]
 
+#NOTE: Test cases for cut unnecessary or (OrCut) transformation.
+
+
+
 # NOTE: Test cases for 0 constraint subsumption(0-Subsume) transformation.
 
-# or11 = TreeNode("OR")
-# or21 = TreeNode("OR")
-# or22 = TreeNode("OR")
-# or11.type = NodeType.OR
-# or21.type = NodeType.OR
-# or22.type = NodeType.OR
-#
-# and11 = TreeNode("AND")
-# and12 = TreeNode("AND")
-# and21 = TreeNode("AND")
-# and22 = TreeNode("AND")
-# and23 = TreeNode("AND")
-# and24 = TreeNode("AND")
-# and12.type = NodeType.AND
-# and21.type = NodeType.AND
-# and22.type = NodeType.AND
-# and23.type = NodeType.AND
-# and24.type = NodeType.AND
-#
-# constraint = TreeNode("AND")
-# constraint.type = NodeType.AND
-#
 # and11.guardSet = [e]
 # and12.guardSet = [f]
 # and21.guardSet = [a]
@@ -228,23 +180,6 @@ f.constraint = True
 #
 # constraint.guardSet = [a]
 # constraint.children = [or21, or22]
-#
-#
-# or112 = TreeNode("OR")
-# or212 = TreeNode("OR")
-# or112.type = NodeType.OR
-# or212.type = NodeType.OR
-#
-# and112 = TreeNode("AND")
-# and122 = TreeNode("AND")
-# and212 = TreeNode("AND")
-# and222 = TreeNode("AND")
-# and122.type = NodeType.AND
-# and212.type = NodeType.AND
-# and222.type = NodeType.AND
-#
-# constraint2 = TreeNode("AND")
-# constraint2.type = NodeType.AND
 #
 # and112.guardSet = [e]
 # and122.guardSet = [f]
