@@ -113,6 +113,7 @@ def orSubTreeElegance(
     dominantSet: list[TreeNode],
     localCommandSet: list[TreeNode],
 ):
+
     outcome = reduceToElegance(child, dominantSet, localCommandSet)
 
     match outcome:
@@ -189,8 +190,19 @@ def orSubTreeIterator(
     dominantSet: list[TreeNode],
     commandSet: list[TreeNode],
 ):
+    # This code is added here to prevent preserve the previous state until the update is complete.
+    # The update is dependent on the currentNode's state before the function was called.
+    # If the initial state changes while the function is executing, it will result in unexpected behavior.
+    # After the update is complete, it will not be necessary any more.
+
+    currentNodeTemp= TreeNode(currentNode.value)
+    currentNodeTemp.type = currentNode.type
+    currentNodeTemp.guardSet = currentNode.guardSet
+    currentNodeTemp.children = currentNode.children
+    currentNodeTemp.constraint = currentNode.constraint
+
     localCommandSet = commandSet
-    localCommandSet = commandSetIterator(remainingChildren, localCommandSet)
+    localCommandSet = commandSetIterator(currentNodeTemp.children, localCommandSet)
 
     action = orSubTreeElegance(child, currentNode, dominantSet, localCommandSet)
 
