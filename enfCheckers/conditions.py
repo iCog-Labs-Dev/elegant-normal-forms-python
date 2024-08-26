@@ -49,6 +49,15 @@ def ruleOne(node: TreeNode, branch_set: list[TreeNode] | None = None) -> bool:
     return True
 
 
+def ruleTwo(node: TreeNode):
+    if node.type == NodeType.AND and not node.children:
+        return len(node.guardSet) > 0
+    for child in node.children:
+        if not ruleTwo(child):
+            return False
+    return True
+
+
 def ruleFive(tree):
     def traverse(node, level=0):
         for child in node.children:
