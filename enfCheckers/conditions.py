@@ -84,6 +84,7 @@ def ruleFour(tree: TreeNode) -> bool:
 
     Condition that must be fulfilled to be ENF:
      - The node must be of type AND.
+     - The node must not be the root node.
      - The node must have empty guard sets.
      - The node must be non-terminal node.
      - The AND node must have at least two children.
@@ -92,6 +93,7 @@ def ruleFour(tree: TreeNode) -> bool:
     # Base Case
     if (
         tree.type == NodeType.AND
+        and tree.type != NodeType.ROOT
         and not tree.guardSet
         and tree.children
         and len(tree.children) < 2
