@@ -1,19 +1,24 @@
 # from Utilities.HelperFunctions import isConsistent, union
+import itertools
+
 from DataStructures.Trees import *
-from enfCheckers.rule1 import rule1
+from enfCheckers.conditions import ruleFive, ruleOne, ruleSeven, ruleSix
 from Utilities.BuildTree import *
 from Utilities.GatherJunctors import gatherJunctors
 from Utilities.HelperFunctions import print_constraint_tree, print_tree
 from Utilities.PropagateTruthValue import propagateTruthValue
+from Utilities.ReduceToElegance import (
+    andSubTreeElegance,
+    andSubTreeIterator,
+    iterator,
+    orSubTreeElegance,
+    orSubTreeIterator,
+    reduceToElegance,
+)
 
 # from DataStructures.Graphs import *
 # from Utilities.TraverseGraph import *
 
-from enfCheckers.conditions import ruleFive, ruleSix, ruleSeven
-
-from Utilities.ReduceToElegance import reduceToElegance,orSubTreeElegance,andSubTreeElegance,orSubTreeIterator,andSubTreeIterator,iterator
-
-import itertools
 
 # ex_a = BinaryConstraintTreeNode("x")
 # ex_b = BinaryConstraintTreeNode("x")
@@ -105,7 +110,7 @@ import itertools
 # input = "|(A, |(B, |(C, |(D, C))))"
 # input = "|(A, &(B, &(C, &(D, C))))"
 # input = "|(&(A, B), |(A, C))"
-input = "|(A,B)"
+# input = "|(A,B)"
 # input = "&(&(A,B),|(C,D))"
 # input = "|(|(!(A), &(A, &(B, C))), &(B, &(C, !(B))))"
 # input = "|(|(!(A), &(A, &(B, C))), &(C, &(B, !(B))))"
@@ -144,6 +149,7 @@ print("Last action after reduction: ", lastAction)
 if constraintTree:
     print_constraint_tree(constraintTree)
     # check if the enf conditions hold
+    ruleOne(constraintTree)
     ruleFive(constraintTree)
     ruleSix(constraintTree)
     ruleSeven(constraintTree)
@@ -158,16 +164,18 @@ if constraintTree:
 #         for bct in constraintTree.children:
 #             print_tree(bct)
 
-print('*'*50)
+print("*" * 50)
+
 
 def generateTruthTableValues(literals):
-    combinations = list (itertools.product([True, False], repeat=len(literals)))
+    combinations = list(itertools.product([True, False], repeat=len(literals)))
 
     result = []
     for combination in combinations:
-        result.append(dict(zip(literals,combination)))
-    
+        result.append(dict(zip(literals, combination)))
+
     return result
+
 
 # print(generateTruthTableValues(['A', 'B', 'C', 'D', 'E']))
 # print(len(generateTruthTableValues(['A', 'B', 'C', 'D', 'E'])))
@@ -179,27 +187,32 @@ def generateTruthTableValues(literals):
 #     'D': False,
 # }
 
+
 def evaluateBinaryExpressionTreeNode(currentNode, truthValues):
     match currentNode.type:
         case NodeType.NOT:
             if currentNode.right is not None:
-                return (not evaluateBinaryExpressionTreeNode(currentNode.right, truthValues))
+                return not evaluateBinaryExpressionTreeNode(
+                    currentNode.right, truthValues
+                )
         case NodeType.AND:
             if currentNode.left is not None and currentNode.right is not None:
-                return (
-                    evaluateBinaryExpressionTreeNode(currentNode.left, truthValues) and evaluateBinaryExpressionTreeNode(currentNode.right, truthValues)
-                )
+                return evaluateBinaryExpressionTreeNode(
+                    currentNode.left, truthValues
+                ) and evaluateBinaryExpressionTreeNode(currentNode.right, truthValues)
         case NodeType.OR:
             if currentNode.left is not None and currentNode.right is not None:
-                return (
-                    evaluateBinaryExpressionTreeNode(currentNode.left, truthValues) or evaluateBinaryExpressionTreeNode(currentNode.right, truthValues)
-                )
+                return evaluateBinaryExpressionTreeNode(
+                    currentNode.left, truthValues
+                ) or evaluateBinaryExpressionTreeNode(currentNode.right, truthValues)
         case NodeType.LITERAL:
             if currentNode.value is not None and currentNode.value in truthValues:
                 return truthValues[currentNode.value]
 
+
 # res = evaluateBinaryExpressionTreeNode(tree, truthValues)
 # print(res)
+
 
 def evaluateReducedConstraintTree(constraintTree, truthValues):
     truthValue = None
@@ -214,7 +227,7 @@ def evaluateReducedConstraintTree(constraintTree, truthValues):
 
                         if literal.constraint == False:
                             literalTruthValue = not literalTruthValue
-                        
+
                         if truthValue is None:
                             truthValue = literalTruthValue
                         else:
@@ -225,18 +238,24 @@ def evaluateReducedConstraintTree(constraintTree, truthValues):
                     if truthValue is None:
                         truthValue = evaluateReducedConstraintTree(orNode, truthValues)
                     else:
-                        truthValue = truthValue and evaluateReducedConstraintTree(orNode, truthValues)
+                        truthValue = truthValue and evaluateReducedConstraintTree(
+                            orNode, truthValues
+                        )
             return truthValue
         case NodeType.OR:
             for andNode in constraintTree.children:
                 if truthValue is None:
                     truthValue = evaluateReducedConstraintTree(andNode, truthValues)
                 else:
-                    truthValue = truthValue or evaluateReducedConstraintTree(andNode, truthValues)
+                    truthValue = truthValue or evaluateReducedConstraintTree(
+                        andNode, truthValues
+                    )
             return truthValue
+
 
 # val = evaluateReducedConstraintTree(constraintTree, truthValues)
 # print(val)
+
 
 # truthTable = [
 #     (
@@ -251,9 +270,11 @@ def generateExpressionTruthTable(literals):
         truthTable.append((generatedTruthValues, outcome))
     return truthTable
 
+
 # print(generateExpressionTruthTable(['A', 'B']))
-print(generateExpressionTruthTable(['A', 'B', 'C']))
+print(generateExpressionTruthTable(["A", "B", "C"]))
 # print(generateExpressionTruthTable(['A', 'B', 'C', 'D']))
+
 
 def generateReducedTruthTable(literals):
     reducedTruthTable = []
@@ -262,8 +283,9 @@ def generateReducedTruthTable(literals):
         reducedTruthTable.append((generatedTruthValues, outcome))
     return reducedTruthTable
 
+
 # print(generateReducedTruthTable(['A', 'B']))
-print(generateReducedTruthTable(['A', 'B', 'C']))
+print(generateReducedTruthTable(["A", "B", "C"]))
 # print(generateReducedTruthTable(['A', 'B', 'C', 'D']))
 
 
