@@ -162,6 +162,27 @@ constraint2.type = NodeType.AND
 
 #NOTE: Test cases for cut unnecessary or (OrCut) transformation.
 
+and11.guardSet = [dprime]
+and21.guardSet = [b]
+and22.guardSet = [cprime]
+constraint.guardSet = [a]
+
+or11.children = [and11]
+or21.children = [and21, and22]
+and21.children = [or11]
+constraint.children = [or21]
+
+and112.guardSet = [b, dprime]
+and122.guardSet = [cprime]
+constraint2.guardSet = [a]
+
+or112.children = [and112, and122]
+constraint2.children = [or112]
+
+current = or11
+parentOfCurrent = and21
+dominantSet = [a, b]
+commandSet = []
 
 
 # NOTE: Test cases for 0 constraint subsumption(0-Subsume) transformation.
