@@ -78,7 +78,7 @@ def ruleThree(node: TreeNode) -> bool:
     return True
 
 
-def ruleFour(tree: TreeNode) -> bool:
+def ruleFour(tree: TreeNode, is_root=True) -> bool:
     """
     #4) Checks if the given tree satisfies the ENF condition for AND nodes.
 
@@ -93,7 +93,7 @@ def ruleFour(tree: TreeNode) -> bool:
     # Base Case
     if (
         tree.type == NodeType.AND
-        and tree.type != NodeType.ROOT
+        and not is_root
         and not tree.guardSet
         and tree.children
         and len(tree.children) < 2
@@ -102,7 +102,7 @@ def ruleFour(tree: TreeNode) -> bool:
 
     # Recursive Case: Check all children
     for child in tree.children:
-        if not ruleFour(child):
+        if not ruleFour(child,False):
             return False
 
     return True
