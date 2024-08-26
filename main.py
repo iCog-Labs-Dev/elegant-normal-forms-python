@@ -2,7 +2,15 @@
 import itertools
 
 from DataStructures.Trees import *
-from enfCheckers.conditions import ruleFive, ruleFour, ruleOne, ruleSeven, ruleSix, ruleThree, ruleTwo
+from enfCheckers.conditions import (
+    ruleFive,
+    ruleFour,
+    ruleOne,
+    ruleSeven,
+    ruleSix,
+    ruleThree,
+    ruleTwo,
+)
 from Utilities.BuildTree import *
 from Utilities.GatherJunctors import gatherJunctors
 from Utilities.HelperFunctions import print_constraint_tree, print_tree
@@ -149,13 +157,24 @@ print("Last action after reduction: ", lastAction)
 if constraintTree:
     print_constraint_tree(constraintTree)
     # check if the enf conditions hold
-    ruleOne(constraintTree)
-    ruleTwo(constraintTree)
-    ruleThree(constraintTree)
-    ruleFour(constraintTree)
-    ruleFive(constraintTree)
-    ruleSix(constraintTree)
-    ruleSeven(constraintTree)
+    rules = [
+        ruleOne,
+        ruleTwo,
+        ruleThree,
+        ruleFour,
+        ruleFive,
+        ruleSix,
+        ruleSeven,
+    ]
+
+    try:
+        for rule in rules:
+            if not rule(constraintTree):
+                raise Exception(f"{rule.__name__} failed")
+        print("ENF conditions passed")
+    except Exception as e:
+        print("ENF conditions failed:", e)
+
 # print("GuardSet: ")
 # if constraintTree is not None and constraintTree.guardSet is not None:
 #     for gct in constraintTree.guardSet:
