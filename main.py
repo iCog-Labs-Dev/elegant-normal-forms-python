@@ -2,7 +2,7 @@
 import itertools
 
 from DataStructures.Trees import *
-from enfCheckers.conditions import ruleFive, ruleOne, ruleSeven, ruleSix, ruleThree, ruleTwo
+from enfCheckers.conditions import ruleFive, ruleFour, ruleOne, ruleSeven, ruleSix, ruleThree, ruleTwo
 from Utilities.BuildTree import *
 from Utilities.GatherJunctors import gatherJunctors
 from Utilities.HelperFunctions import print_constraint_tree, print_tree
@@ -152,6 +152,7 @@ if constraintTree:
     ruleOne(constraintTree)
     ruleTwo(constraintTree)
     ruleThree(constraintTree)
+    ruleFour(constraintTree)
     ruleFive(constraintTree)
     ruleSix(constraintTree)
     ruleSeven(constraintTree)

@@ -57,24 +57,54 @@ def ruleTwo(node: TreeNode):
             return False
     return True
 
+
 def ruleThree(node: TreeNode) -> bool:
     """
     #3) Checks if the given tree satisfies the ENF condition for OR nodes.
-    
+
     Condition that must be fulfilled:
      - The OR node must have at least two children.
     """
-    
+
     # Base Case: If a node is OR type and has less than 2 children, then it is not ENF.
     if node.type == NodeType.OR and len(node.children) < 2:
         return False
-    
+
     # recursive case: check all children
     for child in node.children:
         if not ruleThree(child):
             return False
-    
+
     return True
+
+
+def ruleFour(tree: TreeNode) -> bool:
+    """
+    #4) Checks if the given tree satisfies the ENF condition for AND nodes.
+
+    Condition that must be fulfilled to be ENF:
+     - The node must be of type AND.
+     - The node must have empty guard sets.
+     - The node must be non-terminal node.
+     - The AND node must have at least two children.
+    """
+
+    # Base Case
+    if (
+        tree.type == NodeType.AND
+        and not tree.guardSet
+        and tree.children
+        and len(tree.children) < 2
+    ):
+        return False
+
+    # Recursive Case: Check all children
+    for child in tree.children:
+        if not ruleFour(child):
+            return False
+
+    return True
+
 
 def ruleFive(tree):
     def traverse(node, level=0):
