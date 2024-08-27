@@ -50,7 +50,7 @@ def commandSetIterator(child:TreeNode, children: List[TreeNode], localCommandSet
             and len(children[0].guardSet if children[0].guardSet else []) == 1
             and children
             and children[0].type == NodeType.AND
-            and child != children[0]
+            and id(child) != id(children[0])
         ):
             return union(
                 children[0].guardSet,
@@ -189,7 +189,9 @@ def andSubTreeElegance(
                     return IterationSignal.ADVANCE
                 else:
                     return IterationSignal.RESET
-
+def updateGuardSet(node: TreeNode, guardSet: List[TreeNode]) -> TreeNode:
+    node.guardSet = guardSet
+    return node
 
 def orSubTreeIterator(
     parent: TreeNode,
@@ -216,7 +218,10 @@ def orSubTreeIterator(
     localCommandSet = commandSetIterator(child, currentNodeTemp.children, localCommandSet)
 
     # Promote child to parent's guardSet
-    parent.guardSet += intersections(currentNodeTemp.children)
+    commonToAllChildren = intersections(currentNodeTemp.children)
+    parent.guardSet += commonToAllChildren
+    currentNode.children = list(map(lambda child: updateGuardSet(child,setDifference(child.guardSet, commonToAllChildren)), currentNode.children))
+
     action = orSubTreeElegance(
         currentNode, child, currentNode, dominantSet, localCommandSet
     )
