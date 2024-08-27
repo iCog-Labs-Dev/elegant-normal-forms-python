@@ -12,6 +12,35 @@ from Utilities.ReduceToElegance import reduceToElegance,orSubTreeElegance,andSub
 
 import itertools
 
+# Function to compute the dominant set and command set for an AND node
+
+def determine_dominant_and_command_sets(node):
+    dominantSet = set()
+    commandSet = set()
+
+    for child in node.children:
+        if isinstance(child, TreeNode):
+            if child.type == NodeType.AND:
+                dominantSet.update(child.guardSet)  
+            elif child.type == NodeType.NOT and child.children:
+                for grandchild in child.children:
+                    if grandchild.type == NodeType.AND:
+                        commandSet.update(grandchild.guardSet)  
+    
+    return dominantSet, commandSet
+
+
+# Function to integrate dominant and command sets into the tree
+def integrate_dominant_command_sets(node):
+    if node is None:
+        return
+
+    if node.type == NodeType.AND:
+        node.dominantSet, node.commandSet = determine_dominant_and_command_sets(node)
+
+    for child in node.children:
+        integrate_dominant_command_sets(child)
+
 # Function to check ENF properties
 
 def check_property_4(node, is_root=True):
@@ -33,34 +62,33 @@ def check_property_5(node):
     """
     For each OR node, the intersection of the guard sets of its children is empty.
     """
-    
     if node is None:
         return True  
 
     if node.type == NodeType.OR:
-        guard_sets = [child.guardSet for child in node.children]
-        for i, gs1 in enumerate(guard_sets):
-            for j, gs2 in enumerate(guard_sets):
-                if i != j and set(gs1) & set(gs2):
+        guard_sets = [set(child.guardSet) for child in node.children]
+        for i in range(len(guard_sets)):
+            for j in range(i + 1, len(guard_sets)):
+                if guard_sets[i] & guard_sets[j]:
                     return False
    
     return all(check_property_5(child) for child in node.children)
+
 
 def check_property_6(node):
     """
     For each AND node, the intersection of its guard set and its dominant set is empty.
     """
-    
     if node is None:
         return True 
 
     if node.type == NodeType.AND:
-        dominant_set = getattr(node, 'dominantSet', [])
-        if set(node.guardSet) & set(dominant_set):
+        dominant_set = getattr(node, 'dominantSet', set())
+        if set(node.guardSet) & dominant_set:
             return False
     
-    
     return all(check_property_6(child) for child in node.children)
+
 
 def check_property_7(node):
     """
@@ -70,13 +98,12 @@ def check_property_7(node):
         return True  
 
     if node.type == NodeType.AND:
-        command_set = getattr(node, 'commandSet', [])
-        if set(node.guardSet) & set(command_set):
+        command_set = getattr(node, 'commandSet', set())
+        if set(node.guardSet) & command_set:
             return False
     
-
     return all(check_property_7(child) for child in node.children)
-    
+
 # ex_a = BinaryConstraintTreeNode("x")
 # ex_b = BinaryConstraintTreeNode("x")
 # ex_c = BinaryConstraintTreeNode("y")
@@ -237,23 +264,15 @@ def generateTruthTableValues(literals):
 # }
 
 def evaluateBinaryExpressionTreeNode(currentNode, truthValues):
-    match currentNode.type:
-        case NodeType.NOT:
-            if currentNode.right is not None:
-                return (not evaluateBinaryExpressionTreeNode(currentNode.right, truthValues))
-        case NodeType.AND:
-            if currentNode.left is not None and currentNode.right is not None:
-                return (
-                    evaluateBinaryExpressionTreeNode(currentNode.left, truthValues) and evaluateBinaryExpressionTreeNode(currentNode.right, truthValues)
-                )
-        case NodeType.OR:
-            if currentNode.left is not None and currentNode.right is not None:
-                return (
-                    evaluateBinaryExpressionTreeNode(currentNode.left, truthValues) or evaluateBinaryExpressionTreeNode(currentNode.right, truthValues)
-                )
-        case NodeType.LITERAL:
-            if currentNode.value is not None and currentNode.value in truthValues:
-                return truthValues[currentNode.value]
+    if currentNode.type == NodeType.NOT:
+        return not evaluateBinaryExpressionTreeNode(currentNode.children[0], truthValues)
+    elif currentNode.type == NodeType.AND:
+        return all(evaluateBinaryExpressionTreeNode(child, truthValues) for child in currentNode.children)
+    elif currentNode.type == NodeType.OR:
+        return any(evaluateBinaryExpressionTreeNode(child, truthValues) for child in currentNode.children)
+    elif currentNode.type == NodeType.LITERAL:
+        return truthValues.get(currentNode.value, False)
+
 
 # res = evaluateBinaryExpressionTreeNode(tree, truthValues)
 # print(res)
