@@ -40,11 +40,13 @@ def compareSets(set1: list[TreeNode], set2: list[TreeNode], currentIndex=0) -> b
         return compareSets(set1[1:], set2, currentIndex + 1)
 
 
-def commandSetIterator(child:TreeNode, children: List[TreeNode], localCommandSet: List[TreeNode]):
+def commandSetIterator(
+    child: TreeNode, children: List[TreeNode], localCommandSet: List[TreeNode]
+):
     if children == []:
         return localCommandSet
     else:
-        #Compare if siblings have terminal and node with one constraint in their guardset
+        # Compare if siblings have terminal and node with one constraint in their guardset
         if (
             children[0].children == []
             and len(children[0].guardSet if children[0].guardSet else []) == 1
@@ -189,9 +191,12 @@ def andSubTreeElegance(
                     return IterationSignal.ADVANCE
                 else:
                     return IterationSignal.RESET
+
+
 def updateGuardSet(node: TreeNode, guardSet: List[TreeNode]) -> TreeNode:
     node.guardSet = guardSet
     return node
+
 
 def orSubTreeIterator(
     parent: TreeNode,
@@ -215,12 +220,21 @@ def orSubTreeIterator(
     currentNodeTemp.constraint = currentNode.constraint
 
     localCommandSet = commandSet
-    localCommandSet = commandSetIterator(child, currentNodeTemp.children, localCommandSet)
+    localCommandSet = commandSetIterator(
+        child, currentNodeTemp.children, localCommandSet
+    )
 
     # Promote child to parent's guardSet
     commonToAllChildren = intersections(currentNodeTemp.children)
     parent.guardSet += commonToAllChildren
-    currentNode.children = list(map(lambda child: updateGuardSet(child,setDifference(child.guardSet, commonToAllChildren)), currentNode.children))
+    currentNode.children = list(
+        map(
+            lambda child: updateGuardSet(
+                child, setDifference(child.guardSet, commonToAllChildren)
+            ),
+            currentNode.children,
+        )
+    )
 
     action = orSubTreeElegance(
         currentNode, child, currentNode, dominantSet, localCommandSet
@@ -322,6 +336,13 @@ def reduceToElegance(
         return
     match current.type:
         case NodeType.AND:
+            # Keep previous state for some calculations
+            currentTemp = TreeNode(current.value)
+            currentTemp.type = current.type
+            currentTemp.constraint = current.constraint
+            currentTemp.children = current.children
+            currentTemp.guardSet = current.guardSet
+
             # Apply Redundant to current, if possible
             current.guardSet = setDifference(current.guardSet, dominantSet)
 
@@ -335,7 +356,7 @@ def reduceToElegance(
 
             # Determine if current is a site for 1Subsume
 
-            resultSet = intersection(current.guardSet, commandSet)
+            resultSet = intersection(currentTemp.guardSet, commandSet)
 
             if len(resultSet) != 0:
                 return ReductionSignal.DELETE
