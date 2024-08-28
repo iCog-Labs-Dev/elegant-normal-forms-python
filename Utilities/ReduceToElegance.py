@@ -224,17 +224,18 @@ def orSubTreeIterator(
         child, currentNodeTemp.children, localCommandSet
     )
 
-    # Promote child to parent's guardSet
+    # Promote child to parent's guardSet if possible
     commonToAllChildren = intersections(currentNodeTemp.children)
-    parent.guardSet += commonToAllChildren
-    currentNode.children = list(
-        map(
-            lambda child: updateGuardSet(
-                child, setDifference(child.guardSet, commonToAllChildren)
-            ),
-            currentNode.children,
+    if len(commonToAllChildren) > 0:
+        parent.guardSet += commonToAllChildren
+        currentNode.children = list(
+            map(
+                lambda child: updateGuardSet(
+                    child, setDifference(child.guardSet, commonToAllChildren)
+                ),
+                currentNode.children,
+            )
         )
-    )
 
     action = orSubTreeElegance(
         currentNode, child, currentNode, dominantSet, localCommandSet
