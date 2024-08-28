@@ -40,22 +40,22 @@ def print_tree(node: Union[TreeNode, BinaryExpressionTreeNode, None], level=0, s
     """
     Recursively prints the structure of a binary tree or a generic tree.
 
-    The function prints each node's value along with its constraint (if applicable) and 
-    the position in the tree (indicated by `side` and `level`). The output is indented 
+    The function prints each node's value along with its constraint (if applicable) and
+    the position in the tree (indicated by `side` and `level`). The output is indented
     according to the depth of the node in the tree to represent the tree hierarchy visually.
 
     Parameters
     ----------
     node : Union[TreeNode, BinaryExpressionTreeNode, None]
-        The root node of the tree (or subtree) to print. It can be of type TreeNode, 
+        The root node of the tree (or subtree) to print. It can be of type TreeNode,
         BinaryExpressionTreeNode, or None.
-    
+
     level : int, optional
         The current depth level in the tree, used for indentation (default is 0).
-    
+
     side : str, optional
-        A string indicating whether the current node is on the left or right side of its 
-        parent, or is a child node (`CHL`). This is used to label nodes in the output 
+        A string indicating whether the current node is on the left or right side of its
+        parent, or is a child node (`CHL`). This is used to label nodes in the output
         (default is an empty string).
 
     Returns
@@ -103,9 +103,9 @@ def isConsistentForSingleValue(
 
     Parameters:
     -------------
-        first_val: TreeNode 
+        first_val: TreeNode
              The TreeNode to check for consistency.
-        toBeChecked: List[TreeNode] 
+        toBeChecked: List[TreeNode]
              The list of TreeNodes to check against.
 
     Returns:
@@ -143,15 +143,18 @@ def find_object(
 ) -> bool:
     """
     Recursively checks if a given TreeNode instance exists within a list of TreeNode objects.
+    This function compares two tree nodes based on their type, value and constraint attributes.
+    Since all junctor nodes have the same value for all of the above, this comparing will only successfully compare
+    nodes of type `NodeType.LITERAL`.
 
     Parameters
     ----------
     objs_list : List[TreeNode]
         A list of TreeNode objects to search within.
-    
+
     instance : TreeNode
         The TreeNode instance to search for within objs_list.
-    
+
     index : int, optional
         The current index in objs_list being checked (default is 0).
 
@@ -160,16 +163,21 @@ def find_object(
     bool
         True if the instance is found in objs_list (based on value and constraint), False otherwise.
     """
-    if index == len(objs_list):# no more objs_list(list of tree node) to compare with instance tree node
+    if index == len(
+        objs_list
+    ):  # no more objs_list(list of tree node) to compare with instance tree node
         return False
-    elif ( # compare objs_list value and constraint with instance value and constraint, if both are equal return true
-        objs_list[index].value == instance.value
-        and objs_list[index].constraint == instance.constraint 
+    elif (  # compare objs_list value and constraint with instance value and constraint, if both are equal return true
+        instance.type == NodeType.LITERAL
         and objs_list[index].type == instance.type
+        and objs_list[index].value == instance.value
+        and objs_list[index].constraint == instance.constraint
     ):
         return True
     else:
-        return find_object(objs_list, instance, index + 1) # if one of them is not equal continue to the next element of the objs_list
+        return find_object(
+            objs_list, instance, index + 1
+        )  # if one of them is not equal continue to the next element of the objs_list
 
 
 def union(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode]:
@@ -185,16 +193,16 @@ def union(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode]:
     ----------
     list1 : List[TreeNode]
         The first list of TreeNode objects to union with list2.
-    
+
     list2 : List[TreeNode]
         The second list of TreeNode objects to union with list1.
-    
+
     Returns
     -------
     List[TreeNode]
-        A list of TreeNode objects that represents the union of list1 and list2, 
+        A list of TreeNode objects that represents the union of list1 and list2,
         containing only unique elements based on value and constraint.
-    
+
     Notes
     -----
     - This function assumes that each TreeNode object has `value` and `constraint` attributes.
@@ -204,12 +212,13 @@ def union(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode]:
     """
     # Start with all elements in list1
     result = list1[:]
-    
+
     for node in list2:
         if not find_object(result, node):
             result.append(node)
-    
+
     return result
+
 
 def intersection(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode]:
     if not list1 or not list2:
@@ -231,7 +240,7 @@ def setDifference(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode
     ----------
     list1 : List[TreeNode]
         The first list of TreeNode objects.
-    
+
     list2 : List[TreeNode]
         The second list of TreeNode objects to compare against.
 
@@ -240,12 +249,18 @@ def setDifference(list1: List[TreeNode], list2: List[TreeNode]) -> List[TreeNode
     List[TreeNode]
         A list of TreeNode objects from list1 that are not found in list2 (based on value and constraint).
     """
-    if not list1: # if list1 is empty it returns empty list
+    if not list1:  # if list1 is empty it returns empty list
         return []
-    element = list1[0] # taking the first element of the list
+    element = list1[0]  # taking the first element of the list
 
-    if find_object(list2, element): # check is there is constraint and value similarity between element and list2
-        return setDifference(list1[1:], list2) # if yes go to the next element recursively
+    if find_object(
+        list2, element
+    ):  # check is there is constraint and value similarity between element and list2
+        return setDifference(
+            list1[1:], list2
+        )  # if yes go to the next element recursively
 
-    return [element] + setDifference(list1[1:], list2) # if there is no similarity either in constraint or value 
-                                                       # we add that element and go to the next elelement of list1
+    return [element] + setDifference(
+        list1[1:], list2
+    )  # if there is no similarity either in constraint or value
+    # we add that element and go to the next elelement of list1

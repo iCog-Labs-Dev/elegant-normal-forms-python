@@ -32,6 +32,17 @@ class TreeNode:
 
     def __repr__(self):
         return f"TreeNode(value={self.value}, constraint={self.constraint}, type={self.type})"
+    
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, TreeNode):
+            return NotImplemented
+        return (
+            self.value == other.value
+            and self.constraint == other.constraint
+            and self.type == other.type
+        )
+    def __repr__(self):
+        return f"TreeNode(value={self.value}, constraint={self.constraint}, type={self.type})"
 
     # def __eq__(self, other: TreeNode):
     #     if self.value == other.value and self.constraint == other.constrant:
@@ -53,7 +64,7 @@ def findAndRemoveChild(children: list[TreeNode], child: TreeNode) -> list[TreeNo
     found = False
 
     for c in children:
-        if not found and c == child:
+        if not found and id(c) == id(child):
             found = True  # Skip the first occurrence of the child
         else:
             result.append(c)
