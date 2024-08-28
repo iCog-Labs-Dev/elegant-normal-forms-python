@@ -335,7 +335,6 @@ def reduceToElegance(
 
             # Determine if current is a site for 1Subsume
 
-            resultSet = []
             resultSet = intersection(current.guardSet, commandSet)
 
             if len(resultSet) != 0:
