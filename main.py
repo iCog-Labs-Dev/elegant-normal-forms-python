@@ -54,8 +54,7 @@ root2.type = NodeType.ROOT
 binaryConstraintTree = propagateTruthValue(root)
 # binaryConstraintTree2 = propagateTruthValue(root2)
 
-constraintTree = TreeNode("ROOT")
-constraintTree.type = NodeType.ROOT
+    literals = dfs(cTree, [])
 
 # constraintTree2 = TreeNode("ROOT")
 # constraintTree2.type = NodeType.ROOT
