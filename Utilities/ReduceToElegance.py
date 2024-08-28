@@ -192,6 +192,8 @@ def andSubTreeElegance(
                 else:
                     return IterationSignal.RESET
 
+        case _:
+            return outcome
 
 def updateGuardSet(node: TreeNode, guardSet: List[TreeNode]) -> TreeNode:
     node.guardSet = guardSet
@@ -200,11 +202,11 @@ def updateGuardSet(node: TreeNode, guardSet: List[TreeNode]) -> TreeNode:
 
 def orSubTreeIterator(
     parent: TreeNode,
-    child: TreeNode,
-    remainingChildren: list[TreeNode],
+    children: list[TreeNode],
     currentNode: TreeNode,
     dominantSet: list[TreeNode],
     commandSet: list[TreeNode],
+    currentChildIndex=0,
 ):
     # This code is added here to prevent preserve the previous state until the update is complete.
     # The update is dependent on the currentNode's state before the function was called.
@@ -212,6 +214,11 @@ def orSubTreeIterator(
     # After the update is complete, it will not be necessary any more.
 
     # This function is responsible for the Promote (Promote Common Constraint) trasofromation.
+
+    if len(children) == 0:
+        return None
+
+    child = children[currentChildIndex]
 
     currentNodeTemp = TreeNode(currentNode.value)
     currentNodeTemp.type = currentNode.type
@@ -224,17 +231,15 @@ def orSubTreeIterator(
         child, currentNodeTemp.children, localCommandSet
     )
 
-    # Promote child to parent's guardSet if possible
-    commonToAllChildren = intersections(currentNodeTemp.children)
-    if len(commonToAllChildren) > 0:
-        parent.guardSet += commonToAllChildren
-        currentNode.children = list(
-            map(
-                lambda child: updateGuardSet(
-                    child, setDifference(child.guardSet, commonToAllChildren)
-                ),
-                currentNode.children,
-            )
+
+    # Resetting iteration if promote transformation has been done.
+    if currentChildIndex == -1:
+        return orSubTreeIterator(
+                parent,
+                children, 
+                parent,
+                dominantSet,
+                commandSet
         )
 
     action = orSubTreeElegance(
@@ -243,19 +248,19 @@ def orSubTreeIterator(
 
     match action:
         case IterationSignal.ADVANCE:
-            if len(remainingChildren) > 0:
+            if currentChildIndex + 1 < len(children):
                 return orSubTreeIterator(
                     parent,
-                    remainingChildren[0],
-                    remainingChildren[1:],
+                    children,
                     currentNode,
                     dominantSet,
                     commandSet,
+                    currentChildIndex + 1
                 )
             else:
                 return None
         case IterationSignal.RESET:
-            return None
+            return orSubTreeIterator(parent, children, currentNode, dominantSet, commandSet)
         case _:
             return action
 
@@ -377,16 +382,30 @@ def reduceToElegance(
             return ReductionSignal.KEEP
         case _:
             # Current type is OR
-            if len(current.children) > 0:
-                action = orSubTreeIterator(
-                    parent,
-                    current.children[0],
-                    current.children[1:],
-                    current,
-                    dominantSet,
-                    commandSet,
+            
+            # Promote child to parent's guardSet if possible
+            commonToAllChildren = intersections(current.children)
+            if len(commonToAllChildren) > 0:
+                parent.guardSet += commonToAllChildren
+                current.children = list(
+                    map(
+                        lambda child: updateGuardSet(
+                            child, setDifference(child.guardSet, commonToAllChildren)
+                        ),
+                        current.children,
+                    )
                 )
-                if action:
-                    return action
+                dominantSet += commonToAllChildren
+                return IterationSignal.RESET
+
+            action = orSubTreeIterator(
+                parent,
+                current.children,
+                current,
+                dominantSet,
+                commandSet,
+            )
+            if action:
+                return action
 
             return ReductionSignal.KEEP
