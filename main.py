@@ -18,8 +18,15 @@ from Tests import *
 # input = "|(&(A, |(!(B), !(C))), D)"
 # input = "&(A, &(B, &(C, &(|(A, |(B, |(C, A))), &(B, &(&(A, A), !(A)))))))"
 # input = "|(&(A, B), |(C, D))"
-input = "|(a, |(b, |(c, |(d, c))))"  # Failing test case.
-input = "|(a, |(b, |(c, |(d, !(c)))))"  # Failing test case.
+# input = "|(a, |(b, |(c, |(d, c))))"
+# input = "&(a, &(b, &(c, &(d,c))))"
+# input = "&(a, &(b, &(c, &(d, !(b)))))"
+# input = "&(a, a)"
+# input = "!(!(a))"
+# input = "|(|(!(a), &(a, &(b,c))), &(b, &(c, !(b))))"
+input = ""
+# input = "|(a, a)"
+# input = "|(a, |(b, |(c, |(d, !(c)))))"
 # input = "|(A, &(B, &(C, &(D, C))))"
 # input = "|(&(A, B), |(A, C))"
 # input = "|(A,B)"
