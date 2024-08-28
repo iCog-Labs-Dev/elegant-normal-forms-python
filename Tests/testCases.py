@@ -137,32 +137,32 @@ constraint2.type = NodeType.AND
 
 # NOTE: Test cases for subtract redundant constraint (Redundant) transformation.
 
-and11.guardSet = [a, c, dprime]
-and12.guardSet = [a]
-and21.guardSet = [bprime, c]
-and22.guardSet = [eprime]
-constraint.guardSet = [a]
-
-or11.children = [and11, and12]
-or21.children = [and21, and22]
-and21.children = [or11]
-constraint.children = [or21]
-
-and112.guardSet = [dprime]
-and122.guardSet = [a]
-and212.guardSet = [bprime, c]
-and222.guardSet = [eprime]
-constraint2.guardSet = [a]
-
-or112.children = [and112, and122]
-or212.children = [and212, and222]
-and212.children = [or112]
-constraint2.children = [or212]
-
-current = and11
-parentOfCurrent = or11
-dominantSet = [bprime, c, a]
-commandSet = [a, eprime]
+# and11.guardSet = [a, c, dprime]
+# and12.guardSet = [a]
+# and21.guardSet = [bprime, c]
+# and22.guardSet = [eprime]
+# constraint.guardSet = [a]
+#
+# or11.children = [and11, and12]
+# or21.children = [and21, and22]
+# and21.children = [or11]
+# constraint.children = [or21]
+#
+# and112.guardSet = [dprime]
+# and122.guardSet = [a]
+# and212.guardSet = [bprime, c]
+# and222.guardSet = [eprime]
+# constraint2.guardSet = [a]
+#
+# or112.children = [and112, and122]
+# or212.children = [and212, and222]
+# and212.children = [or112]
+# constraint2.children = [or212]
+#
+# current = and11
+# parentOfCurrent = or11
+# dominantSet = [bprime, c, a]
+# commandSet = [a, eprime]
 
 # NOTE: Test cases for cut unnecessary or (OrCut) transformation.
 

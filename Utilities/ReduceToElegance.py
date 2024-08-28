@@ -54,10 +54,11 @@ def commandSetIterator(
             and children[0].type == NodeType.AND
             and id(child) != id(children[0])
         ):
-            return union(
+            tempResult = union(
                 children[0].guardSet,
                 commandSetIterator(child, children[1:], localCommandSet),
             )
+            return setDifference(tempResult, child.guardSet)
         else:
             return commandSetIterator(child, children[1:], localCommandSet)
 
@@ -195,6 +196,7 @@ def andSubTreeElegance(
         case _:
             return outcome
 
+
 def updateGuardSet(node: TreeNode, guardSet: List[TreeNode]) -> TreeNode:
     node.guardSet = guardSet
     return node
@@ -231,16 +233,9 @@ def orSubTreeIterator(
         child, currentNodeTemp.children, localCommandSet
     )
 
-
     # Resetting iteration if promote transformation has been done.
     if currentChildIndex == -1:
-        return orSubTreeIterator(
-                parent,
-                children, 
-                parent,
-                dominantSet,
-                commandSet
-        )
+        return orSubTreeIterator(parent, children, parent, dominantSet, commandSet)
 
     action = orSubTreeElegance(
         currentNode, child, currentNode, dominantSet, localCommandSet
@@ -255,12 +250,14 @@ def orSubTreeIterator(
                     currentNode,
                     dominantSet,
                     commandSet,
-                    currentChildIndex + 1
+                    currentChildIndex + 1,
                 )
             else:
                 return None
         case IterationSignal.RESET:
-            return orSubTreeIterator(parent, children, currentNode, dominantSet, commandSet)
+            return orSubTreeIterator(
+                parent, children, currentNode, dominantSet, commandSet
+            )
         case _:
             return action
 
@@ -382,7 +379,7 @@ def reduceToElegance(
             return ReductionSignal.KEEP
         case _:
             # Current type is OR
-            
+
             # Promote child to parent's guardSet if possible
             commonToAllChildren = intersections(current.children)
             if len(commonToAllChildren) > 0:
