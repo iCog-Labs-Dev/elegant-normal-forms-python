@@ -2,6 +2,7 @@ from Utilities.BuildTree import *
 from Utilities.GatherJunctors import gatherJunctors
 from Utilities.HelperFunctions import print_tree, print_constraint_tree
 from Utilities.PropagateTruthValue import propagateTruthValue
+from Utilities.PostProcessor import *
 
 # from Utilities.HelperFunctions import isConsistent, union
 from DataStructures.Trees import *
@@ -137,6 +138,7 @@ lastAction = reduceToElegance(constraintTree, [], [])
 # If the last action returned is a DISCONNECT, that means the whole tree is a tautology. Will always return True
 # If the last action returned is a KEEP, that means the algorithm tried to reduce the tree as much as possible
 print("Last action after reduction: ", lastAction)
+print(constraintTree)
 if constraintTree:
     print_constraint_tree(constraintTree)
 # print("GuardSet: ")
@@ -244,6 +246,7 @@ def generateExpressionTruthTable(literals):
     return truthTable
 
 # print(generateExpressionTruthTable(['A', 'B']))
+print(parse_tree_to_lisp(constraintTree))
 print(generateExpressionTruthTable(['A', 'B', 'C']))
 # print(generateExpressionTruthTable(['A', 'B', 'C', 'D']))
 
