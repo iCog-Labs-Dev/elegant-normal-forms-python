@@ -53,10 +53,11 @@ if binaryConstraintTree is not None:
     constraintTree = gatherJunctors(binaryConstraintTree, constraintTree)
 
 if binaryConstraintTree2 is not None:
-    constraintTree = gatherJunctors(binaryConstraintTree2, constraintTree2)
+    constraintTree2 = gatherJunctors(binaryConstraintTree2, constraintTree2)
 print("Constraint Tree Finished")
 
 if constraintTree:
+    print("constraint Tree before reduction")
     print_constraint_tree(constraintTree)
 
 table1 = generateReducedTruthTable(constraintTree, collectLiterals(constraintTree))
@@ -72,20 +73,9 @@ table2 = generateReducedTruthTable(constraintTree2, collectLiterals(constraintTr
 
 print("Last action after reduction: ", lastAction)
 
-if constraintTree2:
-    print_constraint_tree(constraintTree2)
-#     reducedTable = generateExpressionTruthTable(collectLiterals(constraintTree))
-# # print("GuardSet: ")
-# # if constraintTree is not None and constraintTree.guardSet is not None:
-# #     for gct in constraintTree.guardSet:
-# #         print_tree(gct)
-# #     if constraintTree.children:
-# #         print("Children: ", len(constraintTree.children))
-# #
-# #     if constraintTree.children is not None:
-# #         for bct in constraintTree.children:
-# #             print_tree(bct)
-#
+if constraintTree:
+    print("constraint Tree after reduction")
+    print_constraint_tree(constraintTree)
 
 print("*" * 50)
 is_equivalent, differences = compare_tables(table1, table2)
