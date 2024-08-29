@@ -37,7 +37,7 @@ class TestReduceToElegance(TestCase):
             )(result)
         )
 
-        action = reduceToElegance(current, parentOfCurrent, dominantSet, commandSet)
+        action = reduceToElegance(parentOfCurrent, current, dominantSet, commandSet)
         match action:
             case ReductionSignal.DELETE:
                 parentOfCurrent.children = findAndRemoveChild(
@@ -67,7 +67,7 @@ class TestReduceToElegance(TestCase):
             )(result)
         )
 
-        action = reduceToElegance(current, parentOfCurrent, dominantSet, commandSet)
+        action = reduceToElegance(parentOfCurrent, current, dominantSet, commandSet)
         match action:
             case ReductionSignal.DELETE:
                 parentOfCurrent.children = findAndRemoveChild(
@@ -96,7 +96,7 @@ class TestReduceToElegance(TestCase):
             )(result)
         )
 
-        action = reduceToElegance(current, parentOfCurrent, dominantSet, commandSet)
+        action = reduceToElegance(parentOfCurrent, current, dominantSet, commandSet)
         match action:
             case ReductionSignal.DISCONNECT:
                 parentOfCurrent.children = findAndRemoveChild(
@@ -122,7 +122,7 @@ class TestReduceToElegance(TestCase):
             )(result)
         )
 
-        action = reduceToElegance(current, parentOfCurrent, dominantSet, commandSet)
+        action = reduceToElegance(parentOfCurrent, current, dominantSet, commandSet)
         match action:
             case ReductionSignal.DELETE:
                 parentOfCurrent.children = findAndRemoveChild(
