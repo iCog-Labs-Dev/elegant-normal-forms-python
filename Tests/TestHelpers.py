@@ -1,5 +1,7 @@
 import itertools
-from DataStructures.Trees import NodeType 
+from DataStructures.Trees import NodeType, TreeNode
+from Utilities.ReduceToElegance import compareSets
+
 
 def compare_tables(table1, table2):
     """Compares two truth tables, even if they have different numbers of variables.
@@ -82,7 +84,6 @@ def generateTruthTableValues(literals):
     return result
 
 
-
 def evaluateBinaryExpressionTreeNode(currentNode, truthValues):
     match currentNode.type:
         case NodeType.NOT:
@@ -116,7 +117,7 @@ def evaluateReducedConstraintTree(constraintTree, truthValues):
                     if literal.value is not None and literal.value in truthValues:
                         literalTruthValue = truthValues[literal.value]
 
-                        if literal.constraint == False:
+                        if not literal.constraint:
                             literalTruthValue = not literalTruthValue
 
                         if truthValue is None:
@@ -159,3 +160,33 @@ def generateReducedTruthTable(constraintTree, literals):
         reducedTruthTable.append((generatedTruthValues, outcome))
     return reducedTruthTable
 
+
+def compareTrees(tree1: TreeNode, tree2: TreeNode):
+    """
+    A function that takes two constraint trees and compares them for equality.
+
+    Args:
+        tree1: The first constraint tree.
+        tree2: The second constraint tree.
+
+    Returns:
+        True if the trees are equivalent, False otherwise.
+    """
+
+    if tree1.type != tree2.type:
+        return False
+
+    if tree1.value != tree2.value:
+        return False
+
+    if not compareSets(tree1.guardSet, tree2.guardSet):
+        return False
+
+    if len(tree1.children) != len(tree2.children):
+        return False
+
+    for child1, child2 in zip(tree1.children, tree2.children):
+        if not compareTrees(child1, child2):
+            return False
+
+    return True
