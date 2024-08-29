@@ -204,7 +204,7 @@ def ruleSeven(tree):
     def traverse(root, node, level=0):
         for child in node.children:
             if child.type == NodeType.AND:
-                ds = commandSetIterator(root.children, 0, [], child, level)
+                commandSetIterator(root.children, 0, [], child, level)
                 assert (
                     len(
                         intersection(
