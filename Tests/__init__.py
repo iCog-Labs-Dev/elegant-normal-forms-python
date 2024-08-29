@@ -1,3 +1,3 @@
-from Tests.testCases import *
-from Tests.testHelpers import *
-from Tests.enfRuleCheckers  import *
+from Tests.TestCases import *
+from Tests.TestHelpers import *
+from Tests.EnfRuleTests import *

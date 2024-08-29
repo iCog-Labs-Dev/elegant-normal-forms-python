@@ -17,6 +17,8 @@ from Tests.EnfRuleTests import (
     ruleSeven,
 )
 
+from Tests.ReduceToEleganceTests import *
+
 
 # input = "&(B, !(|(C, |(A, &(!(B), A)))))"
 # input = "&(B, !(|(C, |(A, &(!(B), |(K,X))))))"
