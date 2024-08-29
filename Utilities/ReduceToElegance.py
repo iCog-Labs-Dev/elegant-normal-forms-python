@@ -40,22 +40,27 @@ def compareSets(set1: list[TreeNode], set2: list[TreeNode], currentIndex=0) -> b
         return compareSets(set1[1:], set2, currentIndex + 1)
 
 
-def commandSetIterator(children: List[TreeNode], localCommandSet: List[TreeNode]):
+def commandSetIterator(
+    child: TreeNode, children: List[TreeNode], localCommandSet: List[TreeNode]
+):
     if children == []:
         return localCommandSet
     else:
+        # Compare if siblings have terminal and node with one constraint in their guardset
         if (
             children[0].children == []
             and len(children[0].guardSet if children[0].guardSet else []) == 1
             and children
             and children[0].type == NodeType.AND
+            and id(child) != id(children[0])
         ):
-            return union(
+            tempResult = union(
                 children[0].guardSet,
-                commandSetIterator(children[1:], localCommandSet),
+                commandSetIterator(child, children[1:], localCommandSet),
             )
+            return setDifference(tempResult, child.guardSet)
         else:
-            return commandSetIterator(children[1:], localCommandSet)
+            return commandSetIterator(child, children[1:], localCommandSet)
 
 
 def containsTerminalAndNode(children: list[TreeNode]) -> bool:
@@ -96,24 +101,30 @@ def computeGrandChildGuardSet(grandChild: TreeNode, resultSet: list[TreeNode]):
     grandChild.guardSet = setDifference(grandChild.guardSet, resultSet)
 
 
-def intersections(
-    intersectionSet: list[TreeNode], children: list[TreeNode]
-) -> list[TreeNode]:
-    if len(children) == 0:
+def intersections(children: list[TreeNode]) -> list[TreeNode]:
+    # Base case: If there's only one child or no children, return its guardSet or an empty list
+    if not children:
         return []
+    if len(children) == 1:
+        return children[0].guardSet
 
-    intersectionSet = intersection(intersectionSet, children[0].guardSet)
+    # Recursive case: Intersect the guardSet of the first child with the intersection of the rest
+    first_child_guardSet = children[0].guardSet
+    remaining_intersections = intersections(children[1:])
 
-    return intersections(intersectionSet, children[1:])
+    # Intersect the current guardSet with the result of the recursive call
+    return intersection(first_child_guardSet, remaining_intersections)
 
 
 def orSubTreeElegance(
+    parent: TreeNode,
     child: TreeNode,
     current: TreeNode,
     dominantSet: list[TreeNode],
     localCommandSet: list[TreeNode],
 ):
-    outcome = reduceToElegance(child, dominantSet, localCommandSet)
+
+    outcome = reduceToElegance(parent, child, dominantSet, localCommandSet)
 
     match outcome:
         case ReductionSignal.DELETE:
@@ -129,12 +140,13 @@ def orSubTreeElegance(
 
 
 def andSubTreeElegance(
+    parent: TreeNode,
     child: TreeNode,
     current: TreeNode,
     handleSet: list[TreeNode],
     commandSet: list[TreeNode],
 ):
-    outcome = reduceToElegance(child, handleSet, commandSet)
+    outcome = reduceToElegance(current, child, handleSet, commandSet)
     match outcome:
         case ReductionSignal.DELETE:
             current.children = []
@@ -146,7 +158,7 @@ def andSubTreeElegance(
             return IterationSignal.ADVANCE
 
         case ReductionSignal.KEEP:
-            resultSet = intersections([], current.children)
+            resultSet = intersections(current.children)
             if len(resultSet) > 0:
                 current.guardSet = union(current.guardSet, resultSet)
                 list(
@@ -181,38 +193,77 @@ def andSubTreeElegance(
                 else:
                     return IterationSignal.RESET
 
+        case _:
+            return outcome
+
+
+def updateGuardSet(node: TreeNode, guardSet: List[TreeNode]) -> TreeNode:
+    node.guardSet = guardSet
+    return node
+
 
 def orSubTreeIterator(
-    child: TreeNode,
-    remainingChildren: list[TreeNode],
+    parent: TreeNode,
+    children: list[TreeNode],
     currentNode: TreeNode,
     dominantSet: list[TreeNode],
     commandSet: list[TreeNode],
+    currentChildIndex=0,
 ):
-    localCommandSet = commandSet
-    localCommandSet = commandSetIterator(remainingChildren, localCommandSet)
+    # This code is added here to prevent preserve the previous state until the update is complete.
+    # The update is dependent on the currentNode's state before the function was called.
+    # If the initial state changes while the function is executing, it will result in unexpected behavior.
+    # After the update is complete, it will not be necessary any more.
 
-    action = orSubTreeElegance(child, currentNode, dominantSet, localCommandSet)
+    # This function is responsible for the Promote (Promote Common Constraint) trasofromation.
+
+    if len(children) == 0:
+        return None
+
+    child = children[currentChildIndex]
+
+    currentNodeTemp = TreeNode(currentNode.value)
+    currentNodeTemp.type = currentNode.type
+    currentNodeTemp.guardSet = currentNode.guardSet
+    currentNodeTemp.children = currentNode.children
+    currentNodeTemp.constraint = currentNode.constraint
+
+    localCommandSet = commandSet
+    localCommandSet = commandSetIterator(
+        child, currentNodeTemp.children, localCommandSet
+    )
+
+    # Resetting iteration if promote transformation has been done.
+    if currentChildIndex == -1:
+        return orSubTreeIterator(parent, children, parent, dominantSet, commandSet)
+
+    action = orSubTreeElegance(
+        currentNode, child, currentNode, dominantSet, localCommandSet
+    )
 
     match action:
         case IterationSignal.ADVANCE:
-            if len(remainingChildren) > 0:
+            if currentChildIndex + 1 < len(children):
                 return orSubTreeIterator(
-                    remainingChildren[0],
-                    remainingChildren[1:],
+                    parent,
+                    children,
                     currentNode,
                     dominantSet,
                     commandSet,
+                    currentChildIndex + 1,
                 )
             else:
                 return None
         case IterationSignal.RESET:
-            return None
+            return orSubTreeIterator(
+                parent, children, currentNode, dominantSet, commandSet
+            )
         case _:
             return action
 
 
 def andSubTreeIterator(
+    parent: TreeNode,
     children: list[TreeNode],
     currentNode: TreeNode,
     handleSet: list[TreeNode],
@@ -222,24 +273,36 @@ def andSubTreeIterator(
     if len(children) == 0:
         return None
     currentChild = children[currentChildIndex]
-    action = andSubTreeElegance(currentChild, currentNode, handleSet, commandSet)
+    action = andSubTreeElegance(
+        currentNode, currentChild, currentNode, handleSet, commandSet
+    )
 
     match action:
         case IterationSignal.ADVANCE:
             if currentChildIndex + 1 < len(children):
                 return andSubTreeIterator(
-                    children, currentNode, handleSet, commandSet, currentChildIndex + 1
+                    parent,
+                    children,
+                    currentNode,
+                    handleSet,
+                    commandSet,
+                    currentChildIndex + 1,
                 )
             else:
                 return None
         case IterationSignal.RESET:
-            return andSubTreeIterator(children, currentNode, handleSet, commandSet, 0)
+            return andSubTreeIterator(
+                parent, children, currentNode, handleSet, commandSet, 0
+            )
         case _:
             return action
 
 
 def iterator(
-    current: TreeNode, dominantSet: list[TreeNode], commandSet: list[TreeNode]
+    parent: TreeNode,
+    current: TreeNode,
+    dominantSet: list[TreeNode],
+    commandSet: list[TreeNode],
 ):
     previousGuardSet = current.guardSet
     handleSet = union(dominantSet, current.guardSet)
@@ -249,22 +312,25 @@ def iterator(
         return ReductionSignal.DELETE
 
     # Reduce each child's subtree to relative elegance
-    outcome = andSubTreeIterator(current.children, current, handleSet, commandSet)
+    outcome = andSubTreeIterator(
+        parent, current.children, current, handleSet, commandSet
+    )
 
     # The subtree iterator returns a value different from None only if ReductionSignal has been found during the processing. If not it will always return None in the end
-    if outcome: 
+    if outcome:
         return outcome
 
     # Apply OR-CUT to each child of current, if possible
     list(map(lambda child: applyOrCut(child, current), current.children))
 
     if not compareSets(previousGuardSet, current.guardSet):
-        return iterator(current, dominantSet, commandSet)
+        return iterator(parent, current, dominantSet, commandSet)
 
-    return None 
+    return None
 
 
 def reduceToElegance(
+    parent: TreeNode,
     current: Union[TreeNode, None],
     dominantSet: list[TreeNode],
     commandSet: list[TreeNode],
@@ -273,6 +339,13 @@ def reduceToElegance(
         return
     match current.type:
         case NodeType.AND:
+            # Keep previous state for some calculations
+            currentTemp = TreeNode(current.value)
+            currentTemp.type = current.type
+            currentTemp.constraint = current.constraint
+            currentTemp.children = current.children
+            currentTemp.guardSet = current.guardSet
+
             # Apply Redundant to current, if possible
             current.guardSet = setDifference(current.guardSet, dominantSet)
 
@@ -286,14 +359,13 @@ def reduceToElegance(
 
             # Determine if current is a site for 1Subsume
 
-            resultSet = []
-            resultSet = intersection(current.guardSet, commandSet)
+            resultSet = intersection(currentTemp.guardSet, commandSet)
 
             if len(resultSet) != 0:
                 return ReductionSignal.DELETE
 
             # Repeat until current's guardSet doesn't change
-            action = iterator(current, dominantSet, commandSet)
+            action = iterator(parent, current, dominantSet, commandSet)
 
             if action:
                 return action
@@ -307,15 +379,30 @@ def reduceToElegance(
             return ReductionSignal.KEEP
         case _:
             # Current type is OR
-            if len(current.children) > 0:
-                action = orSubTreeIterator(
-                    current.children[0],
-                    current.children[1:],
-                    current,
-                    dominantSet,
-                    commandSet,
+
+            # Promote child to parent's guardSet if possible
+            commonToAllChildren = intersections(current.children)
+            if len(commonToAllChildren) > 0:
+                parent.guardSet += commonToAllChildren
+                current.children = list(
+                    map(
+                        lambda child: updateGuardSet(
+                            child, setDifference(child.guardSet, commonToAllChildren)
+                        ),
+                        current.children,
+                    )
                 )
-                if action:
-                    return action
+                dominantSet += commonToAllChildren
+                return IterationSignal.RESET
+
+            action = orSubTreeIterator(
+                parent,
+                current.children,
+                current,
+                dominantSet,
+                commandSet,
+            )
+            if action:
+                return action
 
             return ReductionSignal.KEEP
