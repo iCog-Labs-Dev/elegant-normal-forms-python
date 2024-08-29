@@ -133,6 +133,7 @@ def deleteInconsistentHandleTestCase():
         "parentOfCurrent": parentOfCurrent,
         "dominantSet": dominantSet,
         "commandSet": commandSet,
+        "constraint": constraint,
         "constraint2": constraint2,
     }
 
@@ -192,6 +193,7 @@ def promoteCommonConstraintsTestCase():
         "parentOfCurrent": parentOfCurrent,
         "dominantSet": dominantSet,
         "commandSet": commandSet,
+        "constraint": constraint,
         "constraint2": constraint2,
     }
 
@@ -251,6 +253,7 @@ def subtractRedundantConstraintTestCase():
         "parentOfCurrent": parentOfCurrent,
         "dominantSet": dominantSet,
         "commandSet": commandSet,
+        "constraint": constraint,
         "constraint2": constraint2,
     }
 
@@ -288,12 +291,16 @@ def cutUnnecessaryOrTestCase():
     and21.children = [or11]
     constraint.children = [or21]
 
-    and112.guardSet = [b, dprime]
-    and122.guardSet = [cprime]
+    and212.guardSet = [b, dprime]
+    and222.guardSet = [cprime]
+    and112.guardSet = []
+
     constraint2.guardSet = [a]
 
-    or112.children = [and112, and122]
-    constraint2.children = [or112]
+    or212.children = [and212, and222]
+    or112.children = [and112]
+    and212.children = [or112]
+    constraint2.children = [or212]
 
     current = or11
     parentOfCurrent = and21
@@ -305,6 +312,7 @@ def cutUnnecessaryOrTestCase():
         "parentOfCurrent": parentOfCurrent,
         "dominantSet": dominantSet,
         "commandSet": commandSet,
+        "constraint": constraint,
         "constraint2": constraint2,
     }
 
@@ -348,7 +356,11 @@ def cutUnnecessaryAndTestCase():
     and132.guardSet = [c]
     constraint2.guardSet = [a]
 
-    or112.children = [and112, and122, and132]
+    or112.children = [
+        and132,
+        and112,
+        and122,
+    ]
     constraint2.children = [or112]
 
     current = and21
@@ -361,6 +373,7 @@ def cutUnnecessaryAndTestCase():
         "parentOfCurrent": parentOfCurrent,
         "dominantSet": dominantSet,
         "commandSet": commandSet,
+        "constraint": constraint,
         "constraint2": constraint2,
     }
 
@@ -425,6 +438,7 @@ def zeroConstraintSubsumptionTestCase():
         "parentOfCurrent": parentOfCurrent,
         "dominantSet": dominantSet,
         "commandSet": commandSet,
+        "constraint": constraint,
         "constraint2": constraint2,
     }
 
@@ -483,6 +497,7 @@ def oneConstraintSubsumptionTestCase():
         "parentOfCurrent": parentOfCurrent,
         "dominantSet": dominantSet,
         "commandSet": commandSet,
+        "constraint": constraint,
         "constraint2": constraint2,
     }
 
@@ -542,5 +557,6 @@ def oneConstraintComplementSubtractionTestCase():
         "parentOfCurrent": parentOfCurrent,
         "dominantSet": dominantSet,
         "commandSet": commandSet,
+        "constraint": constraint,
         "constraint2": constraint2,
     }
