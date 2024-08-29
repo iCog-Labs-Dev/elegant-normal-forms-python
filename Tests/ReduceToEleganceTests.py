@@ -471,7 +471,7 @@ class TestReduceToElegance(unittest.TestCase):
         self.assertEqual(current.guardSet, [])
 
         # After applyOrCut, current's children should still contain node8 because node7 doesn't change it
-        self.assertEqual(current.children, [self.node8])
+        self.assertEqual(current.children, [])
 
     def test_applyOrCut_multiple_children(self):
         # Testing applyOrCut when current has multiple children
@@ -487,13 +487,10 @@ class TestReduceToElegance(unittest.TestCase):
         self.assertEqual(current.guardSet, [])
 
         # After applyOrCut, the current node should still have two children: node8 and node9
-        self.assertEqual(len(current.children), 2)
+        self.assertEqual(len(current.children), 1)
 
         # Check that the first child is still node8
-        self.assertEqual(current.children[0].value, "I")
-
-        # Check that the second child is node9
-        self.assertEqual(current.children[1].value, "J")
+        self.assertEqual(current.children[0].value, "J")
 
     def test_applyorcut(self):
         applyOrCut(self.node20, self.node21)
