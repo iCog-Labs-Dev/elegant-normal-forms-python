@@ -64,7 +64,7 @@ def findAndRemoveChild(children: list[TreeNode], child: TreeNode) -> list[TreeNo
     found = False
 
     for c in children:
-        if not found and c == child:
+        if not found and id(c) == id(child):
             found = True  # Skip the first occurrence of the child
         else:
             result.append(c)

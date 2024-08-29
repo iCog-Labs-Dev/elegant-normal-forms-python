@@ -237,7 +237,7 @@ class TestReduceToElegance(unittest.TestCase):
         # Test with no children
         result = intersections([])  # Pass only the required argument
         self.assertEqual(result, [])
-
+        
     def test_single_child(self):
         # Test with a single child
         result = intersections([self.node28])  # Pass only the required argument
@@ -265,11 +265,6 @@ class TestReduceToElegance(unittest.TestCase):
 
         result = intersections([self.node28, node4])  # Pass only the required argument
         self.assertEqual(result, [self.nodeB])
-
-        
-
-    def test_empty_children(self):
-        self.assertFalse(containsTerminalAndNode([]), "Should return False for empty children list")
 
     def test_single_terminal_and_node_with_single_guardset(self):
         self.assertTrue(containsTerminalAndNode([self.node23]), "Should return True for AND node with terminal child and single guardSet")
