@@ -37,6 +37,10 @@ from Tests import *
 # input = "&(a, a)"
 # input = "!(!(a))"
 # input = "|(|(!(a), &(a, &(b,c))), &(b, &(c, !(b))))"
+<<<<<<< Updated upstream
+=======
+input = "|(c,b)"
+>>>>>>> Stashed changes
 # input = "|(a, a)"
 # input = "|(a, |(b, |(c, |(d, !(c)))))"
 # input = "|(A, &(B, &(C, &(D, C))))"
@@ -65,6 +69,13 @@ root2.type = NodeType.ROOT
 
 binaryConstraintTree = propagateTruthValue(root)
 # binaryConstraintTree2 = propagateTruthValue(root2)
+<<<<<<< Updated upstream
+=======
+
+constraintTree = TreeNode("ROOT")
+constraintTree.type = NodeType.ROOT
+
+>>>>>>> Stashed changes
 # constraintTree2 = TreeNode("ROOT")
 # constraintTree2.type = NodeType.ROOT
 
