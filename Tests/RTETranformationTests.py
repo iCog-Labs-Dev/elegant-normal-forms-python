@@ -166,14 +166,18 @@ class TestReduceToElegance(TestCase):
 
     def testZeroConstraintSubsumption(self):
         result = zeroConstraintSubsumptionTestCase()
-        current, parentOfCurrent, constraint, constraint2 = itemgetter(
-            "current",
-            "parentOfCurrent",
-            "constraint",
-            "constraint2",
-        )(result)
+        current, parentOfCurrent, dominantSet, commandSet, constraint, constraint2 = (
+            itemgetter(
+                "current",
+                "parentOfCurrent",
+                "dominantSet",
+                "commandSet",
+                "constraint",
+                "constraint2",
+            )(result)
+        )
 
-        action = reduceToElegance(constraint, constraint, [], [])
+        action = reduceToElegance(parentOfCurrent, current, dominantSet, commandSet)
         match action:
             case ReductionSignal.DELETE:
                 parentOfCurrent.children = findAndRemoveChild(
@@ -234,6 +238,10 @@ class TestReduceToElegance(TestCase):
 
         action = reduceToElegance(parentOfCurrent, current, dominantSet, commandSet)
         match action:
+            case ReductionSignal.DELETE:
+                parentOfCurrent.children = findAndRemoveChild(
+                    parentOfCurrent.children, current
+                )
             case ReductionSignal.DISCONNECT:
                 parentOfCurrent.children = findAndRemoveChild(
                     parentOfCurrent.children, current
@@ -243,4 +251,4 @@ class TestReduceToElegance(TestCase):
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
         self.assertEqual(compareTrees(constraint, constraint2), True)
         self.assertEqual(compare_tables(table1, table2), (True, []))
-        self.assertEqual(action, ReductionSignal.DELETE)
+        self.assertEqual(action, ReductionSignal.KEEP)
