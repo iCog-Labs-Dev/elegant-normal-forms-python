@@ -1,3 +1,16 @@
+# from Utilities.HelperFunctions import isConsistent, union
+import itertools
+
+from DataStructures.Trees import *
+from enfCheckers.conditions import (
+    ruleFive,
+    ruleFour,
+    ruleOne,
+    ruleSeven,
+    ruleSix,
+    ruleThree,
+    ruleTwo,
+)
 from Utilities.BuildTree import *
 from Utilities.HelperFunctions import print_constraint_tree, print_tree
 from Utilities.PropagateTruthValue import propagateTruthValue
@@ -24,7 +37,6 @@ from Tests import *
 # input = "&(a, a)"
 # input = "!(!(a))"
 # input = "|(|(!(a), &(a, &(b,c))), &(b, &(c, !(b))))"
-input = ""
 # input = "|(a, a)"
 # input = "|(a, |(b, |(c, |(d, !(c)))))"
 # input = "|(A, &(B, &(C, &(D, C))))"
@@ -39,6 +51,7 @@ input = ""
 # input = "|(&(!(a), b), |(!(c), !(d)))"
 # input = "|(g, &(a, &(b, &(|(!(c), |(!(d), e)), |(c, &(c, f))))))" # Example from Mosh's paper. Expected output: "|(g,&(a, &(b, &(c, |(!(d), e)))))"
 # input = "|(g,&(a, &(b, &(c, |(!(d), e)))))" # Reduced form of the above expression from Mosh's paper.
+
 
 tree = BuildTree(input)
 # tree2 = BuildTree(input2)
@@ -71,6 +84,7 @@ if constraintTree:
     print("constraint Tree before reduction")
     print_constraint_tree(constraintTree)
 
+    
 table1 = generateReducedTruthTable(constraintTree, collectLiterals(constraintTree))
 
 lastAction = None
@@ -84,9 +98,29 @@ table2 = generateReducedTruthTable(constraintTree, collectLiterals(constraintTre
 
 print("Last action after reduction: ", lastAction)
 
+
 if constraintTree:
     print("constraint Tree after reduction")
     print_constraint_tree(constraintTree)
+    # check if the enf conditions hold
+    rules = [
+        ruleOne,
+        ruleTwo,
+        ruleThree,
+        ruleFour,
+        ruleFive,
+        ruleSix,
+        ruleSeven,
+    ]
+
+    try:
+        for rule in rules:
+            if not rule(constraintTree):
+                raise Exception(f"{rule.__name__} failed")
+        print("ENF conditions passed")
+    except Exception as e:
+        print("ENF conditions failed:", e)
+
 
 print("*" * 50)
 print("Expression VS. Reduction Equivalence")
