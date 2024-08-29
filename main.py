@@ -1,33 +1,21 @@
-from Utilities.BuildTree import *
-from Utilities.GatherJunctors import gatherJunctors
-from Utilities.HelperFunctions import print_tree, print_constraint_tree,intersection
+from DataStructures.Trees import TreeNode, BinaryExpressionTreeNode, NodeType
+from Utilities.BuildTree import BuildTree
+from Utilities.HelperFunctions import print_constraint_tree
 from Utilities.PropagateTruthValue import propagateTruthValue
+from Utilities.GatherJunctors import gatherJunctors
+from Utilities.ReduceToElegance import reduceToElegance
 
-# from Utilities.HelperFunctions import isConsistent, union
-import itertools
 
-from DataStructures.Trees import *
-from enfCheckers.conditions import (
-    ruleFive,
-    ruleFour,
+from Tests.TestHelpers import collectLiterals, generateReducedTruthTable, compare_tables
+from Tests.EnfRuleTests import (
     ruleOne,
-    ruleSeven,
-    ruleSix,
-    ruleThree,
     ruleTwo,
+    ruleThree,
+    ruleFour,
+    ruleFive,
+    ruleSix,
+    ruleSeven,
 )
-from Utilities.BuildTree import *
-from Utilities.HelperFunctions import print_constraint_tree, print_tree
-from Utilities.PropagateTruthValue import propagateTruthValue
-from Utilities.GatherJunctors import gatherJunctors
-from Utilities.ReduceToElegance import (
-    reduceToElegance,
-    ReductionSignal,
-    findAndRemoveChild,
-)
-
-from DataStructures.Trees import *
-from Tests import *
 
 
 # input = "&(B, !(|(C, |(A, &(!(B), A)))))"
@@ -90,7 +78,7 @@ if constraintTree:
     print("constraint Tree before reduction")
     print_constraint_tree(constraintTree)
 
-    
+
 table1 = generateReducedTruthTable(constraintTree, collectLiterals(constraintTree))
 
 lastAction = None
@@ -145,4 +133,3 @@ else:
         print(f"Index: {difference[0]}")
         print("Table 1:", difference[1])
         print("Table 2:", difference[2])
-
