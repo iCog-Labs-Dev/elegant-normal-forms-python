@@ -1,3 +1,8 @@
+from Utilities.BuildTree import *
+from Utilities.GatherJunctors import gatherJunctors
+from Utilities.HelperFunctions import print_tree, print_constraint_tree,intersection
+from Utilities.PropagateTruthValue import propagateTruthValue
+
 # from Utilities.HelperFunctions import isConsistent, union
 import itertools
 
@@ -37,10 +42,6 @@ from Tests import *
 # input = "&(a, a)"
 # input = "!(!(a))"
 # input = "|(|(!(a), &(a, &(b,c))), &(b, &(c, !(b))))"
-<<<<<<< Updated upstream
-=======
-input = "|(c,b)"
->>>>>>> Stashed changes
 # input = "|(a, a)"
 # input = "|(a, |(b, |(c, |(d, !(c)))))"
 # input = "|(A, &(B, &(C, &(D, C))))"
@@ -49,6 +50,7 @@ input = "|(c,b)"
 # input = "&(&(A,B),|(C,D))"
 # input = "|(|(!(A), &(A, &(B, C))), &(B, &(C, !(B))))"
 # input = "|(|(!(A), &(A, &(B, C))), &(C, &(B, !(B))))"
+input = "|(&(A, B), |(&(A, C), &(A, D)))"
 # input = "!(&(|(a, b), &(c,d)))"
 # input = "|(!(a), |(!(c), !(d)))"
 # input = "!(&(|(a, b), &(c,d)))"
@@ -69,13 +71,10 @@ root2.type = NodeType.ROOT
 
 binaryConstraintTree = propagateTruthValue(root)
 # binaryConstraintTree2 = propagateTruthValue(root2)
-<<<<<<< Updated upstream
-=======
 
 constraintTree = TreeNode("ROOT")
 constraintTree.type = NodeType.ROOT
 
->>>>>>> Stashed changes
 # constraintTree2 = TreeNode("ROOT")
 # constraintTree2.type = NodeType.ROOT
 

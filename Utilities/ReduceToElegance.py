@@ -100,7 +100,6 @@ def applyAndCut(grandChild: TreeNode, child: TreeNode):
 def computeGrandChildGuardSet(grandChild: TreeNode, resultSet: list[TreeNode]):
     grandChild.guardSet = setDifference(grandChild.guardSet, resultSet)
 
-
 def intersections(children: list[TreeNode]) -> list[TreeNode]:
     # Base case: If there's only one child or no children, return its guardSet or an empty list
     if not children:

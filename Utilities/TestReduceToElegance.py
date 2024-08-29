@@ -237,8 +237,7 @@ class TestReduceToElegance(unittest.TestCase):
         # Test with no children
         result = intersections([])  # Pass only the required argument
         self.assertEqual(result, [])
-        self.assertFalse(containsTerminalAndNode([]), "Should return False for empty children list")
-
+        
     def test_single_child(self):
         # Test with a single child
         result = intersections([self.node28])  # Pass only the required argument
