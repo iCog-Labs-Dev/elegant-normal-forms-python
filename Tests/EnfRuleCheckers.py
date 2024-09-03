@@ -5,7 +5,21 @@ from Utilities.HelperFunctions import intersection, union
 
 
 def ruleOne(node: TreeNode, branch_set: list[TreeNode] | None = None) -> bool:
-    """Gather guard sets and constraints from the root to each leaf and check for consistency."""
+    """
+    ENf Rule #1: All branch sets are consistent.
+
+    The function gathers guard sets and constraints from the root to each leaf and check for consistency.
+
+    Args:
+        - node: TreeNode: The root node of the tree.
+        - branch_set [Optional]: list[TreeNode]: The branch set to be checked for consistency. Defalue is None.
+
+    Returns:
+        - bool: True if the branch set is consistent, False otherwise.
+
+    Branch Set: is the union of the guard sets of the AND nodes which are in the branch.
+
+    """
 
     def check_branch_set_consistency(branch_set: list[TreeNode]) -> bool:
         """Check if a branch set is consistent."""
@@ -50,6 +64,21 @@ def ruleOne(node: TreeNode, branch_set: list[TreeNode] | None = None) -> bool:
 
 
 def ruleTwo(node: TreeNode):
+    """
+    ENF Rule #2: All terminal AND nodes have non empty guard sets.
+
+    Args:
+        - node: TreeNode: The root node of the tree.
+
+    Returns:
+        - bool: True if the rule is satisfied, False otherwise.
+
+    Conditions that must be fulfilled to return True:
+        - The node must be of type AND.
+        - The node must be terminal (Have no children).
+        - All such nodes must have non-empty guard sets.
+    """
+
     if node.type == NodeType.AND and not node.children:
         return len(node.guardSet) > 0
     for child in node.children:
@@ -60,10 +89,17 @@ def ruleTwo(node: TreeNode):
 
 def ruleThree(node: TreeNode) -> bool:
     """
-    #3) Checks if the given tree satisfies the ENF condition for OR nodes.
+    ENF Rule #3: All OR nodes have at least two children.
 
-    Condition that must be fulfilled:
-     - The OR node must have at least two children.
+    Args:
+        - node: TreeNode: The root node of the tree.
+
+    Returns:
+        - bool: True if the rule is satisfied, False otherwise.
+
+    Conditions that must be fulfilled to return True:
+        - The node must be of type OR.
+        - All such nodes must have at least two children.
     """
 
     # Base Case: If a node is OR type and has less than 2 children, then it is not ENF.
@@ -80,14 +116,21 @@ def ruleThree(node: TreeNode) -> bool:
 
 def ruleFour(tree: TreeNode, is_root=True) -> bool:
     """
-    #4) Checks if the given tree satisfies the ENF condition for AND nodes.
+    ENF Rule #4: All non-terminal AND nodes, which are not the root node,
+    and which have empty guard sets, have at least two children.
 
-    Condition that must be fulfilled to be ENF:
+    Args:
+        - tree: TreeNode: The root node of the tree.
+        - is_root [Optional]: bool: True if the node is the root node, False otherwise. Default is True.
+    Returns :
+        - bool: True if the rule is satisfied, False otherwise.
+
+    Conditions that must be fulfilled to return True:
      - The node must be of type AND.
      - The node must not be the root node.
      - The node must have empty guard sets.
      - The node must be non-terminal node.
-     - The AND node must have at least two children.
+     - All such nodes must have at least two children.
     """
 
     # Base Case
@@ -109,6 +152,21 @@ def ruleFour(tree: TreeNode, is_root=True) -> bool:
 
 
 def ruleFive(tree):
+    """
+    ENF Rule #5: For each OR node, the intersection of the guard sets of the children of the node is empty.
+
+    Args:
+        - tree: TreeNode: The root node of the tree.
+
+    Returns :
+        - bool: True if the rule is satisfied, False otherwise.
+
+    Conditions that must be fulfilled to return True:
+     - The node must be of type OR.
+     - The intersection of the guard sets of the children of this node is empty.
+
+    """
+
     def traverse(node, level=0):
         for child in node.children:
             if child.type == NodeType.OR:
@@ -130,8 +188,27 @@ def ruleFive(tree):
 
 
 def ruleSix(tree):
-    # For each AND node, the intersection of its guard set and its dominant set is
-    # empty
+    """
+    ENF Rule #6: For each AND node, the intersection of its guard set and its dominant set is empty.
+
+    Args:
+        - tree: TreeNode: The root node of the tree.
+
+    Returns :
+        - bool: True if the rule is satisfied, False otherwise.
+
+    Conditions that must be fulfilled to return True:
+     - The node must be of type AND.
+     - The intersection of its guard sets and its dominant set is empty.
+
+    A is said to dominate node B:
+        - If A and B are distinct
+        - A and B are in the same branch
+        - A is closer to the root of the tree than is B.
+    Dominant set: of a node is the union of the guard sets of the AND nodes which dominate that node.
+
+    """
+
     def dominantSetIterator(children, level, localDominantSet, target, targetNodeLevel):
         if children == []:
             return localDominantSet
@@ -172,12 +249,27 @@ def ruleSix(tree):
 
 
 def ruleSeven(tree):
-    # For each AND node, the intersection of its guard set and its command set is
-    # empty
-    # A commands B if:
-    #   if A is a childless AND node having only one constraint in its guard set.
-    #   A is a child of an ancestor of B
-    #   A and B are not in the same branch
+    """
+    ENF Rule #6: For each AND node, the intersection of its guard set and its command set is empty.
+
+    Args:
+        - tree: TreeNode: The root node of the tree.
+
+    Returns :
+        - bool: True if the rule is satisfied, False otherwise.
+
+    Conditions that must be fulfilled to return True:
+     - The node must be of type AND.
+     - The intersection of its guard sets and its command set is empty.
+
+    A commands B if:
+      - If A is a childless AND node having only one constraint in its guard set.
+      - A is a child of an ancestor of B.
+      - A and B are not in the same branch.
+    Command set: of a node is the union of the guard sets of all nodes that command it.
+
+    """
+
     def commandSetIterator(children, level, localCommandSet, target, targetNodeLevel):
         if children == []:
             return localCommandSet
