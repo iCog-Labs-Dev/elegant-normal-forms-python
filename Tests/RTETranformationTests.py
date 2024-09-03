@@ -9,7 +9,7 @@ from Tests.TestHelpers import (
     generateReducedTruthTable,
 )
 
-from Tests.TestCases import (
+from Tests.TransformationTestCases import (
     deleteInconsistentHandleTestCase,
     promoteCommonConstraintsTestCase,
     subtractRedundantConstraintTestCase,
