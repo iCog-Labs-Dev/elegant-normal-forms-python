@@ -10,40 +10,40 @@ from Tests.EnfRuleTests import (
     ruleSeven,
 )
 
+EXPRESSIONS = [
+    "&(B, !(|(C, |(A, &(!(B), A)))))",
+    "&(B, !(|(C, |(A, &(!(B), |(K,X))))))",
+    "&(B, !(|(C, |(A, &(&(B, &(C, D)), A)))))",
+    "|(&(A, |(!(B), !(C))), D)",
+    "&(A, &(B, &(C, &(|(A, |(B, |(C, A))), &(B, &(&(A, A), !(A)))))))",
+    "|(&(A, B), |(C, D))",
+    "|(a, |(b, |(c, |(d, c))))",
+    "&(a, &(b, &(c, &(d,c))))",
+    "&(a, &(b, &(c, &(d, !(b)))))",
+    "&(a, a)",
+    "!(!(a))",
+    "|(|(!(a), &(a, &(b,c))), &(b, &(c, !(b))))",
+    "|(a, a)",
+    "|(a, |(b, |(c, |(d, !(c)))))",
+    "|(A, &(B, &(C, &(D, C))))",
+    "|(&(A, B), |(A, C))",
+    "|(A,B)",
+    "&(&(A,B),|(C,D))",
+    "|(|(!(A), &(A, &(B, C))), &(B, &(C, !(B))))",
+    "|(|(!(A), &(A, &(B, C))), &(C, &(B, !(B))))",
+    "!(&(|(a, b), &(c,d)))",
+    "|(!(a), |(!(c), !(d)))",
+    "!(&(|(a, b), &(c,d)))",
+    "|(&(!(a), b), |(!(c), !(d)))",
+    "|(g, &(a, &(b, &(|(!(c), |(!(d), e)), |(c, &(c, f))))))",  # Example from Mosh's paper. Expected output: "|(g,&(a, &(b, &(c, |(!(d), e)))))"
+    "|(g,&(a, &(b, &(c, |(!(d), e)))))",  # Reduced form of the above expression from Mosh's paper.
+    "|(&(A, B), |(&(A, C), &(A, D)))",
+]
+
 
 class GeneralTests(TestCase):
-    EXPRESSIONS = [
-        "&(B, !(|(C, |(A, &(!(B), A)))))",
-        "&(B, !(|(C, |(A, &(!(B), |(K,X))))))",
-        "&(B, !(|(C, |(A, &(&(B, &(C, D)), A)))))",
-        "|(&(A, |(!(B), !(C))), D)",
-        "&(A, &(B, &(C, &(|(A, |(B, |(C, A))), &(B, &(&(A, A), !(A)))))))",
-        "|(&(A, B), |(C, D))",
-        "|(a, |(b, |(c, |(d, c))))",
-        "&(a, &(b, &(c, &(d,c))))",
-        "&(a, &(b, &(c, &(d, !(b)))))",
-        "&(a, a)",
-        "!(!(a))",
-        "|(|(!(a), &(a, &(b,c))), &(b, &(c, !(b))))",
-        "|(a, a)",
-        "|(a, |(b, |(c, |(d, !(c)))))",
-        "|(A, &(B, &(C, &(D, C))))",
-        "|(&(A, B), |(A, C))",
-        "|(A,B)",
-        "&(&(A,B),|(C,D))",
-        "|(|(!(A), &(A, &(B, C))), &(B, &(C, !(B))))",
-        "|(|(!(A), &(A, &(B, C))), &(C, &(B, !(B))))",
-        "!(&(|(a, b), &(c,d)))",
-        "|(!(a), |(!(c), !(d)))",
-        "!(&(|(a, b), &(c,d)))",
-        "|(&(!(a), b), |(!(c), !(d)))",
-        "|(g, &(a, &(b, &(|(!(c), |(!(d), e)), |(c, &(c, f))))))",  # Example from Mosh's paper. Expected output: "|(g,&(a, &(b, &(c, |(!(d), e)))))"
-        "|(g,&(a, &(b, &(c, |(!(d), e)))))",  # Reduced form of the above expression from Mosh's paper.
-        "|(&(A, B), |(&(A, C), &(A, D)))",
-    ]
-
     def testRTEGeneral(self):
-        for index, input in enumerate(self.EXPRESSIONS):
+        for index, input in enumerate(EXPRESSIONS):
             constraintTree, table1, table2 = rteRunner(input)
             self.assertTrue(
                 compare_tables(table1, table2),

@@ -18,36 +18,9 @@ from Tests.EnfRuleTests import (
 )
 
 from Tests.ReduceToEleganceTests import *
+from Tests.GeneralTestCases import EXPRESSIONS
 
-
-# input = "&(B, !(|(C, |(A, &(!(B), A)))))"
-# input = "&(B, !(|(C, |(A, &(!(B), |(K,X))))))"
-# input = "&(B, !(|(C, |(A, &(&(B, &(C, D)), A)))))"
-# input = "|(&(A, |(!(B), !(C))), D)"
-# input = "&(A, &(B, &(C, &(|(A, |(B, |(C, A))), &(B, &(&(A, A), !(A)))))))"
-# input = "|(&(A, B), |(C, D))"
-# input = "|(a, |(b, |(c, |(d, c))))"
-# input = "&(a, &(b, &(c, &(d,c))))"
-# input = "&(a, &(b, &(c, &(d, !(b)))))"
-# input = "&(a, a)"
-# input = "!(!(a))"
-# input = "|(|(!(a), &(a, &(b,c))), &(b, &(c, !(b))))"
-# input = "|(a, a)"
-# input = "|(a, |(b, |(c, |(d, !(c)))))"
-# input = "|(A, &(B, &(C, &(D, C))))"
-# input = "|(&(A, B), |(A, C))"
-# input = "|(A,B)"
-# input = "&(&(A,B),|(C,D))"
-# input = "|(|(!(A), &(A, &(B, C))), &(B, &(C, !(B))))"
-# input = "|(|(!(A), &(A, &(B, C))), &(C, &(B, !(B))))"
-input = "|(&(A, B), |(&(A, C), &(A, D)))"
-# input = "!(&(|(a, b), &(c,d)))"
-# input = "|(!(a), |(!(c), !(d)))"
-# input = "!(&(|(a, b), &(c,d)))"
-# input = "|(&(!(a), b), |(!(c), !(d)))"
-# input = "|(g, &(a, &(b, &(|(!(c), |(!(d), e)), |(c, &(c, f))))))" # Example from Mosh's paper. Expected output: "|(g,&(a, &(b, &(c, |(!(d), e)))))"
-# input = "|(g,&(a, &(b, &(c, |(!(d), e)))))" # Reduced form of the above expression from Mosh's paper.
-
+input = EXPRESSIONS[0]
 tree = BuildTree(input)
 # tree2 = BuildTree(input2)
 
@@ -86,6 +59,14 @@ table1 = generateReducedTruthTable(constraintTree, collectLiterals(constraintTre
 lastAction = None
 if constraintTree is not None:
     lastAction = reduceToElegance(constraintTree, constraintTree, [], [])
+    match lastAction:
+        case ReductionSignal.DELETE:
+            constraintTree.children = []
+            constraintTree.guardSet = []
+
+        case ReductionSignal.DISCONNECT:
+            constraintTree.children = []
+            constraintTree.guardSet = []
 
 table2 = generateReducedTruthTable(constraintTree, collectLiterals(constraintTree))
 # # If the last action returned is a DELETE, that means the whole tree is a contradiction. Will always return False
