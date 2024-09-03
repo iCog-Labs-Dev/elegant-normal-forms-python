@@ -53,10 +53,23 @@ class TestReduceToElegance(TestCase):
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
 
-        self.assertEqual(compareTrees(constraint, constraint2), True)
-        self.assertEqual(compare_tables(table0, table1), (True, []))
-        self.assertEqual(compare_tables(table1, table2), (True, []))
-        self.assertEqual(action, ReductionSignal.DELETE)
+        self.assertTrue(
+            compareTrees(constraint, constraint2),
+            "Found tree doesn't match the Expected tree.",
+        )
+        self.assertEqual(
+            compare_tables(table0, table1),
+            (True, []),
+            "Tree's semantic meaning changed after reduction.",
+        )
+        self.assertEqual(
+            compare_tables(table1, table2),
+            (True, []),
+            "Tree's semantic meaning doesn't match the Expected tree.",
+        )
+        self.assertEqual(
+            action, ReductionSignal.DELETE, "Action doesn't match the Expected action."
+        )
 
     def testPromoteCommonConstraints(self):
         result = promoteCommonConstraintsTestCase()
@@ -86,9 +99,20 @@ class TestReduceToElegance(TestCase):
 
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
-        self.assertEqual(compareTrees(constraint, constraint2), True)
-        self.assertEqual(compare_tables(table0, table1), (True, []))
-        self.assertEqual(compare_tables(table1, table2), (True, []))
+        self.assertTrue(
+            compareTrees(constraint, constraint2),
+            "Found tree doesn't match the Expected tree.",
+        )
+        self.assertEqual(
+            compare_tables(table0, table1),
+            (True, []),
+            "Tree's semantic meaning changed after reduction.",
+        )
+        self.assertEqual(
+            compare_tables(table1, table2),
+            (True, []),
+            "Tree's semantic meaning doesn't match the Expected tree.",
+        )
 
     def testSubtractRedundantConstraint(self):
         result = subtractRedundantConstraintTestCase()
@@ -114,10 +138,23 @@ class TestReduceToElegance(TestCase):
 
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
-        self.assertEqual(compareTrees(constraint, constraint2), True)
-        self.assertEqual(compare_tables(table0, table1), (True, []))
-        self.assertEqual(compare_tables(table1, table2), (True, []))
-        self.assertEqual(action, ReductionSignal.DELETE)
+        self.assertTrue(
+            compareTrees(constraint, constraint2),
+            "Found tree doesn't match the Expected tree.",
+        )
+        self.assertEqual(
+            compare_tables(table0, table1),
+            (True, []),
+            "Tree's semantic meaning changed after reduction.",
+        )
+        self.assertEqual(
+            compare_tables(table1, table2),
+            (True, []),
+            "Tree's semantic meaning doesn't match the Expected tree.",
+        )
+        self.assertEqual(
+            action, ReductionSignal.DELETE, "Action doesn't match the Expected action"
+        )
 
     def testCutUnnecessaryOr(self):
         result = cutUnnecessaryOrTestCase()
@@ -147,9 +184,20 @@ class TestReduceToElegance(TestCase):
 
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
-        self.assertEqual(compareTrees(constraint, constraint2), True)
-        self.assertEqual(compare_tables(table0, table1), (True, []))
-        self.assertEqual(compare_tables(table1, table2), (True, []))
+        self.assertTrue(
+            compareTrees(constraint, constraint2),
+            "Found tree doesn't match the Expected tree.",
+        )
+        self.assertEqual(
+            compare_tables(table0, table1),
+            (True, []),
+            "Tree's semantic meaning changed after reduction.",
+        )
+        self.assertEqual(
+            compare_tables(table1, table2),
+            (True, []),
+            "Tree's semantic meaning doesn't match the Expected tree.",
+        )
 
     def testCutUnnecessaryAnd(self):
         result = cutUnnecessaryAndTestCase()
@@ -175,10 +223,23 @@ class TestReduceToElegance(TestCase):
 
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
-        self.assertEqual(compareTrees(constraint, constraint2), True)
-        self.assertEqual(compare_tables(table0, table1), (True, []))
-        self.assertEqual(compare_tables(table1, table2), (True, []))
-        self.assertEqual(action, ReductionSignal.KEEP)
+        self.assertTrue(
+            compareTrees(constraint, constraint2),
+            "Found tree doesn't match the Expected tree.",
+        )
+        self.assertEqual(
+            compare_tables(table0, table1),
+            (True, []),
+            "Tree's semantic meaning changed after reduction.",
+        )
+        self.assertEqual(
+            compare_tables(table1, table2),
+            (True, []),
+            "Tree's semantic meaning doesn't match the Expected tree.",
+        )
+        self.assertEqual(
+            action, ReductionSignal.KEEP, "Action doesn't match the Expected action"
+        )
 
     def testZeroConstraintSubsumption(self):
         result = zeroConstraintSubsumptionTestCase()
@@ -207,10 +268,25 @@ class TestReduceToElegance(TestCase):
 
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
-        self.assertEqual(compareTrees(constraint, constraint2), True)
-        self.assertEqual(compare_tables(table0, table1), (True, []))
-        self.assertEqual(compare_tables(table1, table2), (True, []))
-        self.assertEqual(action, ReductionSignal.DISCONNECT)
+        self.assertTrue(
+            compareTrees(constraint, constraint2),
+            "Found tree doesn't match the Expected tree.",
+        )
+        self.assertEqual(
+            compare_tables(table0, table1),
+            (True, []),
+            "Tree's semantic meaning changed after reduction.",
+        )
+        self.assertEqual(
+            compare_tables(table1, table2),
+            (True, []),
+            "Tree's semantic meaning doesn't match the Expected tree.",
+        )
+        self.assertEqual(
+            action,
+            ReductionSignal.DISCONNECT,
+            "Action doesn't match the Expected action.",
+        )
 
     def testOneConstraintSubsumption(self):
         result = oneConstraintSubsumptionTestCase()
@@ -240,9 +316,20 @@ class TestReduceToElegance(TestCase):
 
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
-        self.assertEqual(compareTrees(constraint, constraint2), True)
-        self.assertEqual(compare_tables(table0, table1), (True, []))
-        self.assertEqual(compare_tables(table1, table2), (True, []))
+        self.assertTrue(
+            compareTrees(constraint, constraint2),
+            "Found tree doesn't match the Expected tree.",
+        )
+        self.assertEqual(
+            compare_tables(table0, table1),
+            (True, []),
+            "Tree's semantic meaning changed after reduction.",
+        )
+        self.assertEqual(
+            compare_tables(table1, table2),
+            (True, []),
+            "Tree's semantic meaning doesn't match the Expected tree.",
+        )
 
     def testOneConstraintComplementSubtraction(self):
         result = oneConstraintComplementSubtractionTestCase()
@@ -272,7 +359,20 @@ class TestReduceToElegance(TestCase):
 
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
-        self.assertEqual(compareTrees(constraint, constraint2), True)
-        self.assertEqual(compare_tables(table0, table1), (True, []))
-        self.assertEqual(compare_tables(table1, table2), (True, []))
-        self.assertEqual(action, ReductionSignal.KEEP)
+        self.assertTrue(
+            compareTrees(constraint, constraint2),
+            "Found tree doesn't match the Expected tree.",
+        )
+        self.assertEqual(
+            compare_tables(table0, table1),
+            (True, []),
+            "Tree's semantic meaning changed after reduction.",
+        )
+        self.assertEqual(
+            compare_tables(table1, table2),
+            (True, []),
+            "Tree's semantic meaning doesn't match the Expected tree.",
+        )
+        self.assertEqual(
+            action, ReductionSignal.KEEP, "Action doesn't match the Expected action."
+        )
