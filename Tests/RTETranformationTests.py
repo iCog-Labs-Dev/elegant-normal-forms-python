@@ -37,6 +37,8 @@ class TestReduceToElegance(TestCase):
             )(result)
         )
 
+        table0 = generateReducedTruthTable(constraint, collectLiterals(constraint))
+
         action = reduceToElegance(parentOfCurrent, current, dominantSet, commandSet)
         match action:
             case ReductionSignal.DELETE:
@@ -50,7 +52,9 @@ class TestReduceToElegance(TestCase):
 
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
+
         self.assertEqual(compareTrees(constraint, constraint2), True)
+        self.assertEqual(compare_tables(table0, table1), (True, []))
         self.assertEqual(compare_tables(table1, table2), (True, []))
         self.assertEqual(action, ReductionSignal.DELETE)
 
@@ -67,6 +71,8 @@ class TestReduceToElegance(TestCase):
             )(result)
         )
 
+        table0 = generateReducedTruthTable(constraint, collectLiterals(constraint))
+
         action = reduceToElegance(parentOfCurrent, current, dominantSet, commandSet)
         match action:
             case ReductionSignal.DELETE:
@@ -81,6 +87,7 @@ class TestReduceToElegance(TestCase):
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
         self.assertEqual(compareTrees(constraint, constraint2), True)
+        self.assertEqual(compare_tables(table0, table1), (True, []))
         self.assertEqual(compare_tables(table1, table2), (True, []))
 
     def testSubtractRedundantConstraint(self):
@@ -96,6 +103,8 @@ class TestReduceToElegance(TestCase):
             )(result)
         )
 
+        table0 = generateReducedTruthTable(constraint, collectLiterals(constraint))
+
         action = reduceToElegance(parentOfCurrent, current, dominantSet, commandSet)
         match action:
             case ReductionSignal.DISCONNECT:
@@ -106,6 +115,7 @@ class TestReduceToElegance(TestCase):
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
         self.assertEqual(compareTrees(constraint, constraint2), True)
+        self.assertEqual(compare_tables(table0, table1), (True, []))
         self.assertEqual(compare_tables(table1, table2), (True, []))
         self.assertEqual(action, ReductionSignal.DELETE)
 
@@ -122,6 +132,8 @@ class TestReduceToElegance(TestCase):
             )(result)
         )
 
+        table0 = generateReducedTruthTable(constraint, collectLiterals(constraint))
+
         action = reduceToElegance(parentOfCurrent, current, dominantSet, commandSet)
         match action:
             case ReductionSignal.DELETE:
@@ -136,6 +148,7 @@ class TestReduceToElegance(TestCase):
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
         self.assertEqual(compareTrees(constraint, constraint2), True)
+        self.assertEqual(compare_tables(table0, table1), (True, []))
         self.assertEqual(compare_tables(table1, table2), (True, []))
 
     def testCutUnnecessaryAnd(self):
@@ -146,6 +159,8 @@ class TestReduceToElegance(TestCase):
             "constraint",
             "constraint2",
         )(result)
+
+        table0 = generateReducedTruthTable(constraint, collectLiterals(constraint))
 
         action = reduceToElegance(constraint, constraint, [], [])
         match action:
@@ -161,6 +176,7 @@ class TestReduceToElegance(TestCase):
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
         self.assertEqual(compareTrees(constraint, constraint2), True)
+        self.assertEqual(compare_tables(table0, table1), (True, []))
         self.assertEqual(compare_tables(table1, table2), (True, []))
         self.assertEqual(action, ReductionSignal.KEEP)
 
@@ -176,6 +192,7 @@ class TestReduceToElegance(TestCase):
                 "constraint2",
             )(result)
         )
+        table0 = generateReducedTruthTable(constraint, collectLiterals(constraint))
 
         action = reduceToElegance(parentOfCurrent, current, dominantSet, commandSet)
         match action:
@@ -191,6 +208,7 @@ class TestReduceToElegance(TestCase):
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
         self.assertEqual(compareTrees(constraint, constraint2), True)
+        self.assertEqual(compare_tables(table0, table1), (True, []))
         self.assertEqual(compare_tables(table1, table2), (True, []))
         self.assertEqual(action, ReductionSignal.DISCONNECT)
 
@@ -207,6 +225,8 @@ class TestReduceToElegance(TestCase):
             )(result)
         )
 
+        table0 = generateReducedTruthTable(constraint, collectLiterals(constraint))
+
         action = reduceToElegance(parentOfCurrent, current, dominantSet, commandSet)
         match action:
             case ReductionSignal.DELETE:
@@ -221,6 +241,7 @@ class TestReduceToElegance(TestCase):
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
         self.assertEqual(compareTrees(constraint, constraint2), True)
+        self.assertEqual(compare_tables(table0, table1), (True, []))
         self.assertEqual(compare_tables(table1, table2), (True, []))
 
     def testOneConstraintComplementSubtraction(self):
@@ -236,6 +257,8 @@ class TestReduceToElegance(TestCase):
             )(result)
         )
 
+        table0 = generateReducedTruthTable(constraint, collectLiterals(constraint))
+
         action = reduceToElegance(parentOfCurrent, current, dominantSet, commandSet)
         match action:
             case ReductionSignal.DELETE:
@@ -250,5 +273,6 @@ class TestReduceToElegance(TestCase):
         table1 = generateReducedTruthTable(constraint, collectLiterals(constraint))
         table2 = generateReducedTruthTable(constraint2, collectLiterals(constraint2))
         self.assertEqual(compareTrees(constraint, constraint2), True)
+        self.assertEqual(compare_tables(table0, table1), (True, []))
         self.assertEqual(compare_tables(table1, table2), (True, []))
         self.assertEqual(action, ReductionSignal.KEEP)
