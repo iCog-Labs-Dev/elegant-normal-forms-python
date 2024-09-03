@@ -1,6 +1,10 @@
 import itertools
-from DataStructures.Trees import NodeType, TreeNode
-from Utilities.ReduceToElegance import compareSets
+
+from Utilities.BuildTree import BuildTree
+from Utilities.ReduceToElegance import ReductionSignal, compareSets, reduceToElegance
+from Utilities.GatherJunctors import gatherJunctors
+from Utilities.PropagateTruthValue import propagateTruthValue
+from DataStructures.Trees import NodeType, TreeNode, BinaryExpressionTreeNode
 
 
 def compare_tables(table1, table2):
@@ -161,6 +165,20 @@ def generateReducedTruthTable(constraintTree, literals):
     return reducedTruthTable
 
 
+def generateTautology(literals):
+    reducedTruthTable = []
+    for generatedTruthValues in generateTruthTableValues(literals):
+        reducedTruthTable.append((generatedTruthValues, True))
+    return reducedTruthTable
+
+
+def generateContradiction(literals):
+    reducedTruthTable = []
+    for generatedTruthValues in generateTruthTableValues(literals):
+        reducedTruthTable.append((generatedTruthValues, False))
+    return reducedTruthTable
+
+
 def compareTrees(tree1: TreeNode, tree2: TreeNode):
     """
     A function that takes two constraint trees and compares them for equality.
@@ -190,3 +208,60 @@ def compareTrees(tree1: TreeNode, tree2: TreeNode):
             return False
 
     return True
+
+
+def rteRunner(input: str):
+    """
+    A functions that takes boolean expression, builds a constraint tree from it,
+    runs propagateTruthValue, gatherJunctors and reduceToElegance on the tree and returns the constraint tree.
+
+    Args:
+        input: A string representing a boolean expression. i.e. "|(&(A, B), |(&(A, C), &(A, D)))"
+    Returns:
+        constraintTree: The constraint tree that is in ENF format.
+        table1: The truth table of the constraint tree before reduction.
+        table2: The truth table of the constraint tree after reduction.
+    """
+
+    tree = BuildTree(input)
+
+    root = BinaryExpressionTreeNode("Root")
+    root.type = NodeType.ROOT
+    root.right = tree
+
+    constraintTree = TreeNode("ROOT")
+    constraintTree.type = NodeType.ROOT
+
+    binaryConstraintTree = propagateTruthValue(root)
+
+    if binaryConstraintTree is not None:
+        constraintTree = gatherJunctors(binaryConstraintTree, constraintTree)
+
+    table1 = generateReducedTruthTable(constraintTree, collectLiterals(constraintTree))
+
+    action = None
+    table2 = None
+
+    if constraintTree is not None:
+        action = reduceToElegance(constraintTree, constraintTree, [], [])
+
+        match action:
+            case ReductionSignal.DELETE:
+                constraintTree.children = []
+                constraintTree.guardSet = []
+                constraintTree.type = NodeType.ROOT
+                constraintTree.value = "ROOT"
+
+                table2 = generateContradiction(collectLiterals(constraintTree))
+
+            case ReductionSignal.DISCONNECT:
+                constraintTree.children = []
+
+                table2 = generateTautology(collectLiterals(constraintTree))
+
+    if not table2:
+        table2 = generateReducedTruthTable(
+            constraintTree, collectLiterals(constraintTree)
+        )
+
+    return constraintTree, table1, table2
