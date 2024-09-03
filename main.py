@@ -7,7 +7,7 @@ from Utilities.ReduceToElegance import reduceToElegance
 
 
 from Tests.TestHelpers import collectLiterals, generateReducedTruthTable, compare_tables
-from Tests.EnfRuleTests import (
+from Tests.EnfRuleCheckers import (
     ruleOne,
     ruleTwo,
     ruleThree,
