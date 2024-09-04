@@ -1,7 +1,6 @@
-import enum
 from unittest import TestCase
 from Tests.TestHelpers import compare_tables, rteRunner
-from Tests.EnfRuleTests import (
+from Tests.EnfRuleCheckers import (
     ruleOne,
     ruleTwo,
     ruleThree,
@@ -10,36 +9,54 @@ from Tests.EnfRuleTests import (
     ruleSix,
     ruleSeven,
 )
-from Utilities.HelperFunctions import print_constraint_tree
 
 EXPRESSIONS = [
-    "&(B, !(|(C, |(A, &(!(B), A)))))",
-    "&(B, !(|(C, |(A, &(!(B), |(K,X))))))",
-    "&(B, !(|(C, |(A, &(&(B, &(C, D)), A)))))",
-    "|(&(A, |(!(B), !(C))), D)",
-    "&(A, &(B, &(C, &(|(A, |(B, |(C, A))), &(B, &(&(A, A), !(A)))))))",
-    "|(&(A, B), |(C, D))",
-    "|(a, |(b, |(c, |(d, c))))",
-    "&(a, &(b, &(c, &(d,c))))",
-    "&(a, &(b, &(c, &(d, !(b)))))",
-    "&(a, a)",
+    "!(a)",
     "!(!(a))",
-    "|(|(!(a), &(a, &(b,c))), &(b, &(c, !(b))))",
+    "!(&(a, b))",
+    "!(|(a, b))",
+    "!(!(&(a, b)))",
+    "!(!(|(a, b)))",
+    "!(&(|(a, b), &(c,d)))",
+    "!(&(|(a, b), &(c,d)))",
+    "&(a, a)",
+    "&(a, &(a, c))",
+    "&(&(a,b),|(c,d))",
+    "&(a, &(b, &(c, &(d,c))))",
+    "&(a, |(b, &(c, |(d, |(e, a)))))",
+    "&(!(|(|(a, &(!(b), a)), c)), b)",  # Example from Holman paper (page 19)
+    "&(a, |(b, &(c, |(d,&(e, !(a))))))",
+    "&(a, &(b, &(a, &(a, a))))",
+    "&(a, &(b, &(c, &(d, !(b)))))",
+    "&(b, !(|(c, |(a, &(!(b), a)))))",
+    "&(b, !(|(c, |(a, &(!(b), |(k,x))))))",
+    "&(&(&(!(a), |(!(b), !(a))), !(c)), b)",  # Example from Holman paper (page 19)
+    "&(b, !(|(c, |(a, &(&(b, &(c, d)), a)))))",
+    "&(a, &(b, &(c, &(|(a, |(b, |(c, a))), &(b, &(&(a, a), !(a)))))))",
+    "|(a, b)",
     "|(a, a)",
-    "|(a, |(b, |(c, |(d, !(c)))))",
-    "|(A, &(B, &(C, &(D, C))))",
-    "|(&(A, B), |(A, C))",
-    "|(A,B)",
-    "&(&(A,B),|(C,D))",
-    "|(|(!(A), &(A, &(B, C))), &(B, &(C, !(B))))",
-    "|(|(!(A), &(A, &(B, C))), &(C, &(B, !(B))))",
-    "!(&(|(a, b), &(c,d)))",
+    "|(&(a, b), |(a, c))",
+    "|(&(a, b), &(a, b))",
+    "|(&(a, b), |(c, d))",
     "|(!(a), |(!(c), !(d)))",
-    "!(&(|(a, b), &(c,d)))",
+    "|(&(a, |(!(b), !(c))), d)",
+    "|(a, |(b, |(c, |(d, c))))",
+    "|(a, &(b, &(c, &(d, c))))",
     "|(&(!(a), b), |(!(c), !(d)))",
+    "|(a, |(b, |(c, |(d, !(c)))))",
+    "|(&(a, b), |(&(a, c), &(a, d)))",
+    "|(&(a, b), &(a, &(c, |(d, &(e, a)))))",
+    "|(&(a, b), &(a, &(c, |(d, |(e, a)))))",
+    "|(&(a, b), &(a, &(c, |(d, |(e, !(a))))))",
+    "|(&(a, b), &(a, &(c, |(d, &(e, !(a))))))",
+    "|(|(!(a), &(a, &(b,c))), &(b, &(c, !(b))))",
+    "|(|(!(a), &(a, &(b, c))), &(b, &(c, !(b))))",
+    "|(|(!(a), &(a, &(b, c))), &(c, &(b, !(b))))",
+    "|(&(&(c, a), d), |(&(c, a), &(&(c, a), e)))",
+    "|(|(&(a,b), &(a, &(c, d))), &(a, &(c, &(e, !(a)))))",
+    "|(&(a, b), |(&(a, &(c, d)), |(&(a, &(c, e)), &(c, a))))",
     "|(g, &(a, &(b, &(|(!(c), |(!(d), e)), |(c, &(c, f))))))",  # Example from Mosh's paper. Expected output: "|(g,&(a, &(b, &(c, |(!(d), e)))))"
     "|(g,&(a, &(b, &(c, |(!(d), e)))))",  # Reduced form of the above expression from Mosh's paper.
-    "|(&(A, B), |(&(A, C), &(A, D)))",
 ]
 
 
