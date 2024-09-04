@@ -229,10 +229,6 @@ def orSubTreeIterator(
         child, currentNodeTemp.children, localCommandSet
     )
 
-    # Resetting iteration if promote transformation has been done.
-    if currentChildIndex == -1:
-        return orSubTreeIterator(parent, children, parent, dominantSet, commandSet)
-
     action = orSubTreeElegance(
         currentNode, child, currentNode, dominantSet, localCommandSet
     )
