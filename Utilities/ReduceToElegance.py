@@ -100,6 +100,7 @@ def applyAndCut(grandChild: TreeNode, child: TreeNode):
 def computeGrandChildGuardSet(grandChild: TreeNode, resultSet: list[TreeNode]):
     grandChild.guardSet = setDifference(grandChild.guardSet, resultSet)
 
+
 def intersections(children: list[TreeNode]) -> list[TreeNode]:
     # Base case: If there's only one child or no children, return its guardSet or an empty list
     if not children:
@@ -122,7 +123,6 @@ def orSubTreeElegance(
     dominantSet: list[TreeNode],
     localCommandSet: list[TreeNode],
 ):
-
     outcome = reduceToElegance(parent, child, dominantSet, localCommandSet)
 
     match outcome:
@@ -209,18 +209,15 @@ def orSubTreeIterator(
     commandSet: list[TreeNode],
     currentChildIndex=0,
 ):
-    # This code is added here to prevent preserve the previous state until the update is complete.
-    # The update is dependent on the currentNode's state before the function was called.
-    # If the initial state changes while the function is executing, it will result in unexpected behavior.
-    # After the update is complete, it will not be necessary any more.
-
-    # This function is responsible for the Promote (Promote Common Constraint) trasofromation.
-
     if len(children) == 0:
         return None
 
     child = children[currentChildIndex]
 
+    # This code is added here to prevent preserve the previous state until the update is complete.
+    # The update is dependent on the currentNode's state before the function was called.
+    # If the initial state changes while the function is executing, it will result in unexpected behavior.
+    # After the update is complete, it will not be necessary any more.
     currentNodeTemp = TreeNode(currentNode.value)
     currentNodeTemp.type = currentNode.type
     currentNodeTemp.guardSet = currentNode.guardSet
